@@ -3,6 +3,7 @@
 // byeeeeee
 package Controllers;
 
+import DatabaseConnector.DBConnector;
 import Hospital.Identity;
 import Hospital.Patient;
 import com.jfoenix.controls.*;
@@ -66,14 +67,6 @@ public class Controller implements Initializable {
     private TableColumn<Identity, String> fullName;
     @FXML
     private TableColumn<Identity, Integer> identityNumber;
-
-    private String dbURL;
-    private String dbUsername = "root";
-    private String dbPassword = "1234";
-    private String URL = "127.0.0.1";
-    private String port = "3306";
-    private String dbName = "hospital";
-    private Connection con;
 
     private ArrayList<Patient> patients;
     private ArrayList<Identity> identities;
@@ -188,8 +181,8 @@ public class Controller implements Initializable {
     }
     private void insertData(Patient p, Identity identity){
         try {
-            connectDB();
-            ExecuteStatement("Insert into Patient (record_number, length_of_stay, join_date_time, leave_date_time) values(" +
+            DBConnector.connectDB();
+            DBConnector.ExecuteStatement("Insert into Patient (record_number, length_of_stay, join_date_time, leave_date_time) values(" +
                     +p.getRecordNumber()+","
                     +p.getLengthOfStay()+",'"
                     + p.getJoinDateAndTimeToString() +"','"
@@ -199,7 +192,7 @@ public class Controller implements Initializable {
                     +p.getLengthOfStay()+",'"
                     + p.getJoinDateAndTimeToString() +"','"
                     + p.getLeaveDateAndTimeToString()+"');");
-            ExecuteStatement("Insert into Identity (identity_number, idby_record_number, full_name, gender, date_of_birth, blood_type,living_address, phone_number) values(" +
+            DBConnector.ExecuteStatement("Insert into Identity (identity_number, idby_record_number, full_name, gender, date_of_birth, blood_type,living_address, phone_number) values(" +
                     +identity.getIdentityNumber()+","
                     +identity.getIdbyRecordNumber()+",'"
                     +identity.getFullName()+"','"
@@ -217,7 +210,7 @@ public class Controller implements Initializable {
                     +identity.getBloodType()+"','"
                     +identity.getLivingAddress()+"',"
                     +identity.getPhoneNumber()+");");
-            con.close();
+            DBConnector.getCon().close();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -245,13 +238,13 @@ public class Controller implements Initializable {
     private void getData() throws SQLException, ClassNotFoundException, ParseException {
         String SQL;
 
-        connectDB();
+        DBConnector.connectDB();
         System.out.println("Connection established");
 
         SQL = "select *\n" +
                 "from Patient P, Identity ID\n" +
                 "where P.record_number = ID.idby_record_number";
-        Statement stmt = con.createStatement();
+        Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
 
         while (rs.next()) {
@@ -272,30 +265,6 @@ public class Controller implements Initializable {
         rs.close();
         stmt.close();
 
-        con.close();
-    }
-
-    private void connectDB() throws ClassNotFoundException, SQLException {
-        dbURL = "jdbc:mysql://" + URL + ":" + port + "/" + dbName + "?verifyServerCertificate=false";
-        Properties p = new Properties();
-        p.setProperty("user", dbUsername);
-        p.setProperty("password", dbPassword);
-        p.setProperty("useSSL", "false");
-        p.setProperty("autoReconnect", "true");
-        Class.forName("com.mysql.jdbc.Driver");
-
-        con = DriverManager.getConnection(dbURL, p);
-    }
-
-    public void ExecuteStatement(String SQL) throws SQLException {
-        try {
-            Statement stmt = con.createStatement();
-            stmt.executeUpdate(SQL);
-            stmt.close();
-        } catch (SQLException s) {
-            s.printStackTrace();
-            System.out.println("SQL statement is not executed!");
-
-        }
+        DBConnector.getCon().close();
     }
 }
