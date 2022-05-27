@@ -3,7 +3,7 @@ package Hospital;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
-
+//test
 public class Identity {
     private int identityNumber;
     private int idbyRecordNumber;
