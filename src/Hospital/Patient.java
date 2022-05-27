@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 //testttthhhhgg
+// osama
 public class Patient {
     private int recordNumber;
     private int lengthOfStay;
