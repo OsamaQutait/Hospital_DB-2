@@ -4,6 +4,7 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -46,11 +47,11 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <JFXTextField fx:id="password" focusColor="#d2dbe5" prefWidth="200.0" promptText="Enter your password" style="-fx-background-color: white;" unFocusColor="#7f204c">
+                        <PasswordField fx:id="password" prefWidth="200.0" promptText="Enter your password">
                            <font>
                               <Font size="18.0" />
                            </font>
-                        </JFXTextField>
+                        </PasswordField>
                      </children>
                   </HBox>
                </children>
