@@ -5,6 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -21,13 +22,26 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <VBox alignment="CENTER" cache="true" prefHeight="750.0" prefWidth="500.0" spacing="40.0" style="-fx-background-color: #204c7f;">
+      <VBox alignment="CENTER" cache="true" prefHeight="508.0" prefWidth="641.0" spacing="40.0" style="-fx-background-color: #204c7f; -fx-border-color: black;">
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-            <VBox prefHeight="140.0" prefWidth="100.0">
+            <Label text="LOGIN" textFill="WHITE">
+               <font>
+                  <Font name="Eras Light ITC" size="36.0" />
+               </font>
+            </Label>
+            <ImageView blendMode="DARKEN" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../../../Downloads/kareem/1212/DataBase/CourseProject/images%20(3).png" />
+               </image></ImageView>
+            <VBox prefHeight="140.0" prefWidth="533.0" style="-fx-border-color: black;">
                <children>
-                  <HBox alignment="CENTER" prefHeight="70.0" prefWidth="200.0" spacing="30.0">
+                  <HBox alignment="CENTER" prefHeight="69.0" prefWidth="577.0" spacing="30.0">
                      <children>
+                        <ImageView blendMode="DARKEN" fitHeight="34.0" fitWidth="31.0">
+                           <image>
+                              <Image url="@../../../../Downloads/kareem/1212/DataBase/CourseProject/download%20(2).png" />
+                           </image>
+                        </ImageView>
                         <Label prefHeight="30.0" prefWidth="100.0" text="Username" textFill="WHITE">
                            <font>
                               <Font size="18.0" />
@@ -40,8 +54,13 @@
                         </JFXTextField>
                      </children>
                   </HBox>
-                  <HBox alignment="CENTER" prefHeight="70.0" prefWidth="480.0" spacing="30.0">
+                  <HBox alignment="CENTER" prefHeight="70.0" prefWidth="510.0" spacing="30.0">
                      <children>
+                        <ImageView blendMode="DARKEN" fitHeight="29.0" fitWidth="28.0">
+                           <image>
+                              <Image url="@../../../../Downloads/kareem/1212/DataBase/CourseProject/download%20(1).png" />
+                           </image>
+                        </ImageView>
                         <Label prefHeight="30.0" prefWidth="100.0" text="Password" textFill="WHITE">
                            <font>
                               <Font size="18.0" />
