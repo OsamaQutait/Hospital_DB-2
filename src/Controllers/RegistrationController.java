@@ -18,6 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
@@ -224,7 +225,18 @@ public class RegistrationController implements Initializable {
         });
 
         register.setOnAction((ActionEvent e) -> {
-
+            if (idNum.getText().length() > 9){
+                idNum.setUnFocusColor(Paint.valueOf("RED"));
+            }
+            if (phoneNumber.getText().length() > 10){
+                phoneNumber.setUnFocusColor(Paint.valueOf("RED"));
+            }
+            if (!lengthOfStay.getText().isEmpty() && Integer.parseInt(lengthOfStay.getText()) < 0){
+                lengthOfStay.setUnFocusColor(Paint.valueOf("RED"));
+            }
+            if (insuranceCheck.isSelected() && insuranceID.getText().length() > 10){
+                insuranceID.setUnFocusColor(Paint.valueOf("RED"));
+            }
         });
     }
     @FXML
