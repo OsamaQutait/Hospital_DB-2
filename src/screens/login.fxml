@@ -31,7 +31,7 @@
             </Label>
             <ImageView blendMode="DARKEN" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../../../../Downloads/kareem/1212/DataBase/CourseProject/images%20(3).png" />
+                  <Image url="@../Pictures/images%20(3).png" />
                </image></ImageView>
             <VBox prefHeight="140.0" prefWidth="533.0" style="-fx-border-color: black;">
                <children>
@@ -39,7 +39,7 @@
                      <children>
                         <ImageView blendMode="DARKEN" fitHeight="34.0" fitWidth="31.0">
                            <image>
-                              <Image url="@../../../../Downloads/kareem/1212/DataBase/CourseProject/download%20(2).png" />
+                              <Image url="@../Pictures/download%20(2).png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="30.0" prefWidth="100.0" text="Username" textFill="WHITE">
@@ -58,7 +58,7 @@
                      <children>
                         <ImageView blendMode="DARKEN" fitHeight="29.0" fitWidth="28.0">
                            <image>
-                              <Image url="@../../../../Downloads/kareem/1212/DataBase/CourseProject/download%20(1).png" />
+                              <Image url="@../Pictures/download%20(1).png" />
                            </image>
                         </ImageView>
                         <Label prefHeight="30.0" prefWidth="100.0" text="Password" textFill="WHITE">
