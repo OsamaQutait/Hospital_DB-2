@@ -14,10 +14,10 @@ public class PatientIdentityTable extends Application {
 
     public void start(Stage primaryStage) throws Exception {
 
-        Parent root = FXMLLoader.load(getClass().getResource("../screens/login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../screens/registration.fxml"));
         primaryStage.setTitle("Hospital Database");
 
-        primaryStage.setScene(new Scene(root, 750, 650));
+        primaryStage.setScene(new Scene(root, 1300, 700));
         primaryStage.show();
     }
 
