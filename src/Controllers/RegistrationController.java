@@ -7,6 +7,7 @@ import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.SelectionMode;
@@ -17,6 +18,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -144,36 +147,12 @@ public class RegistrationController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
         disablingItems();
+        initializingArrays();
 
         SpinnerValueFactory<Integer> spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100);
         spinnerValueFactory.setValue(0);
         payCoverage.setValueFactory(spinnerValueFactory);
-        genderList = new ArrayList<>();
-        genderList.add("Male");
-        genderList.add("Female");
 
-        bloodList = new ArrayList<>();
-        bloodList.add("O-");
-        bloodList.add("O+");
-        bloodList.add("A-");
-        bloodList.add("A+");
-        bloodList.add("B-");
-        bloodList.add("B+");
-        bloodList.add("AB-");
-        bloodList.add("AB+");
-
-        emergencyStatList = new ArrayList<>();
-        emergencyStatList.add("Alive");
-        emergencyStatList.add("Dead");
-
-        visitReasonList = new ArrayList<>();
-        visitReasonList.add("For surgery");
-        visitReasonList.add("For test");
-        visitReasonList.add("For surgery and test");
-
-        departmentList = new ArrayList<>();
-        testList = new ArrayList<>();
-        surgeryList = new ArrayList<>();
 
         try {
             getData();
@@ -243,6 +222,18 @@ public class RegistrationController implements Initializable {
             testName.setValue(null);
             nurse.setValue(null);
         });
+
+        register.setOnAction((ActionEvent e) -> {
+
+        });
+    }
+    @FXML
+    private void eventID(ActionEvent event) {
+
+        idNum.setText("test");
+    }
+    private Boolean isPatientInTheSystem(){
+        return true;
     }
     private void disablingItems(){
         insuranceID.setDisable(true);
@@ -256,6 +247,34 @@ public class RegistrationController implements Initializable {
         addSurgery.setDisable(true);
         tClear.setDisable(true);
         addTest.setDisable(true);
+    }
+    private void initializingArrays(){
+        genderList = new ArrayList<>();
+        genderList.add("Male");
+        genderList.add("Female");
+
+        bloodList = new ArrayList<>();
+        bloodList.add("O-");
+        bloodList.add("O+");
+        bloodList.add("A-");
+        bloodList.add("A+");
+        bloodList.add("B-");
+        bloodList.add("B+");
+        bloodList.add("AB-");
+        bloodList.add("AB+");
+
+        emergencyStatList = new ArrayList<>();
+        emergencyStatList.add("Alive");
+        emergencyStatList.add("Dead");
+
+        visitReasonList = new ArrayList<>();
+        visitReasonList.add("For surgery");
+        visitReasonList.add("For test");
+        visitReasonList.add("For surgery and test");
+
+        departmentList = new ArrayList<>();
+        testList = new ArrayList<>();
+        surgeryList = new ArrayList<>();
     }
     private void getData() throws SQLException, ClassNotFoundException, ParseException {
         String SQL;

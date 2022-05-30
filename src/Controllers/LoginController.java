@@ -6,6 +6,8 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.PasswordField;
+
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +19,7 @@ public class LoginController implements Initializable {
     private JFXTextField username;
 
     @FXML
-    private JFXTextField password;
+    private PasswordField password;
 
     @FXML
     private JFXButton login;
