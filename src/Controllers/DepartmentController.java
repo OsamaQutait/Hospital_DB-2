@@ -101,6 +101,7 @@ public class DepartmentController implements Initializable{
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
 		clearAll();
 	}
 	// this method call all clear sub methods 
