@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" style="-fx-background-color: #e0dbdb;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegistrationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="1300.0" style="-fx-background-color: #e0dbdb;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.DepartmentController">
    <children>
       <HBox prefHeight="800.0" prefWidth="1300.0">
          <children>
@@ -98,16 +98,25 @@
                               </Button>
                            </children>
                         </GridPane>
-                        <AnchorPane prefHeight="594.0" prefWidth="1120.0" style="-fx-border-color: black;">
+                        <GridPane hgap="10.0" prefHeight="594.0" prefWidth="1130.0" style="-fx-border-color: black;" vgap="10.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="584.0" minWidth="10.0" prefWidth="465.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="522.0" minWidth="10.0" prefWidth="325.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="346.0" minWidth="10.0" prefWidth="312.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <AnchorPane layoutX="30.0" layoutY="34.0" prefHeight="536.0" prefWidth="493.0" style="-fx-border-color: black;">
+                              <VBox prefHeight="291.0" prefWidth="374.0" spacing="10.0" style="-fx-border-color: black;">
                                  <children>
-                                    <Label alignment="CENTER" layoutX="17.0" layoutY="22.0" prefHeight="62.0" prefWidth="460.0" text="New Department" textFill="WHITE">
+                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="459.0" text="New Department">
                                        <font>
-                                          <Font name="Gabriola" size="51.0" />
+                                          <Font name="Gabriola" size="35.0" />
                                        </font>
                                     </Label>
-                                    <GridPane hgap="10.0" layoutX="17.0" layoutY="97.0" prefHeight="216.0" prefWidth="459.0" style="-fx-border-color: black;" vgap="10.0">
+                                    <GridPane hgap="10.0" prefHeight="103.0" prefWidth="453.0" vgap="10.0">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -119,57 +128,66 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Department ID" textFill="#3b5998">
-                                             <font>
-                                                <Font size="24.0" />
-                                             </font>
-                                          </Label>
-                                          <JFXTextField unFocusColor="#3b5998" GridPane.rowIndex="1" />
-                                          <JFXTextField unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Department Name" textFill="#3b5998" GridPane.columnIndex="1">
-                                             <font>
-                                                <Font size="24.0" />
-                                             </font>
-                                          </Label>
                                           <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Maximum Number of rooms" textFill="#3b5998" GridPane.rowIndex="2">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <JFXTextField unFocusColor="#3b5998" GridPane.rowIndex="3" />
+                                          <JFXTextField fx:id="MaxNoRooms" unFocusColor="#3b5998" GridPane.rowIndex="3" />
                                           <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Department Floor" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                              <font>
                                                 <Font size="16.0" />
                                              </font>
                                           </Label>
-                                          <JFXTextField unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          <JFXTextField fx:id="DepartmentFloor" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          <Label alignment="CENTER" prefHeight="46.0" prefWidth="228.0" text="Department ID" textFill="#3b5998">
+                                             <font>
+                                                <Font size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="DepartmentID" unFocusColor="#3b5998" GridPane.rowIndex="1" />
+                                          <Label alignment="CENTER" prefHeight="35.0" prefWidth="229.0" text="Department Name" textFill="#3b5998" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font size="24.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="DepartmentName" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                        </children>
                                        <padding>
                                           <Insets left="5.0" right="5.0" />
                                        </padding>
                                     </GridPane>
-                                    <HBox layoutX="14.0" layoutY="330.0" prefHeight="59.0" prefWidth="464.0" style="-fx-border-color: black;">
+                                    <HBox prefHeight="32.0" prefWidth="166.0">
                                        <children>
-                                          <JFXButton prefHeight="57.0" prefWidth="232.0" style="-fx-border-color: black;" text="Insert">
+                                          <JFXButton fx:id="DepInsert" prefHeight="41.0" prefWidth="245.0" style="-fx-border-color: black; -fx-background-color: #aeaeae;" text="Insert">
                                              <font>
-                                                <Font size="28.0" />
+                                                <Font size="18.0" />
                                              </font>
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
                                           </JFXButton>
-                                          <JFXButton prefHeight="73.0" prefWidth="236.0" style="-fx-border-color: black;" text="Clear">
+                                          <JFXButton fx:id="DepClear" prefHeight="41.0" prefWidth="247.0" style="-fx-border-color: black; -fx-background-color: #aeaeae;" text="Clear">
                                              <font>
-                                                <Font size="28.0" />
+                                                <Font size="18.0" />
                                              </font>
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
                                           </JFXButton>
                                        </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
                                     </HBox>
-                                    <HBox layoutX="15.0" layoutY="406.0" prefHeight="43.0" prefWidth="462.0">
+                                    <HBox prefHeight="43.0" prefWidth="462.0">
                                        <children>
                                           <ImageView blendMode="DARKEN" fitHeight="35.0" fitWidth="87.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../Pictures/warning.png" />
                                              </image>
                                           </ImageView>
-                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="The new created departments will be without any room, if you  want to add a new room check room section aside." wrappingWidth="417.6907958984375">
+                                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="The new created departments will be without any room, if you  want to add a new room check room section below." wrappingWidth="417.6907958984375">
                                              <HBox.margin>
                                                 <Insets left="5.0" />
                                              </HBox.margin>
@@ -178,17 +196,205 @@
                                              </font>
                                           </Text>
                                        </children>
+                                       <VBox.margin>
+                                          <Insets left="5.0" />
+                                       </VBox.margin>
                                     </HBox>
                                  </children>
-                              </AnchorPane>
-                              <AnchorPane layoutX="576.0" layoutY="33.0" prefHeight="536.0" prefWidth="493.0" style="-fx-border-color: black;">
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </VBox>
+                              <VBox prefHeight="291.0" prefWidth="482.0" spacing="10.0" style="-fx-border-color: black;" GridPane.rowIndex="1">
                                  <children>
-                                    <Label alignment="CENTER" layoutX="20.0" layoutY="22.0" prefHeight="62.0" prefWidth="460.0" text="New Room" textFill="WHITE">
+                                    <Label alignment="CENTER" prefHeight="30.0" prefWidth="459.0" text="New Room">
                                        <font>
-                                          <Font name="Gabriola" size="51.0" />
+                                          <Font name="Gabriola" size="35.0" />
                                        </font>
                                     </Label>
-                                    <GridPane hgap="10.0" layoutX="14.0" layoutY="98.0" prefHeight="217.0" prefWidth="467.0" style="-fx-border-color: black;" vgap="10.0">
+                                    <GridPane hgap="10.0" prefHeight="103.0" prefWidth="453.0" vgap="10.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Accommodation cost" textFill="#3b5998" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="AccoCost" unFocusColor="#3b5998" GridPane.rowIndex="3" />
+                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Room Description" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <font>
+                                                <Font size="16.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="RoomDescription" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                          <Label alignment="CENTER" prefHeight="46.0" prefWidth="228.0" text="Room ID (01-99)" textFill="#3b5998">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="RoomID" unFocusColor="#3b5998" GridPane.rowIndex="1" />
+                                          <Label alignment="CENTER" prefHeight="35.0" prefWidth="229.0" text="Maximum Number of beds" textFill="#3b5998" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXComboBox fx:id="NumOfBeds" prefHeight="25.0" prefWidth="255.0" promptText="select maximum number of beds " unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                       </children>
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" />
+                                       </padding>
+                                    </GridPane>
+                                    <HBox prefHeight="32.0" prefWidth="166.0">
+                                       <children>
+                                          <JFXButton fx:id="RoomInsert" prefHeight="41.0" prefWidth="245.0" style="-fx-border-color: black; -fx-background-color: #aeaeae;" text="Insert">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                          </JFXButton>
+                                          <JFXButton fx:id="RoomClear" prefHeight="41.0" prefWidth="247.0" style="-fx-border-color: black; -fx-background-color: #aeaeae;" text="Clear">
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                          </JFXButton>
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                    </HBox>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </VBox>
+                              <VBox prefHeight="306.0" prefWidth="326.0" spacing="10.0" style="-fx-border-color: black;" GridPane.columnIndex="1">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="45.0" prefWidth="343.0" text="Delete Department (only if empty)">
+                                       <font>
+                                          <Font name="Gabriola" size="30.0" />
+                                       </font>
+                                    </Label>
+                                    <Label prefHeight="42.0" prefWidth="333.0" text="Depatment to Delete" textFill="#3b5998">
+                                       <padding>
+                                          <Insets left="5.0" />
+                                       </padding>
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <JFXComboBox fx:id="DelDepartID" prefHeight="21.0" prefWidth="327.0" promptText="Select Depatment to Delete" unFocusColor="#3b5998">
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" />
+                                       </padding>
+                                    </JFXComboBox>
+                                    <HBox prefHeight="49.0" prefWidth="324.0">
+                                       <children>
+                                          <JFXButton fx:id="DelDepartDelete" prefHeight="44.0" prefWidth="150.0" style="-fx-background-color: #aeaeae; -fx-border-color: black;" text="Delete">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="DelDepartClear" prefHeight="44.0" prefWidth="150.0" style="-fx-background-color: #aeaeae; -fx-border-color: black;" text="Clear">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="306.0" prefWidth="326.0" spacing="10.0" style="-fx-border-color: black;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="45.0" prefWidth="343.0" text="Delete Room (only if empty)">
+                                       <font>
+                                          <Font name="Gabriola" size="30.0" />
+                                       </font>
+                                    </Label>
+                                    <Label prefHeight="42.0" prefWidth="333.0" text="Room to Delete" textFill="#3b5998">
+                                       <padding>
+                                          <Insets left="5.0" />
+                                       </padding>
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <JFXComboBox fx:id="DelRoomID" prefHeight="21.0" prefWidth="327.0" promptText="Select Room to Delete" unFocusColor="#3b5998">
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" />
+                                       </padding>
+                                    </JFXComboBox>
+                                    <HBox prefHeight="49.0" prefWidth="324.0">
+                                       <children>
+                                          <JFXButton fx:id="DelRoomDelete" prefHeight="44.0" prefWidth="150.0" style="-fx-background-color: #aeaeae; -fx-border-color: black;" text="Delete">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="DelRoomClear" prefHeight="44.0" prefWidth="150.0" style="-fx-background-color: #aeaeae; -fx-border-color: black;" text="Clear">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                             <font>
+                                                <Font size="18.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-border-color: black;" GridPane.columnIndex="2">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="46.0" prefWidth="310.0" text="Update Department information">
+                                       <font>
+                                          <Font name="Gabriola" size="30.0" />
+                                       </font>
+                                    </Label>
+                                    <Label prefHeight="42.0" prefWidth="309.0" text="Department to Update" textFill="#3b5998">
+                                       <padding>
+                                          <Insets left="5.0" />
+                                       </padding>
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <JFXComboBox fx:id="UpDepartID" prefHeight="25.0" prefWidth="310.0" promptText="Select Department to Update" unFocusColor="#3b5998">
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" />
+                                       </padding>
+                                    </JFXComboBox>
+                                    <GridPane hgap="5.0" vgap="5.0">
                                       <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -196,64 +402,148 @@
                                       <rowConstraints>
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
-                                       <padding>
-                                          <Insets left="5.0" right="5.0" />
-                                       </padding>
                                        <children>
-                                          <Label alignment="CENTER" prefHeight="87.0" prefWidth="234.0" text="Room ID" textFill="#3b5998">
+                                          <Label alignment="CENTER" prefHeight="49.0" prefWidth="175.0" text="New Depatment Name" textFill="#3b5998">
                                              <font>
-                                                <Font size="24.0" />
+                                                <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <JFXTextField prefHeight="29.0" prefWidth="199.0" unFocusColor="#3b5998" GridPane.rowIndex="1">
+                                          <Label alignment="CENTER" prefHeight="44.0" prefWidth="163.0" text="New Number of rooms" textFill="#3b5998" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXTextField fx:id="UpDepartName" unFocusColor="#3b5998" GridPane.rowIndex="1">
                                              <GridPane.margin>
                                                 <Insets left="5.0" />
-                                             </GridPane.margin></JFXTextField>
-                                          <JFXComboBox prefHeight="31.0" prefWidth="237.0" promptText="select maximum number of beds " GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                          <Label alignment="CENTER" prefHeight="87.0" prefWidth="234.0" text="Maximum number of beds" textFill="#3b5998" GridPane.columnIndex="1">
+                                             </GridPane.margin>
+                                          </JFXTextField>
+                                          <JFXTextField fx:id="UpDepartNoRooms" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets right="5.0" />
+                                             </GridPane.margin>
+                                          </JFXTextField>
+                                       </children>
+                                    </GridPane>
+                                    <HBox prefHeight="49.0" prefWidth="324.0">
+                                       <children>
+                                          <JFXButton fx:id="UpDepartUpdate" prefHeight="44.0" prefWidth="150.0" style="-fx-background-color: #aeaeae; -fx-border-color: black;" text="Update">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
-                                          </Label>
-                                          <Label alignment="CENTER" prefHeight="87.0" prefWidth="234.0" text="Accommodation cost" textFill="#3b5998" GridPane.rowIndex="2">
-                                             <font>
-                                                <Font size="22.0" />
-                                             </font>
-                                          </Label>
-                                          <JFXTextField prefHeight="29.0" prefWidth="199.0" unFocusColor="#3b5998" GridPane.rowIndex="3">
-                                             <padding>
-                                                <Insets left="5.0" />
-                                             </padding>
-                                          </JFXTextField>
-                                          <Label alignment="CENTER" prefHeight="87.0" prefWidth="234.0" text="Room Description" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                             <font>
-                                                <Font size="24.0" />
-                                             </font>
-                                          </Label>
-                                          <JFXTextField prefHeight="29.0" prefWidth="199.0" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                       </children>
-                                    </GridPane>
-                                    <HBox layoutX="15.0" layoutY="330.0" prefHeight="59.0" prefWidth="464.0" style="-fx-border-color: black;">
-                                       <children>
-                                          <JFXButton prefHeight="57.0" prefWidth="232.0" style="-fx-border-color: black;" text="Insert">
-                                             <font>
-                                                <Font size="28.0" />
-                                             </font>
                                           </JFXButton>
-                                          <JFXButton prefHeight="73.0" prefWidth="236.0" style="-fx-border-color: black;" text="Clear">
+                                          <JFXButton fx:id="UpDepartClear" prefHeight="44.0" prefWidth="150.0" style="-fx-background-color: #aeaeae; -fx-border-color: black;" text="Clear">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
                                              <font>
-                                                <Font size="28.0" />
+                                                <Font size="18.0" />
                                              </font>
                                           </JFXButton>
                                        </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
                                     </HBox>
                                  </children>
-                              </AnchorPane>
+                              </VBox>
+                              <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-border-color: black;" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="46.0" prefWidth="310.0" text="Update Room information">
+                                       <font>
+                                          <Font name="Gabriola" size="30.0" />
+                                       </font>
+                                    </Label>
+                                    <Label prefHeight="42.0" prefWidth="309.0" text="Room to Update" textFill="#3b5998">
+                                       <padding>
+                                          <Insets left="5.0" />
+                                       </padding>
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <JFXComboBox fx:id="UpRoomID" prefHeight="25.0" prefWidth="310.0" promptText="Select Room to Update" unFocusColor="#3b5998">
+                                       <padding>
+                                          <Insets left="5.0" right="5.0" />
+                                       </padding>
+                                    </JFXComboBox>
+                                    <GridPane hgap="5.0" vgap="5.0">
+                                       <columnConstraints>
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                       </columnConstraints>
+                                       <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                       </rowConstraints>
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="49.0" prefWidth="175.0" text="New Room description" textFill="#3b5998" GridPane.rowIndex="1">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label alignment="CENTER" prefHeight="44.0" prefWidth="163.0" text="New Accommodation cost" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                             <GridPane.margin>
+                                                <Insets right="5.0" />
+                                             </GridPane.margin>
+                                          </Label>
+                                          <JFXTextField fx:id="UpRoomDescription" unFocusColor="#3b5998" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" />
+                                             </GridPane.margin>
+                                          </JFXTextField>
+                                          <JFXTextField fx:id="UpRoomAcco" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                             <GridPane.margin>
+                                                <Insets right="5.0" />
+                                             </GridPane.margin>
+                                          </JFXTextField>
+                                          <Label prefHeight="29.0" prefWidth="201.0" text="New Number of beds" textFill="#3b5998">
+                                             <GridPane.margin>
+                                                <Insets left="5.0" />
+                                             </GridPane.margin>
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXComboBox fx:id="UpRoomNoBeds" prefHeight="48.0" prefWidth="180.0" promptText="Select number of beds" unFocusColor="#3b5998" GridPane.columnIndex="1">
+                                             <GridPane.margin>
+                                                <Insets right="5.0" />
+                                             </GridPane.margin>
+                                          </JFXComboBox>
+                                       </children>
+                                    </GridPane>
+                                    <HBox prefHeight="49.0" prefWidth="324.0">
+                                       <children>
+                                          <JFXButton fx:id="UpRoomUpdate" prefHeight="5.0" prefWidth="145.0" style="-fx-background-color: #aeaeae; -fx-border-color: black;" text="Update">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                          <JFXButton fx:id="UpRoomClear" prefHeight="19.0" prefWidth="148.0" style="-fx-background-color: #aeaeae; -fx-border-color: black;" text="Clear">
+                                             <HBox.margin>
+                                                <Insets left="5.0" right="5.0" />
+                                             </HBox.margin>
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </JFXButton>
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                    </HBox>
+                                 </children>
+                              </VBox>
                            </children>
-                        </AnchorPane>
+                        </GridPane>
                      </children>
                      <padding>
                         <Insets left="10.0" />
