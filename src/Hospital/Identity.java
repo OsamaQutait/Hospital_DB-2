@@ -6,17 +6,15 @@ import java.util.Date;
 
 public class Identity {
     private int identityNumber;
-    private int idbyRecordNumber;
     private String fullName;
     private Date dateOfBirth;
     private String gender;
     private String livingAddress;
     private String bloodType;
-    private int phoneNumber;
+    private int[] phoneNumber;
 
-    public Identity(int identityNumber, int idbyRecordNumber, String fullName, Date dateOfBirth, String gender, String livingAddress, String bloodType, int phoneNumber) {
+    public Identity(int identityNumber, String fullName, Date dateOfBirth, String gender, String livingAddress, String bloodType, int[] phoneNumber) {
         this.identityNumber = identityNumber;
-        this.idbyRecordNumber = idbyRecordNumber;
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
@@ -31,14 +29,6 @@ public class Identity {
 
     public void setIdentityNumber(int identityNumber) {
         this.identityNumber = identityNumber;
-    }
-
-    public int getIdbyRecordNumber() {
-        return idbyRecordNumber;
-    }
-
-    public void setIdbyRecordNumber(int idbyRecordNumber) {
-        this.idbyRecordNumber = idbyRecordNumber;
     }
 
     public String getFullName() {
@@ -86,11 +76,11 @@ public class Identity {
         this.bloodType = bloodType;
     }
 
-    public int getPhoneNumber() {
+    public int[] getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(int[] phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 }
