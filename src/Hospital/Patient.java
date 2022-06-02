@@ -7,54 +7,41 @@ import java.time.LocalTime;
 import java.util.Date;
 
 public class Patient {
-    private int recordNumber;
-    private int lengthOfStay;
-    private Date joinDateAndTime;
-    private Date leaveDateAndTime;
+    private int identityNumber;
+    private String emergencyStatus;
+    private String visitReason;
 
-    /*@FXML
-    private JFXTextArea fullName;*/
-
-    public Patient(int recordNumber, int lengthOfStay, Date joinDateAndTime, Date leaveDateAndTime) {
-        this.recordNumber = recordNumber;
-        this.lengthOfStay = lengthOfStay;
-        this.joinDateAndTime = joinDateAndTime;
-        this.leaveDateAndTime = leaveDateAndTime;
+    public Patient(int identityNumber, String emergencyStatus, String visitReason) {
+        this.identityNumber = identityNumber;
+        this.emergencyStatus = emergencyStatus;
+        this.visitReason = visitReason;
     }
 
-    public int getRecordNumber() {
-        return recordNumber;
+    public int getIdentityNumber() {
+        return identityNumber;
     }
 
-    public void setRecordNumber(int recordNumber) {
-        this.recordNumber = recordNumber;
+    public void setIdentityNumber(int identityNumber) {
+        this.identityNumber = identityNumber;
     }
 
-    public int getLengthOfStay() {
-        return lengthOfStay;
+    public String getEmergencyStatus() {
+        return emergencyStatus;
     }
 
-    public void setLengthOfStay(int lengthOfStay) {
-        this.lengthOfStay = lengthOfStay;
+    public void setEmergencyStatus(String emergencyStatus) {
+        this.emergencyStatus = emergencyStatus;
     }
 
-    public Date getJoinDateAndTime() {
-        return joinDateAndTime;
+    public String getVisitReason() {
+        return visitReason;
     }
 
-    public void setJoinDateAndTime(Date joinDateAndTime) {
-        this.joinDateAndTime = joinDateAndTime;
+    public void setVisitReason(String visitReason) {
+        this.visitReason = visitReason;
     }
 
-    public Date getLeaveDateAndTime() {
-        return leaveDateAndTime;
-    }
-
-    public void setLeaveDateAndTime(Date leaveDateAndTime) {
-        this.leaveDateAndTime = leaveDateAndTime;
-    }
-
-    public String getJoinDateAndTimeToString() {
+    /*public String getJoinDateAndTimeToString() {
         return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(this.joinDateAndTime);
     }
 
@@ -87,5 +74,5 @@ public class Patient {
             return LocalDate.of(Integer.parseInt(d[2]), Integer.parseInt(d[1]), Integer.parseInt(d[0]));
         }
         return null;
-    }
+    }*/
 }
