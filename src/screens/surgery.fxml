@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -84,7 +85,7 @@
                                         </Button>
                                     </children>
                                 </GridPane>
-                                <VBox prefHeight="600.0" prefWidth="1066.0" spacing="10.0">
+                                <VBox prefHeight="602.0" prefWidth="1126.0" spacing="10.0">
                                     <opaqueInsets>
                                         <Insets />
                                     </opaqueInsets>
@@ -126,19 +127,21 @@
                                           <JFXButton fx:id="clearDelete" prefHeight="31.0" prefWidth="336.0" text="Clear" textFill="#3b5998" />
                                        </children>
                                     </VBox>
-                                    <VBox prefHeight="200.0" prefWidth="331.0" style="-fx-background-color: #dfe3ee;">
+                                    <VBox prefHeight="333.0" prefWidth="377.0" style="-fx-background-color: #dfe3ee;">
                                        <children>
                                           <Label prefHeight="82.0" prefWidth="348.0" text="       Update Surgeries Price" textAlignment="CENTER" textFill="#4059a9">
                                              <font>
                                                 <Font size="24.0" />
                                              </font>
                                           </Label>
-                                          <Label text="Surgery Identity number" textFill="#3b5998" />
-                                          <JFXTextField fx:id="updatePriceId" />
-                                          <Label text="New Price" textFill="#3b5998" />
+                                          <Label text="Surgery Namer" textFill="#3b5998" />
+                                          <JFXComboBox fx:id="upSurgeryName" focusColor="#3b5998" prefHeight="31.0" prefWidth="426.0" promptText="Select Surgeries to Update" />
+                                          <Label text="New Surgers Price" textFill="#3b5998" />
                                           <JFXTextField fx:id="newPrice" />
-                                          <JFXButton fx:id="updatePrice" prefHeight="31.0" prefWidth="337.0" text="Update Price" textFill="#3b5998" />
-                                          <JFXButton fx:id="clearUpdate" prefHeight="31.0" prefWidth="342.0" text="Clear" textFill="#3b5998" />
+                                          <Label text="New Surgeries Name" textFill="#3b5998" />
+                                          <JFXTextField fx:id="newName" />
+                                          <JFXButton fx:id="updateSurgeries" prefHeight="31.0" prefWidth="381.0" text="Update Surgeries" textFill="#3b5998" />
+                                          <JFXButton fx:id="clearUpdatePrice" prefHeight="31.0" prefWidth="378.0" text="Clear" textFill="#3b5998" />
                                        </children>
                                     </VBox>
                                  </children>
