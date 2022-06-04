@@ -1,8 +1,10 @@
 package Controllers;
 //payment coverage error in float and text
-
+//must handle all dates and validate them
+//if dead he can't do anything
 import DatabaseConnector.DBConnector;
 import Hospital.Identity;
+import Hospital.Insurance;
 import Hospital.Patient;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
@@ -228,22 +230,49 @@ public class RegistrationController implements Initializable {
             testValidation();
             patientValidation();
             insuranceValidation();
-            /*try {
-                Date joinDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue().toString() + " " + joinTime.getValue().toString() + ":00");
-                Date leaveDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue().toString() + " " + leaveTime.getValue().toString() + ":00");
-                Date dob = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth.getValue().toString());
-                if (dob.compareTo(joinDT) >= 0){
-                    joinDate.setDefaultColor(Paint.valueOf("red"));
-                    joinTime.setDefaultColor(Paint.valueOf("red"));
-                }
-                if (leaveDT.compareTo(joinDT) < 0){
-                    leaveDate.setDefaultColor(Paint.valueOf("red"));
-                    leaveTime.setDefaultColor(Paint.valueOf("red"));
-                }
-            } catch (ParseException parseException) {
-                parseException.printStackTrace();
-            }*/
+            if (identityValidation() && departmentValidation() && patientValidation()){
+                datesValidation();
+                try {
+                    Patient p = new Patient();
+                    Identity id = new Identity();
+                    Insurance insurance = new Insurance();
 
+                    id.setBloodType(bloodType.getValue());
+                    id.setFullName(fullName.getText());
+                    id.setGender(gender.getValue());
+                    id.setLivingAddress(address.getText());
+                    id.setIdentityNumber(Integer.parseInt(idNum.getText()));
+
+                    insurance.setInsuranceID(Integer.parseInt(insuranceID.getText()));
+                    insurance.setPaymentCoverage(payCoverage.getValue());
+                    insurance.setExpiryDate(
+                            new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(String.valueOf(expiryDate.getValue()))
+                    );
+                    insurance.setIdentityNumber(Integer.parseInt(idNum.getText()));
+
+                    p = new Patient(visitReason.getValue(), emergencyStatus.getValue(), Integer.parseInt(lengthOfStay.getText()), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00"),
+                            Integer.parseInt(idNum.getText()));
+                    if (leaveDate.getValue() != null){
+                        p.setLeaveDateAndTime(
+                                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00")
+                        );
+                    }
+
+                    id.setDateOfBirth(
+                            new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(dateOfBirth.getValue()))
+                    );
+
+                    String identitySQL = "Insert into Patient values("
+                            + "'" + p.getVisitReason() + "','"
+                            + p.getEmergencyStatus() + "',"
+                            + p.getLengthOfStay() + ",'"
+                            + p.getJoinDateAndTimeToString() + "','"
+                            + p.getLeaveDateAndTimeToString() + "');";
+
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
+            }
         });
         idClear.setOnAction((ActionEvent e) -> {
             identityClear();
@@ -345,98 +374,102 @@ public class RegistrationController implements Initializable {
         testDate.setPromptText("");
     }
 
+    //must check if insurance exists
     private int insuranceValidation() {
         if (insuranceCheck.isSelected()) {
+            boolean flag = false;
             if (insuranceCheck.isSelected() && (insuranceID.getText().length() != 9 || !Pattern.matches("[0-9]{9}", idNum.getText()))) {
                 insuranceID.setUnFocusColor(Paint.valueOf("RED"));
-                return 0;
+                flag = true;
             } else {
                 insuranceID.setUnFocusColor(Paint.valueOf("black"));
             }
             if (expiryDate.getValue() == null) {
                 expiryDate.setDefaultColor(Paint.valueOf("red"));
                 expiryDate.setPromptText("ERROR");
-                return 0;
+                flag = true;
             } else {
                 expiryDate.setDefaultColor(Paint.valueOf("black"));
             }
-            return 1;
+            return !flag ? 1 : 0;
         }
         return -1;
     }
 
     private boolean patientValidation() {
+        boolean flag = false;
         if (emergencyStatus.getSelectionModel().isEmpty()) {
             emergencyStatus.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = true;
         } else {
             emergencyStatus.setUnFocusColor(Paint.valueOf("black"));
         }
         if (visitReason.getSelectionModel().isEmpty()) {
             visitReason.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = true;
         } else {
             visitReason.setUnFocusColor(Paint.valueOf("black"));
         }
         if (joinDate.getValue() == null) {
             joinDate.setDefaultColor(Paint.valueOf("red"));
             joinDate.setPromptText("ERROR");
-            return false;
+            flag = true;
         } else {
             joinDate.setDefaultColor(Paint.valueOf("black"));
         }
         if (joinTime.getValue() == null) {
             joinTime.setDefaultColor(Paint.valueOf("red"));
             joinTime.setPromptText("ERROR");
-            return false;
+            flag = true;
         } else {
             joinTime.setDefaultColor(Paint.valueOf("black"));
         }
         if (leaveTime.getValue() == null) {
             leaveTime.setDefaultColor(Paint.valueOf("red"));
             leaveTime.setPromptText("ERROR");
-            return false;
+            flag = true;
         } else {
             leaveTime.setDefaultColor(Paint.valueOf("black"));
         }
         if (leaveDate.getValue() == null) {
             leaveDate.setDefaultColor(Paint.valueOf("red"));
             leaveDate.setPromptText("ERROR");
-            return false;
+            flag = true;
         } else {
             leaveDate.setDefaultColor(Paint.valueOf("black"));
         }
         if (!lengthOfStay.getText().isEmpty() && Integer.parseInt(lengthOfStay.getText()) < 0) {
             lengthOfStay.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
+            flag = true;
         } else {
             lengthOfStay.setUnFocusColor(Paint.valueOf("black"));
         }
-        return true;
+        return !flag;
     }
 
     private int testValidation() {
         if (!testName.isDisabled()) {
+            boolean flag = false;
             if (testName.getSelectionModel().isEmpty()) {
                 testName.setUnFocusColor(Paint.valueOf("red"));
-                return 0;
+                flag = true;
             } else {
                 testName.setUnFocusColor(Paint.valueOf("black"));
             }
             if (nurse.getSelectionModel().isEmpty()) {
                 nurse.setUnFocusColor(Paint.valueOf("red"));
-                return 0;
+                flag = true;
             } else {
                 nurse.setUnFocusColor(Paint.valueOf("black"));
             }
             if (testDate.getValue() == null) {
                 testDate.setDefaultColor(Paint.valueOf("red"));
                 testDate.setPromptText("ERROR");
-                return 0;
+                flag = true;
             } else {
                 testDate.setDefaultColor(Paint.valueOf("black"));
             }
-            return 1;
+            return !flag ? 1 : 0;
         }
         return -1;
     }
@@ -444,92 +477,145 @@ public class RegistrationController implements Initializable {
     ///must be handled isDisabled() to be removed
     private int surgeryValidation() {
         if (!surgeryName.isDisabled()) {
+            boolean flag = false;
             if (surgeryName.getSelectionModel().isEmpty()) {
                 surgeryName.setUnFocusColor(Paint.valueOf("red"));
-                return 0;
+                flag = true;
             } else {
                 surgeryName.setUnFocusColor(Paint.valueOf("black"));
             }
             if (doctor.getSelectionModel().isEmpty()) {
                 doctor.setUnFocusColor(Paint.valueOf("red"));
-                return 0;
+                flag = true;
             } else {
                 doctor.setUnFocusColor(Paint.valueOf("black"));
             }
             if (surgeryDate.getValue() == null) {
                 surgeryDate.setDefaultColor(Paint.valueOf("red"));
                 surgeryDate.setPromptText("ERROR");
-                return 0;
+                flag = true;
             } else {
                 surgeryDate.setDefaultColor(Paint.valueOf("black"));
             }
-            return 1;
+            return !flag ? 1 : 0;
         }
         return -1;
     }
 
     //must add date
     private boolean departmentValidation() {
+        boolean flag = true;
         if (departmentName.getSelectionModel().isEmpty()) {
             departmentName.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = false;
         } else {
             departmentName.setUnFocusColor(Paint.valueOf("black"));
         }
         if (roomName.getSelectionModel().isEmpty()) {
             roomName.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = false;
         } else {
             roomName.setUnFocusColor(Paint.valueOf("black"));
         }
-        return true;
+        return flag;
     }
 
+    //must check if id exists
     private boolean identityValidation() {
+        boolean flag = true;
         if (idNum.getText().length() != 9 || !Pattern.matches("[0-9]{9}", idNum.getText())) {
             idNum.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
+            flag = false;
         } else {
             idNum.setUnFocusColor(Paint.valueOf("black"));
         }
         if (phoneNumber.getText().length() != 10 || !Pattern.matches("05[2-9][0-9]{7}", phoneNumber.getText())) {
             phoneNumber.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
+            flag = false;
         } else {
             phoneNumber.setUnFocusColor(Paint.valueOf("black"));
         }
         if (!Pattern.matches("[A-Za-z-']+", fullName.getText())) {
             fullName.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
+            flag = false;
         } else {
             fullName.setUnFocusColor(Paint.valueOf("black"));
         }
         if (!Pattern.matches("[A-Za-z-']+", address.getText())) {
             address.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
+            flag = false;
         } else {
             address.setUnFocusColor(Paint.valueOf("black"));
         }
         if (gender.getSelectionModel().isEmpty()) {
             gender.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = false;
         } else {
             gender.setUnFocusColor(Paint.valueOf("black"));
         }
         if (bloodType.getSelectionModel().isEmpty()) {
             bloodType.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = false;
         } else {
             bloodType.setUnFocusColor(Paint.valueOf("black"));
         }
         if (dateOfBirth.getValue() == null) {
             dateOfBirth.setDefaultColor(Paint.valueOf("red"));
             dateOfBirth.setPromptText("ERROR");
-            return false;
+            flag = false;
         } else {
             dateOfBirth.setDefaultColor(Paint.valueOf("black"));
         }
-        return true;
+        return flag;
+    }
+
+    private void datesValidation(){
+        try {
+                Date joinDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue().toString() + " " + joinTime.getValue().toString() + ":00");
+                Date leaveDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue().toString() + " " + leaveTime.getValue().toString() + ":00");
+                Date dob = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth.getValue().toString());
+                if (insuranceCheck.isSelected()) {
+                    Date inExpiry = new SimpleDateFormat("yyyy-MM-dd").parse(expiryDate.getValue().toString());
+                    if (inExpiry.compareTo(joinDT) < 0){
+                        expiryDate.setDefaultColor(Paint.valueOf("red"));
+                    }else{
+                        expiryDate.setDefaultColor(Paint.valueOf("black"));
+                    }
+                }
+                if (!surgeryName.isDisabled()) {
+                    Date sDate = new SimpleDateFormat("yyyy-MM-dd").parse(surgeryDate.getValue().toString());
+                    if (sDate.compareTo(joinDT) < 0 || sDate.compareTo(leaveDT) >= 0){
+                        surgeryDate.setDefaultColor(Paint.valueOf("red"));
+                    }else{
+                        surgeryDate.setDefaultColor(Paint.valueOf("black"));
+                    }
+                }
+                if (!testName.isDisabled()) {
+                    Date tDate = new SimpleDateFormat("yyyy-MM-dd").parse(testDate.getValue().toString());
+                    if (tDate.compareTo(joinDT) < 0 || tDate.compareTo(leaveDT) >= 0){
+                        testDate.setDefaultColor(Paint.valueOf("red"));
+                    }else{
+                        testDate.setDefaultColor(Paint.valueOf("black"));
+                    }
+                }
+
+                if (dob.compareTo(joinDT) <= 0){
+                    joinDate.setDefaultColor(Paint.valueOf("red"));
+                    joinTime.setDefaultColor(Paint.valueOf("red"));
+                }else{
+                    joinDate.setDefaultColor(Paint.valueOf("black"));
+                    joinTime.setDefaultColor(Paint.valueOf("black"));
+                }
+                if (leaveDT.compareTo(joinDT) < 0){
+                    leaveDate.setDefaultColor(Paint.valueOf("red"));
+                    leaveTime.setDefaultColor(Paint.valueOf("red"));
+                }else {
+                    leaveDate.setDefaultColor(Paint.valueOf("black"));
+                    leaveTime.setDefaultColor(Paint.valueOf("black"));
+                }
+            } catch (ParseException parseException) {
+                parseException.printStackTrace();
+            }
     }
 
     private void disablingItems() {

@@ -8,6 +8,10 @@ public class Insurance {
     private Date expiryDate;
     private int identityNumber;
 
+    public Insurance(){
+
+    }
+
     public Insurance(int insuranceID, int paymentCoverage, Date expiryDate, int identityNumber) {
         this.insuranceID = insuranceID;
         this.paymentCoverage = paymentCoverage;

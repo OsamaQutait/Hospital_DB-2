@@ -13,6 +13,10 @@ public class Identity {
     private String bloodType;
     private int[] phoneNumber;
 
+    public Identity(){
+
+    }
+
     public Identity(int identityNumber, String fullName, Date dateOfBirth, String gender, String livingAddress, String bloodType, int[] phoneNumber) {
         this.identityNumber = identityNumber;
         this.fullName = fullName;

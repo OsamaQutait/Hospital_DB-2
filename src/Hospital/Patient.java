@@ -7,30 +7,44 @@ import java.time.LocalTime;
 import java.util.Date;
 
 public class Patient {
-    private int identityNumber;
-    private String emergencyStatus;
     private String visitReason;
+    private String emergencyStatus;
+    private int lengthOfStay;
+    private Date joinDateAndTime;
+    private Date leaveDateAndTime;
+    private int identityNumber;
+    private int roomID;
 
-    public Patient(int identityNumber, String emergencyStatus, String visitReason) {
-        this.identityNumber = identityNumber;
-        this.emergencyStatus = emergencyStatus;
+    public Patient(){
+
+    }
+
+    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, Date leaveDateAndTime, int identityNumber, int roomID) {
         this.visitReason = visitReason;
-    }
-
-    public int getIdentityNumber() {
-        return identityNumber;
-    }
-
-    public void setIdentityNumber(int identityNumber) {
-        this.identityNumber = identityNumber;
-    }
-
-    public String getEmergencyStatus() {
-        return emergencyStatus;
-    }
-
-    public void setEmergencyStatus(String emergencyStatus) {
         this.emergencyStatus = emergencyStatus;
+        this.lengthOfStay = lengthOfStay;
+        this.joinDateAndTime = joinDateAndTime;
+        this.leaveDateAndTime = leaveDateAndTime;
+        this.identityNumber = identityNumber;
+        this.roomID = roomID;
+    }
+    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, int identityNumber, int roomID) {
+        this.visitReason = visitReason;
+        this.emergencyStatus = emergencyStatus;
+        this.lengthOfStay = lengthOfStay;
+        this.joinDateAndTime = joinDateAndTime;
+        this.leaveDateAndTime = leaveDateAndTime;
+        this.identityNumber = identityNumber;
+        this.roomID = roomID;
+    }
+    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, int identityNumber) {
+        this.visitReason = visitReason;
+        this.emergencyStatus = emergencyStatus;
+        this.lengthOfStay = lengthOfStay;
+        this.joinDateAndTime = joinDateAndTime;
+        this.leaveDateAndTime = leaveDateAndTime;
+        this.identityNumber = identityNumber;
+        this.roomID = roomID;
     }
 
     public String getVisitReason() {
@@ -41,7 +55,55 @@ public class Patient {
         this.visitReason = visitReason;
     }
 
-    /*public String getJoinDateAndTimeToString() {
+    public String getEmergencyStatus() {
+        return emergencyStatus;
+    }
+
+    public void setEmergencyStatus(String emergencyStatus) {
+        this.emergencyStatus = emergencyStatus;
+    }
+
+    public int getLengthOfStay() {
+        return lengthOfStay;
+    }
+
+    public void setLengthOfStay(int lengthOfStay) {
+        this.lengthOfStay = lengthOfStay;
+    }
+
+    public Date getJoinDateAndTime() {
+        return joinDateAndTime;
+    }
+
+    public void setJoinDateAndTime(Date joinDateAndTime) {
+        this.joinDateAndTime = joinDateAndTime;
+    }
+
+    public Date getLeaveDateAndTime() {
+        return leaveDateAndTime;
+    }
+
+    public void setLeaveDateAndTime(Date leaveDateAndTime) {
+        this.leaveDateAndTime = leaveDateAndTime;
+    }
+
+    public int getIdentityNumber() {
+        return identityNumber;
+    }
+
+    public void setIdentityNumber(int identityNumber) {
+        this.identityNumber = identityNumber;
+    }
+
+    public int getRoomID() {
+        return roomID;
+    }
+
+    public void setRoomID(int roomID) {
+        this.roomID = roomID;
+    }
+
+    public String getJoinDateAndTimeToString() {
         return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(this.joinDateAndTime);
     }
 
@@ -74,5 +136,5 @@ public class Patient {
             return LocalDate.of(Integer.parseInt(d[2]), Integer.parseInt(d[1]), Integer.parseInt(d[0]));
         }
         return null;
-    }*/
+    }
 }
