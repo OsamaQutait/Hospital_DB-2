@@ -1,14 +1,14 @@
 package Hospital;
 
 //this class represent the department class, where we save all department attributes as an object
-public class department {
+public class Department {
 
 	private int departmentID;
 	private String departmentName;
 	private int departmentFloor;
 	private int numberOfRooms;
 	
-	public department(int departmentID,String departmentName,int departmentFloor, int numberOfRooms){
+	public Department(int departmentID,String departmentName,int departmentFloor, int numberOfRooms){
 		this.departmentID=departmentID;
 		this.departmentName=departmentName;
 		this.departmentFloor=departmentFloor;

@@ -1,6 +1,5 @@
 package Controllers;
 
-
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -85,7 +84,7 @@ public class DepartmentController implements Initializable {
 	private JFXTextField UpDepartName;
 
 	@FXML
-	private JFXTextField UpDepartNoRooms;
+	private JFXComboBox<String> UpDepartNoRooms;
 
 	@FXML
 	private JFXButton UpDepartUpdate;
@@ -111,6 +110,9 @@ public class DepartmentController implements Initializable {
 	@FXML
 	private JFXButton UpRoomClear;
 
+	@FXML
+	private JFXComboBox<String> depatmentRoom;
+
 	ArrayList<String> MaxRoomlist;
 	ArrayList<String> DepartmentFloorlist;
 	ArrayList<String> MaxNumBedslist;
@@ -123,38 +125,59 @@ public class DepartmentController implements Initializable {
 		try {
 			comboBoxesInitializing();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		assignComboBoxesValues();
-		
+
 		// the clear button for department section (clear all elements)
 		DepClear.setOnAction((ActionEvent e) -> {
 			DepartmentClear();
-        });
+		});
+		// the insert button for the department section
 		DepInsert.setOnAction((ActionEvent e) -> {
 			newDepartmentValidation();
-        });
+		});
 		// the clear button for room section (clear all elements)
 		RoomClear.setOnAction((ActionEvent e) -> {
 			RoomClear();
-        });
+		});
+		// the insert button for the room section
+		RoomInsert.setOnAction((ActionEvent e) -> {
+			newRoomValidation();
+		});
 		// the clear button for delete department section (clear all elements)
 		DelDepartClear.setOnAction((ActionEvent e) -> {
 			DeleteDepartmentClear();
-        });
+		});
+		// the delete button for the department delete section
+		DelDepartDelete.setOnAction((ActionEvent e) -> {
+			DeleteDepartmentValidation();
+		});
 		// the clear button for delete room section (clear all elements)
 		DelRoomClear.setOnAction((ActionEvent e) -> {
 			DeleteRoomClear();
-        });
+		});
+		// the delete button for the room delete section
+		DelRoomDelete.setOnAction((ActionEvent e) -> {
+			DeleteRoomValidation();
+		});
 		// the clear button for Update department section (clear all elements)
 		UpDepartClear.setOnAction((ActionEvent e) -> {
 			UpdateDepartmentClear();
-        });
+		});
+		// the Update button for the department update section
+		UpDepartUpdate.setOnAction((ActionEvent e) -> {
+			UpdateDepartmentValidation();
+		});
 		// the clear button for Update room section (clear all elements)
 		UpRoomClear.setOnAction((ActionEvent e) -> {
 			UpdateRoomClear();
-        });
+		});
+		// the Update button for the room update section
+		UpRoomUpdate.setOnAction((ActionEvent e) -> {
+			UpdateRoomValidation();
+		});
+
 	}
 
 	// this method call all clear sub methods
@@ -185,10 +208,12 @@ public class DepartmentController implements Initializable {
 		AccoCost.clear();
 		RoomDescription.clear();
 		NumOfBeds.setValue(null);
+		depatmentRoom.setValue(null);
 		RoomID.setFocusColor(Color.BLACK);
 		AccoCost.setFocusColor(Color.BLACK);
 		RoomDescription.setFocusColor(Color.BLACK);
 		NumOfBeds.setFocusColor(Color.BLACK);
+		depatmentRoom.setFocusColor(Color.BLACK);
 	}
 
 	// this method will clear the Delete Department section
@@ -207,7 +232,7 @@ public class DepartmentController implements Initializable {
 	public void UpdateDepartmentClear() {
 		UpDepartID.setValue(null);
 		UpDepartName.clear();
-		UpDepartNoRooms.clear();
+		UpDepartNoRooms.setValue(null);
 		UpDepartID.setFocusColor(Color.BLACK);
 		UpDepartName.setFocusColor(Color.BLACK);
 		UpDepartNoRooms.setFocusColor(Color.BLACK);
@@ -246,10 +271,11 @@ public class DepartmentController implements Initializable {
 			MaxNumBedslist.add(tmp);
 		}
 		// to read the data from the SQL and save them
-		intitializeDepartmentAndRoom();
+		initializeDepartmentAndRoom();
 	}
 
-	public void intitializeDepartmentAndRoom() throws ParseException {
+	// this method is used to initialize Department And Room lists
+	public void initializeDepartmentAndRoom() throws ParseException {
 		String SQL;
 		roomlist = new ArrayList<>();
 		departmentlist = new ArrayList<>();
@@ -257,15 +283,13 @@ public class DepartmentController implements Initializable {
 			DBConnector.connectDB();
 			System.out.println("Connection established");
 
-			SQL = "select D.Department_id\n" + 
-					"from Department D;";
+			SQL = "select D.Department_id\n" + "from Department D;";
 			Statement stmt = DBConnector.getCon().createStatement();
 			ResultSet rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
 				departmentlist.add(rs.getString(1));
 			}
-			SQL = "select R.Room_id\n" + 
-					"from room R;";
+			SQL = "select R.Room_id\n" + "from room R;";
 			stmt = DBConnector.getCon().createStatement();
 			rs = stmt.executeQuery(SQL);
 
@@ -273,15 +297,17 @@ public class DepartmentController implements Initializable {
 				roomlist.add(rs.getString(1));
 			}
 			rs.close();
-	        stmt.close();
-	        DBConnector.getCon().close();
+			stmt.close();
+			DBConnector.getCon().close();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	public void assignComboBoxesValues(){
+
+	// in this method we assign ComboBoxes the values
+	public void assignComboBoxesValues() {
 		MaxNoRooms.setItems(FXCollections.observableArrayList(MaxRoomlist));
 		DepartmentFloor.setItems(FXCollections.observableArrayList(DepartmentFloorlist));
 		NumOfBeds.setItems(FXCollections.observableArrayList(MaxNumBedslist));
@@ -290,32 +316,193 @@ public class DepartmentController implements Initializable {
 		DelDepartID.setItems(FXCollections.observableArrayList(departmentlist));
 		UpDepartID.setItems(FXCollections.observableArrayList(departmentlist));
 		UpRoomNoBeds.setItems(FXCollections.observableArrayList(MaxNumBedslist));
+		depatmentRoom.setItems(FXCollections.observableArrayList(departmentlist));
+		UpDepartNoRooms.setItems(FXCollections.observableArrayList(MaxRoomlist));
 	}
-	public void newDepartmentValidation(){
-		boolean flag=true;
-		if (DepartmentID.getText().length() != 9 || !Pattern.matches("[0-9]{9}", DepartmentID.getText())) {
-			DepartmentID.setUnFocusColor(Paint.valueOf("RED"));
+
+	// in this method we make a validation for the department section attributes
+	public void newDepartmentValidation() {
+		boolean flag = true;
+		if (DepartmentID.getText().isEmpty() || DepartmentID.getText().length() > 10
+				|| !Pattern.matches("[0-9]{9}", DepartmentID.getText())) {
+			DepartmentID.setUnFocusColor(Color.RED);
 			DepartmentID.clear();
-			flag=false;
-        }else{
-        	DepartmentID.setUnFocusColor(Paint.valueOf("black"));
-        }
+			flag = false;
+		} else {
+			DepartmentID.setUnFocusColor(Color.BLACK);
+		}
+		if (DepartmentName.getText().length() > 32) {
+			DepartmentName.setUnFocusColor(Color.RED);
+			DepartmentName.clear();
+			flag = false;
+		} else {
+			DepartmentName.setUnFocusColor(Color.BLACK);
+		}
 		if (MaxNoRooms.getSelectionModel().isEmpty()) {
-			MaxNoRooms.setUnFocusColor(Paint.valueOf("RED"));
+			MaxNoRooms.setUnFocusColor(Color.RED);
 			MaxNoRooms.setValue(null);
-			flag=false;
-        }else{
-        	MaxNoRooms.setUnFocusColor(Paint.valueOf("black"));
-        }
+			flag = false;
+		} else {
+			MaxNoRooms.setUnFocusColor(Color.BLACK);
+		}
 		if (DepartmentFloor.getSelectionModel().isEmpty()) {
-			DepartmentFloor.setUnFocusColor(Paint.valueOf("RED"));
+			DepartmentFloor.setUnFocusColor(Color.RED);
 			DepartmentFloor.setValue(null);
-			flag=false;
-        }else{
-        	DepartmentFloor.setUnFocusColor(Paint.valueOf("black"));
-        }
-		if(flag){
+			flag = false;
+		} else {
+			DepartmentFloor.setUnFocusColor(Color.BLACK);
+		}
+		if (flag) {
 			DepartmentClear();
+		}
+	}
+
+	// in this method we make a validation for the room section attributes
+	public void newRoomValidation() {
+		boolean flag = true;
+		if (RoomID.getText().isEmpty() || RoomID.getText().length() > 2
+				|| !Pattern.matches("[0-9]{9}", RoomID.getText())) {
+			RoomID.setUnFocusColor(Color.RED);
+			RoomID.clear();
+			flag = false;
+		} else if (RoomID.getText().length() == 1 || Pattern.matches("[0-9]{9}", RoomID.getText())) {
+			// add 0 with the number chosen (e.g 3 ==> 03)
+			RoomID.setText("0" + RoomID.getText());
+			RoomID.setUnFocusColor(Color.BLACK);
+		} else {
+			RoomID.setUnFocusColor(Color.BLACK);
+		}
+		if (AccoCost.getText().isEmpty() || (!Pattern.matches("[+]?[0-9]*\\.?[0-9]+", AccoCost.getText())
+				&& !Pattern.matches("[0-9]{9}", AccoCost.getText()))) {
+			AccoCost.setUnFocusColor(Color.RED);
+			AccoCost.clear();
+			flag = false;
+		} else {
+			AccoCost.setUnFocusColor(Color.BLACK);
+		}
+		if (RoomDescription.getText().length() > 128) {
+			RoomDescription.setUnFocusColor(Color.RED);
+			RoomDescription.clear();
+			flag = false;
+		} else {
+			RoomDescription.setUnFocusColor(Color.BLACK);
+		}
+		if (NumOfBeds.getSelectionModel().isEmpty()) {
+			NumOfBeds.setUnFocusColor(Color.RED);
+			NumOfBeds.setValue(null);
+			flag = false;
+		} else {
+			NumOfBeds.setUnFocusColor(Color.BLACK);
+		}
+		if (depatmentRoom.getSelectionModel().isEmpty()) {
+			depatmentRoom.setUnFocusColor(Color.RED);
+			depatmentRoom.setValue(null);
+			flag = false;
+		} else {
+			depatmentRoom.setUnFocusColor(Color.BLACK);
+		}
+		if (flag) {
+			RoomClear();
+		}
+	}
+
+	// in this method we make a validation for the delete department section
+	// attributes
+	public void DeleteDepartmentValidation() {
+		boolean flag = true;
+		if (DelDepartID.getSelectionModel().isEmpty()) {
+			DelDepartID.setUnFocusColor(Color.RED);
+			DelDepartID.setValue(null);
+			flag = false;
+		} else {
+			DelDepartID.setUnFocusColor(Color.BLACK);
+		}
+		if (flag) {
+			DeleteDepartmentClear();
+		}
+	}
+
+	// in this method we make a validation for the delete room section
+	// attributes
+	public void DeleteRoomValidation() {
+		boolean flag = true;
+		if (DelRoomID.getSelectionModel().isEmpty()) {
+			DelRoomID.setUnFocusColor(Color.RED);
+			DelRoomID.setValue(null);
+			flag = false;
+		} else {
+			DelRoomID.setUnFocusColor(Color.BLACK);
+		}
+		if (flag) {
+			DeleteRoomClear();
+		}
+	}
+
+	// in this method we make a validation for the Update department section
+	// attributes
+	public void UpdateDepartmentValidation() {
+		boolean flag = true;
+		if (UpDepartID.getSelectionModel().isEmpty()) {
+			UpDepartID.setUnFocusColor(Color.RED);
+			UpDepartID.setValue(null);
+			flag = false;
+		} else {
+			UpDepartID.setUnFocusColor(Color.BLACK);
+		}
+		if (UpDepartName.getText().length() > 32) {
+			UpDepartName.setUnFocusColor(Color.RED);
+			UpDepartName.clear();
+			flag = false;
+		} else {
+			UpDepartName.setUnFocusColor(Color.BLACK);
+		}
+		if (UpDepartNoRooms.getSelectionModel().isEmpty()) {
+			UpDepartNoRooms.setUnFocusColor(Color.RED);
+			UpDepartNoRooms.setValue(null);
+			flag = false;
+		} else {
+			UpDepartNoRooms.setUnFocusColor(Color.BLACK);
+		}
+		if (flag) {
+			UpdateDepartmentClear();
+		}
+	}
+
+	// in this method we make a validation for the Update room section
+	// attributes
+	public void UpdateRoomValidation() {
+		boolean flag = true;
+		if (UpRoomID.getSelectionModel().isEmpty()) {
+			UpRoomID.setUnFocusColor(Color.RED);
+			UpRoomID.setValue(null);
+			flag = false;
+		} else {
+			UpRoomID.setUnFocusColor(Color.BLACK);
+		}
+		if (UpRoomDescription.getText().length() > 128) {
+			UpRoomDescription.setUnFocusColor(Color.RED);
+			UpRoomDescription.clear();
+			flag = false;
+		} else {
+			UpRoomDescription.setUnFocusColor(Color.BLACK);
+		}
+		if (UpRoomAcco.getText().isEmpty() || (!Pattern.matches("[+]?[0-9]*\\.?[0-9]+", UpRoomAcco.getText())
+				&& !Pattern.matches("[0-9]{9}", UpRoomAcco.getText()))) {
+			UpRoomAcco.setUnFocusColor(Color.RED);
+			UpRoomAcco.clear();
+			flag = false;
+		} else {
+			UpRoomAcco.setUnFocusColor(Color.BLACK);
+		}
+		if (UpRoomNoBeds.getSelectionModel().isEmpty()) {
+			UpRoomNoBeds.setUnFocusColor(Color.RED);
+			UpRoomNoBeds.setValue(null);
+			flag = false;
+		} else {
+			UpRoomNoBeds.setUnFocusColor(Color.BLACK);
+		}
+		if (flag) {
+			UpdateRoomClear();
 		}
 	}
 }

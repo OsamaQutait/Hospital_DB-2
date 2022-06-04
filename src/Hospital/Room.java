@@ -1,7 +1,7 @@
 package Hospital;
 
 // this class represent the room class, where we save all room attributes as an object
-public class room {
+public class Room {
 	
 	private String roomID;
 	private int AvailableBeds;
@@ -10,7 +10,7 @@ public class room {
 	private float AccommodationCost;
 	private int departmentID;
 	
-	public room(String roomID,int AvailableBeds,int totalNumberOfBeds,String roomDescription,float AccommodationCost,int departmentID){
+	public Room(String roomID,int AvailableBeds,int totalNumberOfBeds,String roomDescription,float AccommodationCost,int departmentID){
 		this.roomID=roomID;
 		this.AvailableBeds=AvailableBeds;
 		this.totalNumberOfBeds=totalNumberOfBeds;

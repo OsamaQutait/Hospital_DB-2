@@ -128,27 +128,11 @@
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
                                        <children>
-                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Maximum Number of rooms" textFill="#3b5998" GridPane.rowIndex="2">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Department Floor" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
-                                          <Label alignment="CENTER" prefHeight="46.0" prefWidth="228.0" text="Department ID" textFill="#3b5998">
-                                             <font>
-                                                <Font size="24.0" />
-                                             </font>
-                                          </Label>
+                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Maximum Number of rooms (1-99 only)" textFill="#3b5998" GridPane.rowIndex="2" />
+                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Department Floor (0-9 only)" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                          <Label alignment="CENTER" prefHeight="46.0" prefWidth="228.0" text="Department ID (10 numbers maximum)" textFill="#3b5998" />
                                           <JFXTextField fx:id="DepartmentID" unFocusColor="#3b5998" GridPane.rowIndex="1" />
-                                          <Label alignment="CENTER" prefHeight="35.0" prefWidth="229.0" text="Department Name" textFill="#3b5998" GridPane.columnIndex="1">
-                                             <font>
-                                                <Font size="24.0" />
-                                             </font>
-                                          </Label>
+                                          <Label alignment="CENTER" prefHeight="35.0" prefWidth="229.0" text="Department Name (32 char maximum)" textFill="#3b5998" wrapText="true" GridPane.columnIndex="1" />
                                           <JFXTextField fx:id="DepartmentName" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                           <JFXComboBox fx:id="DepartmentFloor" prefHeight="25.0" prefWidth="230.0" promptText="Select Department floor" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                           <JFXComboBox fx:id="MaxNoRooms" prefHeight="48.0" prefWidth="235.0" promptText="Select Max number of rooms" unFocusColor="#3b5998" GridPane.rowIndex="3" />
@@ -215,12 +199,13 @@
                                           <Font name="Gabriola" size="35.0" />
                                        </font>
                                     </Label>
-                                    <GridPane hgap="10.0" prefHeight="103.0" prefWidth="453.0" vgap="10.0">
+                                    <GridPane hgap="10.0" prefHeight="144.0" prefWidth="464.0" vgap="10.0">
                                        <columnConstraints>
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                        </columnConstraints>
                                        <rowConstraints>
+                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -233,11 +218,7 @@
                                              </font>
                                           </Label>
                                           <JFXTextField fx:id="AccoCost" unFocusColor="#3b5998" GridPane.rowIndex="3" />
-                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Room Description" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                                             <font>
-                                                <Font size="16.0" />
-                                             </font>
-                                          </Label>
+                                          <Label alignment="CENTER" prefHeight="64.0" prefWidth="229.0" text="Room Description (128 character max)" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                           <JFXTextField fx:id="RoomDescription" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                           <Label alignment="CENTER" prefHeight="46.0" prefWidth="228.0" text="Room ID (01-99)" textFill="#3b5998">
                                              <font>
@@ -245,12 +226,18 @@
                                              </font>
                                           </Label>
                                           <JFXTextField fx:id="RoomID" unFocusColor="#3b5998" GridPane.rowIndex="1" />
-                                          <Label alignment="CENTER" prefHeight="35.0" prefWidth="229.0" text="Maximum Number of beds" textFill="#3b5998" GridPane.columnIndex="1">
+                                          <Label alignment="CENTER" prefHeight="35.0" prefWidth="229.0" text="Maximum Number of beds (1-4)" textFill="#3b5998" GridPane.columnIndex="1">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <JFXComboBox fx:id="NumOfBeds" prefHeight="25.0" prefWidth="255.0" promptText="select maximum number of beds " unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <Label alignment="CENTER" prefHeight="57.0" prefWidth="229.0" text="Choose the department: " textFill="#3b5998" GridPane.rowIndex="4">
                                              <font>
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <JFXComboBox fx:id="NumOfBeds" prefHeight="25.0" prefWidth="255.0" promptText="select maximum number of beds " unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                          <JFXComboBox fx:id="depatmentRoom" prefHeight="32.0" prefWidth="222.0" promptText="Select department" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                        </children>
                                        <padding>
                                           <Insets left="5.0" right="5.0" />
@@ -414,16 +401,19 @@
                                                 <Font size="14.0" />
                                              </font>
                                           </Label>
-                                          <JFXTextField fx:id="UpDepartName" unFocusColor="#3b5998" GridPane.rowIndex="1">
+                                          <JFXTextField fx:id="UpDepartName" prefHeight="37.0" prefWidth="153.0" unFocusColor="#3b5998" GridPane.rowIndex="1">
                                              <GridPane.margin>
                                                 <Insets left="5.0" />
                                              </GridPane.margin>
+                                             <padding>
+                                                <Insets left="5.0" right="5.0" />
+                                             </padding>
                                           </JFXTextField>
-                                          <JFXTextField fx:id="UpDepartNoRooms" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                          <JFXComboBox fx:id="UpDepartNoRooms" prefHeight="60.0" prefWidth="160.0" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                              <GridPane.margin>
-                                                <Insets right="5.0" />
+                                                <Insets left="5.0" right="5.0" />
                                              </GridPane.margin>
-                                          </JFXTextField>
+                                          </JFXComboBox>
                                        </children>
                                     </GridPane>
                                     <HBox prefHeight="49.0" prefWidth="324.0">

@@ -26,6 +26,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+    	// when click on login button, check if the user name and password are valid from  the database
         login.setOnAction((ActionEvent e) -> {
             try {
                 DBConnector.connectDB();
@@ -38,7 +39,7 @@ public class LoginController implements Initializable {
                 if (rs.next()){
                     System.out.println("The user exists in the system");
                 }else{
-                    System.out.println("The user does not exist");
+                    System.out.println("The user does not exist");		// error message needed
                 }
                 rs.close();
                 stmt.close();
