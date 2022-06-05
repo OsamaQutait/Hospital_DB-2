@@ -1,5 +1,6 @@
 package Controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,9 +18,13 @@ import DatabaseConnector.DBConnector;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 
 public class DepartmentController implements Initializable {
 
@@ -196,10 +201,10 @@ public class DepartmentController implements Initializable {
 		DepartmentName.clear();
 		MaxNoRooms.setValue(null);
 		DepartmentFloor.setValue(null);
-		DepartmentID.setFocusColor(Color.BLACK);
-		DepartmentName.setFocusColor(Color.BLACK);
-		MaxNoRooms.setFocusColor(Color.BLACK);
-		DepartmentFloor.setFocusColor(Color.BLACK);
+		DepartmentID.setUnFocusColor(Color.BLACK);
+		DepartmentName.setUnFocusColor(Color.BLACK);
+		MaxNoRooms.setUnFocusColor(Color.BLACK);
+		DepartmentFloor.setUnFocusColor(Color.BLACK);
 	}
 
 	// this method will clear the room insertion section
@@ -209,23 +214,23 @@ public class DepartmentController implements Initializable {
 		RoomDescription.clear();
 		NumOfBeds.setValue(null);
 		depatmentRoom.setValue(null);
-		RoomID.setFocusColor(Color.BLACK);
-		AccoCost.setFocusColor(Color.BLACK);
-		RoomDescription.setFocusColor(Color.BLACK);
-		NumOfBeds.setFocusColor(Color.BLACK);
-		depatmentRoom.setFocusColor(Color.BLACK);
+		RoomID.setUnFocusColor(Color.BLACK);
+		AccoCost.setUnFocusColor(Color.BLACK);
+		RoomDescription.setUnFocusColor(Color.BLACK);
+		NumOfBeds.setUnFocusColor(Color.BLACK);
+		depatmentRoom.setUnFocusColor(Color.BLACK);
 	}
 
 	// this method will clear the Delete Department section
 	public void DeleteDepartmentClear() {
 		DelDepartID.setValue(null);
-		DelDepartID.setFocusColor(Color.BLACK);
+		DelDepartID.setUnFocusColor(Color.BLACK);
 	}
 
 	// this method will clear the Delete room section
 	public void DeleteRoomClear() {
 		DelRoomID.setValue(null);
-		DelRoomID.setFocusColor(Color.BLACK);
+		DelRoomID.setUnFocusColor(Color.BLACK);
 	}
 
 	// this method will clear the update Department section
@@ -233,9 +238,9 @@ public class DepartmentController implements Initializable {
 		UpDepartID.setValue(null);
 		UpDepartName.clear();
 		UpDepartNoRooms.setValue(null);
-		UpDepartID.setFocusColor(Color.BLACK);
-		UpDepartName.setFocusColor(Color.BLACK);
-		UpDepartNoRooms.setFocusColor(Color.BLACK);
+		UpDepartID.setUnFocusColor(Color.BLACK);
+		UpDepartName.setUnFocusColor(Color.BLACK);
+		UpDepartNoRooms.setUnFocusColor(Color.BLACK);
 
 	}
 
@@ -245,10 +250,10 @@ public class DepartmentController implements Initializable {
 		UpRoomNoBeds.setValue(null);
 		UpRoomDescription.clear();
 		UpRoomAcco.clear();
-		UpRoomID.setFocusColor(Color.BLACK);
-		UpRoomNoBeds.setFocusColor(Color.BLACK);
-		UpRoomDescription.setFocusColor(Color.BLACK);
-		UpRoomAcco.setFocusColor(Color.BLACK);
+		UpRoomID.setUnFocusColor(Color.BLACK);
+		UpRoomNoBeds.setUnFocusColor(Color.BLACK);
+		UpRoomDescription.setUnFocusColor(Color.BLACK);
+		UpRoomAcco.setUnFocusColor(Color.BLACK);
 	}
 
 	public void comboBoxesInitializing() throws ParseException {
@@ -323,10 +328,13 @@ public class DepartmentController implements Initializable {
 	// in this method we make a validation for the department section attributes
 	public void newDepartmentValidation() {
 		boolean flag = true;
-		if (DepartmentID.getText().isEmpty() || DepartmentID.getText().length() > 10
-				|| !Pattern.matches("[0-9]{9}", DepartmentID.getText())) {
+		if (DepartmentID.getText().isEmpty() || DepartmentID.getText().length() > 9
+				|| !Pattern.matches("[0-9]", DepartmentID.getText())) {
 			DepartmentID.setUnFocusColor(Color.RED);
 			DepartmentID.clear();
+			// "The inserted name was more than 32 characters!"
+			errorPop("Not Vaild Department ID, please get sure to insert an integer number with 9 digits max!");
+	        System.out.print("why");
 			flag = false;
 		} else {
 			DepartmentID.setUnFocusColor(Color.BLACK);
@@ -361,11 +369,11 @@ public class DepartmentController implements Initializable {
 	public void newRoomValidation() {
 		boolean flag = true;
 		if (RoomID.getText().isEmpty() || RoomID.getText().length() > 2
-				|| !Pattern.matches("[0-9]{9}", RoomID.getText())) {
+				|| !Pattern.matches("[0-9]", RoomID.getText())) {
 			RoomID.setUnFocusColor(Color.RED);
 			RoomID.clear();
 			flag = false;
-		} else if (RoomID.getText().length() == 1 || Pattern.matches("[0-9]{9}", RoomID.getText())) {
+		} else if (RoomID.getText().length() == 1 || Pattern.matches("[0-9]", RoomID.getText())) {
 			// add 0 with the number chosen (e.g 3 ==> 03)
 			RoomID.setText("0" + RoomID.getText());
 			RoomID.setUnFocusColor(Color.BLACK);
@@ -373,7 +381,7 @@ public class DepartmentController implements Initializable {
 			RoomID.setUnFocusColor(Color.BLACK);
 		}
 		if (AccoCost.getText().isEmpty() || (!Pattern.matches("[+]?[0-9]*\\.?[0-9]+", AccoCost.getText())
-				&& !Pattern.matches("[0-9]{9}", AccoCost.getText()))) {
+				&& !Pattern.matches("[0-9]", AccoCost.getText()))) {
 			AccoCost.setUnFocusColor(Color.RED);
 			AccoCost.clear();
 			flag = false;
@@ -487,7 +495,7 @@ public class DepartmentController implements Initializable {
 			UpRoomDescription.setUnFocusColor(Color.BLACK);
 		}
 		if (UpRoomAcco.getText().isEmpty() || (!Pattern.matches("[+]?[0-9]*\\.?[0-9]+", UpRoomAcco.getText())
-				&& !Pattern.matches("[0-9]{9}", UpRoomAcco.getText()))) {
+				&& !Pattern.matches("[0-9]", UpRoomAcco.getText()))) {
 			UpRoomAcco.setUnFocusColor(Color.RED);
 			UpRoomAcco.clear();
 			flag = false;
@@ -504,5 +512,20 @@ public class DepartmentController implements Initializable {
 		if (flag) {
 			UpdateRoomClear();
 		}
+	}
+	public void errorPop(String str){
+		Stage primaryStage = new Stage();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("../screens/error.fxml"));
+        primaryStage.setTitle("error");
+        Parent root = null;
+		try {
+			root = loader.load();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        ErrorMessage alertController = loader.getController();
+        alertController.setErrorLabel(str);
+        primaryStage.setScene(new Scene(root));
+        primaryStage.show();
 	}
 }

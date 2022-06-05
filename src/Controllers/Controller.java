@@ -71,12 +71,13 @@ public class Controller implements Initializable {
     private ArrayList<Patient> patients;
     private ArrayList<Identity> identities;
     private ObservableList<Identity> patientData;
-
+    
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
         patients = new ArrayList<>();
         identities = new ArrayList<>();
+        /*
         try {
             getData();
         } catch (SQLException throwables) {
@@ -91,7 +92,7 @@ public class Controller implements Initializable {
         fullName.setCellValueFactory(new PropertyValueFactory<Identity, String>("fullName"));
         identityNumber.setCellValueFactory(new PropertyValueFactory<Identity, Integer>("identityNumber"));
         patientTable.setItems(patientData);
-
+        
         insertMode.setOnAction((ActionEvent e) -> {
             if (insertMode.isSelected()) {
                 select.setDisable(true);
@@ -160,7 +161,7 @@ public class Controller implements Initializable {
             insert.setDisable(true);
             clearWindow();
         });
-
+         
         select.setOnAction((ActionEvent e) -> {
             clearWindow();
             identityNum.setText(String.valueOf(patientTable.getSelectionModel().getSelectedItem().getIdentityNumber()));
@@ -178,7 +179,9 @@ public class Controller implements Initializable {
             leaveDate.setValue(p.getLeaveDateLocalDate());
             leaveTime.setValue(p.getLeaveTime());
         });
+        */
     }
+    /*
     private void insertData(Patient p, Identity identity){
         try {
             DBConnector.connectDB();
@@ -267,4 +270,5 @@ public class Controller implements Initializable {
 
         DBConnector.getCon().close();
     }
+    */
 }
