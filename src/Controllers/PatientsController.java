@@ -1,17 +1,20 @@
 package Controllers;
 
 import com.jfoenix.controls.*;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -117,6 +120,9 @@ public class PatientsController implements Initializable {
     @FXML
     private JFXButton statistics;
 
+    @FXML
+    private Button registrationButton;
+
     private ArrayList<String> genderList;
     private ArrayList<String> bloodList;
     private ArrayList<String> emergencyStatList;
@@ -125,6 +131,7 @@ public class PatientsController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initializingArrays();
+        disablingItems();
         SpinnerValueFactory<Integer> spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100);
         spinnerValueFactory.setValue(0);
         payCoverage.setValueFactory(spinnerValueFactory);
@@ -145,7 +152,84 @@ public class PatientsController implements Initializable {
             }
         };
         payCoverage.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, enterKeyEventHandler);
+
+        sMode.setOnAction((ActionEvent e) -> {
+            upMode.setSelected(false);
+            dMode.setSelected(false);
+            inMode.setSelected(false);
+            sMode.setSelected(true);
+            search.setDisable(false);
+            delete.setDisable(true);
+            update.setDisable(true);
+            insert.setDisable(true);
+        });
+
+        upMode.setOnAction((ActionEvent e) -> {
+            upMode.setSelected(true);
+            dMode.setSelected(false);
+            inMode.setSelected(false);
+            sMode.setSelected(false);
+            update.setDisable(false);
+            search.setDisable(true);
+            delete.setDisable(true);
+            insert.setDisable(true);
+        });
+
+        inMode.setOnAction((ActionEvent e) -> {
+            upMode.setSelected(false);
+            dMode.setSelected(false);
+            inMode.setSelected(true);
+            sMode.setSelected(false);
+            insert.setDisable(false);
+            search.setDisable(true);
+            delete.setDisable(true);
+            update.setDisable(true);
+        });
+
+        dMode.setOnAction((ActionEvent e) -> {
+            upMode.setSelected(false);
+            dMode.setSelected(true);
+            inMode.setSelected(false);
+            sMode.setSelected(false);
+            delete.setDisable(false);
+            search.setDisable(true);
+            update.setDisable(true);
+            insert.setDisable(true);
+        });
+
+        idClear.setOnAction((ActionEvent e) -> {
+            identityClear();
+        });
+
+        pClear.setOnAction((ActionEvent e) -> {
+            patientClear();
+        });
+
+        inClear.setOnAction((ActionEvent e) -> {
+            insuranceClear();
+        });
+
+        insuranceCheck.setOnAction((ActionEvent e) -> {
+            insuranceID.setDisable(!insuranceCheck.isSelected());
+            payCoverage.setDisable(!insuranceCheck.isSelected());
+            expiryDate.setDisable(!insuranceCheck.isSelected());
+        });
+
+        registrationButton.setOnAction((ActionEvent e) -> {
+            try {
+                insuranceCheck.getScene().getWindow().hide();
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/registration.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Hospital Database");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
     }
+
     private void identityClear() {
         idNum.clear();
         fullName.clear();
@@ -337,5 +421,15 @@ public class PatientsController implements Initializable {
             dateOfBirth.setDefaultColor(Paint.valueOf("black"));
         }
         return true;
+    }
+
+    private void disablingItems() {
+        insuranceID.setDisable(true);
+        payCoverage.setDisable(true);
+        expiryDate.setDisable(true);
+        search.setDisable(true);
+        delete.setDisable(true);
+        update.setDisable(true);
+        insert.setDisable(true);
     }
 }

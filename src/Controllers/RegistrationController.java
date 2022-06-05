@@ -2,22 +2,25 @@ package Controllers;
 //payment coverage error in float and text
 //must handle all dates and validate them
 //if dead he can't do anything
+
 import DatabaseConnector.DBConnector;
 import Hospital.Identity;
 import Hospital.Insurance;
 import Hospital.Patient;
 import com.jfoenix.controls.*;
+import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.SelectionModel;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -26,9 +29,12 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -50,9 +56,6 @@ public class RegistrationController implements Initializable {
 
     @FXML
     private JFXTextField address;
-
-    @FXML
-    private JFXTextField phoneNumber;
 
     @FXML
     private JFXComboBox<String> bloodType;
@@ -150,6 +153,12 @@ public class RegistrationController implements Initializable {
     @FXML
     private VBox departBOX;
 
+    @FXML
+    private JFXButton addPhoneNumbers;
+
+    @FXML
+    private Button patientButton;
+
     private ArrayList<String> genderList;
     private ArrayList<String> bloodList;
     private ArrayList<String> emergencyStatList;
@@ -160,6 +169,7 @@ public class RegistrationController implements Initializable {
     private ArrayList<String> doctorList;
     private ArrayList<String> testList;
     private ArrayList<String> nurseList;
+    private static ArrayList<String> phoneNumbers;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -212,6 +222,8 @@ public class RegistrationController implements Initializable {
         });
 
         visitReason.setOnAction((ActionEvent e) -> {
+            testClear();
+            surgeryClear();
             if (visitReason.getSelectionModel().isSelected(0)) {
                 disableSurgery(false);
                 disableTest(true);
@@ -230,7 +242,7 @@ public class RegistrationController implements Initializable {
             testValidation();
             patientValidation();
             insuranceValidation();
-            if (identityValidation() && departmentValidation() && patientValidation()){
+            if (identityValidation() && departmentValidation() && patientValidation()) {
                 datesValidation();
                 try {
                     Patient p = new Patient();
@@ -252,7 +264,7 @@ public class RegistrationController implements Initializable {
 
                     p = new Patient(visitReason.getValue(), emergencyStatus.getValue(), Integer.parseInt(lengthOfStay.getText()), new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00"),
                             Integer.parseInt(idNum.getText()));
-                    if (leaveDate.getValue() != null){
+                    if (leaveDate.getValue() != null) {
                         p.setLeaveDateAndTime(
                                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00")
                         );
@@ -294,24 +306,54 @@ public class RegistrationController implements Initializable {
         tClear.setOnAction((ActionEvent e) -> {
             testClear();
         });
+
+        addPhoneNumbers.setOnAction((ActionEvent e) -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/phoneNumbers.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
+        patientButton.setOnAction((ActionEvent e) -> {
+            try {
+                addPhoneNumbers.getScene().getWindow().hide();
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/patients.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Hospital Database");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
     }
 
     private void identityClear() {
-        idNum.clear();
-        fullName.clear();
-        dateOfBirth.setValue(null);
-        address.clear();
-        phoneNumber.clear();
-        gender.setValue(null);
-        bloodType.setValue(null);
-        dateOfBirth.setPromptText("");
-        dateOfBirth.setDefaultColor(Paint.valueOf("black"));
-        bloodType.setUnFocusColor(Paint.valueOf("black"));
-        gender.setUnFocusColor(Paint.valueOf("black"));
-        address.setUnFocusColor(Paint.valueOf("black"));
-        fullName.setUnFocusColor(Paint.valueOf("black"));
-        phoneNumber.setUnFocusColor(Paint.valueOf("black"));
-        idNum.setUnFocusColor(Paint.valueOf("black"));
+        try {
+            idNum.clear();
+            fullName.clear();
+            dateOfBirth.setValue(null);
+            address.clear();
+            gender.setValue(null);
+            bloodType.setValue(null);
+            dateOfBirth.setPromptText("");
+            dateOfBirth.setDefaultColor(Paint.valueOf("black"));
+            bloodType.setUnFocusColor(Paint.valueOf("black"));
+            gender.setUnFocusColor(Paint.valueOf("black"));
+            address.setUnFocusColor(Paint.valueOf("black"));
+            fullName.setUnFocusColor(Paint.valueOf("black"));
+            idNum.setUnFocusColor(Paint.valueOf("black"));
+            addPhoneNumbers.setStyle("-fx-background-color: #3b5998");
+        } catch (Exception e) {
+            System.out.println("");
+        }
     }
 
     private void insuranceClear() {
@@ -529,12 +571,13 @@ public class RegistrationController implements Initializable {
         } else {
             idNum.setUnFocusColor(Paint.valueOf("black"));
         }
-        if (phoneNumber.getText().length() != 10 || !Pattern.matches("05[2-9][0-9]{7}", phoneNumber.getText())) {
-            phoneNumber.setUnFocusColor(Paint.valueOf("RED"));
+        if (phoneNumbers.isEmpty()){
+            addPhoneNumbers.setStyle("-fx-background-color: #ff0000");
             flag = false;
-        } else {
-            phoneNumber.setUnFocusColor(Paint.valueOf("black"));
+        }else{
+            addPhoneNumbers.setStyle("-fx-background-color: #3b5998");
         }
+
         if (!Pattern.matches("[A-Za-z-']+", fullName.getText())) {
             fullName.setUnFocusColor(Paint.valueOf("RED"));
             flag = false;
@@ -569,53 +612,53 @@ public class RegistrationController implements Initializable {
         return flag;
     }
 
-    private void datesValidation(){
+    private void datesValidation() {
         try {
-                Date joinDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue().toString() + " " + joinTime.getValue().toString() + ":00");
-                Date leaveDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue().toString() + " " + leaveTime.getValue().toString() + ":00");
-                Date dob = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth.getValue().toString());
-                if (insuranceCheck.isSelected()) {
-                    Date inExpiry = new SimpleDateFormat("yyyy-MM-dd").parse(expiryDate.getValue().toString());
-                    if (inExpiry.compareTo(joinDT) < 0){
-                        expiryDate.setDefaultColor(Paint.valueOf("red"));
-                    }else{
-                        expiryDate.setDefaultColor(Paint.valueOf("black"));
-                    }
+            Date joinDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue().toString() + " " + joinTime.getValue().toString() + ":00");
+            Date leaveDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue().toString() + " " + leaveTime.getValue().toString() + ":00");
+            Date dob = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth.getValue().toString());
+            if (insuranceCheck.isSelected()) {
+                Date inExpiry = new SimpleDateFormat("yyyy-MM-dd").parse(expiryDate.getValue().toString());
+                if (inExpiry.compareTo(joinDT) < 0) {
+                    expiryDate.setDefaultColor(Paint.valueOf("red"));
+                } else {
+                    expiryDate.setDefaultColor(Paint.valueOf("black"));
                 }
-                if (!surgeryName.isDisabled()) {
-                    Date sDate = new SimpleDateFormat("yyyy-MM-dd").parse(surgeryDate.getValue().toString());
-                    if (sDate.compareTo(joinDT) < 0 || sDate.compareTo(leaveDT) >= 0){
-                        surgeryDate.setDefaultColor(Paint.valueOf("red"));
-                    }else{
-                        surgeryDate.setDefaultColor(Paint.valueOf("black"));
-                    }
-                }
-                if (!testName.isDisabled()) {
-                    Date tDate = new SimpleDateFormat("yyyy-MM-dd").parse(testDate.getValue().toString());
-                    if (tDate.compareTo(joinDT) < 0 || tDate.compareTo(leaveDT) >= 0){
-                        testDate.setDefaultColor(Paint.valueOf("red"));
-                    }else{
-                        testDate.setDefaultColor(Paint.valueOf("black"));
-                    }
-                }
-
-                if (dob.compareTo(joinDT) <= 0){
-                    joinDate.setDefaultColor(Paint.valueOf("red"));
-                    joinTime.setDefaultColor(Paint.valueOf("red"));
-                }else{
-                    joinDate.setDefaultColor(Paint.valueOf("black"));
-                    joinTime.setDefaultColor(Paint.valueOf("black"));
-                }
-                if (leaveDT.compareTo(joinDT) < 0){
-                    leaveDate.setDefaultColor(Paint.valueOf("red"));
-                    leaveTime.setDefaultColor(Paint.valueOf("red"));
-                }else {
-                    leaveDate.setDefaultColor(Paint.valueOf("black"));
-                    leaveTime.setDefaultColor(Paint.valueOf("black"));
-                }
-            } catch (ParseException parseException) {
-                parseException.printStackTrace();
             }
+            if (!surgeryName.isDisabled()) {
+                Date sDate = new SimpleDateFormat("yyyy-MM-dd").parse(surgeryDate.getValue().toString());
+                if (sDate.compareTo(joinDT) < 0 || sDate.compareTo(leaveDT) >= 0) {
+                    surgeryDate.setDefaultColor(Paint.valueOf("red"));
+                } else {
+                    surgeryDate.setDefaultColor(Paint.valueOf("black"));
+                }
+            }
+            if (!testName.isDisabled()) {
+                Date tDate = new SimpleDateFormat("yyyy-MM-dd").parse(testDate.getValue().toString());
+                if (tDate.compareTo(joinDT) < 0 || tDate.compareTo(leaveDT) >= 0) {
+                    testDate.setDefaultColor(Paint.valueOf("red"));
+                } else {
+                    testDate.setDefaultColor(Paint.valueOf("black"));
+                }
+            }
+
+            if (dob.compareTo(joinDT) <= 0) {
+                joinDate.setDefaultColor(Paint.valueOf("red"));
+                joinTime.setDefaultColor(Paint.valueOf("red"));
+            } else {
+                joinDate.setDefaultColor(Paint.valueOf("black"));
+                joinTime.setDefaultColor(Paint.valueOf("black"));
+            }
+            if (leaveDT.compareTo(joinDT) < 0) {
+                leaveDate.setDefaultColor(Paint.valueOf("red"));
+                leaveTime.setDefaultColor(Paint.valueOf("red"));
+            } else {
+                leaveDate.setDefaultColor(Paint.valueOf("black"));
+                leaveTime.setDefaultColor(Paint.valueOf("black"));
+            }
+        } catch (ParseException parseException) {
+            parseException.printStackTrace();
+        }
     }
 
     private void disablingItems() {
@@ -669,6 +712,7 @@ public class RegistrationController implements Initializable {
         departmentList = new ArrayList<>();
         testList = new ArrayList<>();
         surgeryList = new ArrayList<>();
+        phoneNumbers = new ArrayList<>();
     }
 
     private void getData() throws SQLException, ClassNotFoundException, ParseException {
@@ -719,5 +763,13 @@ public class RegistrationController implements Initializable {
         stmt.close();
 
         DBConnector.getCon().close();
+    }
+
+    public ArrayList<String> getPhoneNumbers(){
+        return phoneNumbers;
+    }
+
+    public static void setPhoneNumbers(ArrayList<String> pNums) {
+        RegistrationController.phoneNumbers = pNums;
     }
 }

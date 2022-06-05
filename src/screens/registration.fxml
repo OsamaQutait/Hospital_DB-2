@@ -69,7 +69,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="174.0" style="-fx-background-color: #3b5998;" text="Patients" textFill="#dfe3ee" GridPane.rowIndex="2">
+                              <Button fx:id="patientButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="174.0" style="-fx-background-color: #3b5998;" text="Patients" textFill="#dfe3ee" GridPane.rowIndex="2">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -130,8 +130,8 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="17.0" minHeight="0.0" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                              <children>
                                                 <Label prefHeight="40.0" prefWidth="132.0" text="Identity number" textFill="#3b5998">
@@ -164,15 +164,9 @@
                                                       <Font size="16.0" />
                                                    </font>
                                                 </Label>
-                                                <Label prefHeight="32.0" prefWidth="132.0" text="Phone number" textFill="#3b5998" GridPane.rowIndex="6">
-                                                   <font>
-                                                      <Font size="16.0" />
-                                                   </font>
-                                                </Label>
                                                 <JFXTextField fx:id="idNum" unFocusColor="#3b5998" GridPane.rowIndex="1" />
                                                 <JFXTextField fx:id="fullName" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <JFXTextField fx:id="address" unFocusColor="#3b5998" GridPane.rowIndex="5" />
-                                                <JFXTextField fx:id="phoneNumber" unFocusColor="#3b5998" GridPane.rowIndex="7" />
                                                 <JFXComboBox fx:id="bloodType" prefHeight="25.0" prefWidth="137.0" promptText="Select blood type" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                 <JFXComboBox fx:id="gender" prefHeight="25.0" prefWidth="143.0" promptText="Select gender" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                 <JFXDatePicker fx:id="dateOfBirth" defaultColor="#3b5998" GridPane.rowIndex="3" />
@@ -180,6 +174,14 @@
                                                    <font>
                                                       <Font size="16.0" />
                                                    </font>
+                                                </JFXButton>
+                                                <JFXButton fx:id="addPhoneNumbers" prefHeight="17.0" prefWidth="140.0" style="-fx-background-color: #3b5998;" text="Add phones" textFill="#dfe3ee" GridPane.rowIndex="7">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                   <GridPane.margin>
+                                                      <Insets />
+                                                   </GridPane.margin>
                                                 </JFXButton>
                                              </children>
                                           </GridPane>
