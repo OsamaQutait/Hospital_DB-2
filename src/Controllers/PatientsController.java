@@ -228,6 +228,8 @@ public class PatientsController implements Initializable {
                 ioException.printStackTrace();
             }
         });
+
+
     }
 
     private void identityClear() {

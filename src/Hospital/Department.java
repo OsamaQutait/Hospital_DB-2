@@ -7,7 +7,9 @@ public class Department {
 	private String departmentName;
 	private int departmentFloor;
 	private int numberOfRooms;
-	
+
+	public Department(){}
+
 	public Department(int departmentID,String departmentName,int departmentFloor, int numberOfRooms){
 		this.departmentID=departmentID;
 		this.departmentName=departmentName;

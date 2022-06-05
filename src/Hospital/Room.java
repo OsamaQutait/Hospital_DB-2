@@ -4,19 +4,19 @@ package Hospital;
 public class Room {
 	
 	private String roomID;
+	private String roomDescription;
 	private int AvailableBeds;
 	private int totalNumberOfBeds;
-	private String roomDescription;
 	private float AccommodationCost;
 	private int departmentID;
-	
-	public Room(String roomID,int AvailableBeds,int totalNumberOfBeds,String roomDescription,float AccommodationCost,int departmentID){
-		this.roomID=roomID;
-		this.AvailableBeds=AvailableBeds;
-		this.totalNumberOfBeds=totalNumberOfBeds;
-		this.roomDescription=roomDescription;
-		this.AccommodationCost=AccommodationCost;
-		this.departmentID=departmentID;
+
+	public Room(String roomID, String roomDescription, int availableBeds, int totalNumberOfBeds, float accommodationCost, int departmentID) {
+		this.roomID = roomID;
+		this.roomDescription = roomDescription;
+		AvailableBeds = availableBeds;
+		this.totalNumberOfBeds = totalNumberOfBeds;
+		AccommodationCost = accommodationCost;
+		this.departmentID = departmentID;
 	}
 
 	public String getRoomID() {

@@ -7,8 +7,8 @@ import java.util.Date;
 public class Identity {
     private int identityNumber;
     private String fullName;
-    private Date dateOfBirth;
     private String gender;
+    private Date dateOfBirth;
     private String livingAddress;
     private String bloodType;
     private int[] phoneNumber;
@@ -17,7 +17,7 @@ public class Identity {
 
     }
 
-    public Identity(int identityNumber, String fullName, Date dateOfBirth, String gender, String livingAddress, String bloodType, int[] phoneNumber) {
+    public Identity(int identityNumber, String fullName, String gender, Date dateOfBirth, String livingAddress, String bloodType, int[] phoneNumber) {
         this.identityNumber = identityNumber;
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
