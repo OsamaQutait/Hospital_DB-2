@@ -5,16 +5,16 @@ public class Department {
 
 	private int departmentID;
 	private String departmentName;
-	private int departmentFloor;
 	private int numberOfRooms;
+	private int departmentFloor;
 
 	public Department(){}
 
-	public Department(int departmentID,String departmentName,int departmentFloor, int numberOfRooms){
-		this.departmentID=departmentID;
-		this.departmentName=departmentName;
-		this.departmentFloor=departmentFloor;
-		this.numberOfRooms=numberOfRooms;
+	public Department(int departmentID, String departmentName, int numberOfRooms, int departmentFloor) {
+		this.departmentID = departmentID;
+		this.departmentName = departmentName;
+		this.numberOfRooms = numberOfRooms;
+		this.departmentFloor = departmentFloor;
 	}
 
 	public int getDepartmentID() {

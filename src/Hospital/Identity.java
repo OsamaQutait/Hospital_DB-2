@@ -1,5 +1,7 @@
 package Hospital;
 
+import javafx.scene.control.SingleSelectionModel;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
@@ -9,22 +11,20 @@ public class Identity {
     private String fullName;
     private String gender;
     private Date dateOfBirth;
-    private String livingAddress;
     private String bloodType;
-    private int[] phoneNumber;
+    private String livingAddress;
 
     public Identity(){
 
     }
 
-    public Identity(int identityNumber, String fullName, String gender, Date dateOfBirth, String livingAddress, String bloodType, int[] phoneNumber) {
+    public Identity(int identityNumber, String fullName, String gender, Date dateOfBirth, String bloodType, String livingAddress) {
         this.identityNumber = identityNumber;
         this.fullName = fullName;
-        this.dateOfBirth = dateOfBirth;
         this.gender = gender;
-        this.livingAddress = livingAddress;
+        this.dateOfBirth = dateOfBirth;
         this.bloodType = bloodType;
-        this.phoneNumber = phoneNumber;
+        this.livingAddress = livingAddress;
     }
 
     public int getIdentityNumber() {
@@ -78,13 +78,5 @@ public class Identity {
 
     public void setBloodType(String bloodType) {
         this.bloodType = bloodType;
-    }
-
-    public int[] getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(int[] phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 }

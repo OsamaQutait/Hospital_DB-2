@@ -6,6 +6,8 @@ public class Surgeries {
     private String surgery_name;
     private float surgery_price;
 
+    public Surgeries(){}
+
     public Surgeries(int surgery_id, String surgery_name, float surgery_price) {
         this.surgery_price = surgery_price;
         this.surgery_name = surgery_name;

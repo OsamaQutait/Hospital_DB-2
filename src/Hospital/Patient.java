@@ -13,13 +13,13 @@ public class Patient {
     private Date joinDateAndTime;
     private Date leaveDateAndTime;
     private int identityNumber;
-    private int roomID;
+    private String roomID;
 
     public Patient(){
 
     }
 
-    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, Date leaveDateAndTime, int identityNumber, int roomID) {
+    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, Date leaveDateAndTime, int identityNumber, String roomID) {
         this.visitReason = visitReason;
         this.emergencyStatus = emergencyStatus;
         this.lengthOfStay = lengthOfStay;
@@ -28,7 +28,7 @@ public class Patient {
         this.identityNumber = identityNumber;
         this.roomID = roomID;
     }
-    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, int identityNumber, int roomID) {
+    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, int identityNumber, String roomID) {
         this.visitReason = visitReason;
         this.emergencyStatus = emergencyStatus;
         this.lengthOfStay = lengthOfStay;
@@ -95,11 +95,11 @@ public class Patient {
         this.identityNumber = identityNumber;
     }
 
-    public int getRoomID() {
+    public String getRoomID() {
         return roomID;
     }
 
-    public void setRoomID(int roomID) {
+    public void setRoomID(String roomID) {
         this.roomID = roomID;
     }
 

@@ -6,6 +6,8 @@ public class Tests {
     private float testPrice;
     private int labID;
 
+    public Tests(){}
+
     public Tests(int testID, String testName, float testPrice, int labID) {
         this.testID = testID;
         this.testName = testName;

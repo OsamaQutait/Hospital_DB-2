@@ -348,8 +348,8 @@
                                                       <Font size="16.0" />
                                                    </font>
                                                 </Label>
-                                                <JFXComboBox fx:id="departmentName" prefHeight="25.0" prefWidth="143.0" promptText="Select visit reason" unFocusColor="#3b5998" GridPane.rowIndex="1" />
-                                                <JFXComboBox fx:id="roomName" prefHeight="25.0" prefWidth="143.0" promptText="Select visit reason" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <JFXComboBox fx:id="departmentName" prefHeight="25.0" prefWidth="143.0" promptText="Select department" unFocusColor="#3b5998" GridPane.rowIndex="1" />
+                                                <JFXComboBox fx:id="roomName" prefHeight="25.0" prefWidth="143.0" promptText="Select room" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                              </children>
                                           </GridPane>
                                           <JFXButton fx:id="dClear" prefHeight="37.0" prefWidth="306.0" text="Clear" textFill="#3b5998">
@@ -391,14 +391,24 @@
                                                       <Font size="16.0" />
                                                    </font>
                                                 </Label>
-                                                <JFXComboBox fx:id="surgeryName" prefHeight="25.0" prefWidth="143.0" promptText="Select visit reason" unFocusColor="#3b5998" GridPane.rowIndex="1" />
-                                                <JFXComboBox fx:id="doctor" prefHeight="25.0" prefWidth="143.0" promptText="Select visit reason" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <JFXComboBox fx:id="surgeryName" prefHeight="25.0" prefWidth="143.0" promptText="Select surgery" unFocusColor="#3b5998" GridPane.rowIndex="1" />
+                                                <JFXComboBox fx:id="doctor" prefHeight="25.0" prefWidth="143.0" promptText="Select doctor" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <Label prefHeight="40.0" prefWidth="132.0" text="Surgery date" textFill="#3b5998" GridPane.rowIndex="2">
                                                    <font>
                                                       <Font size="16.0" />
                                                    </font>
                                                 </Label>
                                                 <JFXDatePicker fx:id="surgeryDate" defaultColor="#3b5998" GridPane.rowIndex="3" />
+                                                <Label prefHeight="30.0" prefWidth="135.0" text="Doctor's rating" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label fx:id="ratingLabel" prefHeight="30.0" prefWidth="135.0" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                   <font>
+                                                      <Font size="16.0" />
+                                                   </font>
+                                                </Label>
                                              </children>
                                           </GridPane>
                                           <JFXButton fx:id="addSurgery" prefHeight="37.0" prefWidth="306.0" text="Add another surgery" textFill="#3b5998">
@@ -445,8 +455,8 @@
                                                       <Font size="16.0" />
                                                    </font>
                                                 </Label>
-                                                <JFXComboBox fx:id="testName" prefHeight="25.0" prefWidth="143.0" promptText="Select visit reason" unFocusColor="#3b5998" GridPane.rowIndex="1" />
-                                                <JFXComboBox fx:id="nurse" prefHeight="25.0" prefWidth="143.0" promptText="Select visit reason" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <JFXComboBox fx:id="testName" prefHeight="25.0" prefWidth="143.0" promptText="Select test" unFocusColor="#3b5998" GridPane.rowIndex="1" />
+                                                <JFXComboBox fx:id="nurse" prefHeight="25.0" prefWidth="143.0" promptText="Select nurse" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <Label prefHeight="40.0" prefWidth="132.0" text="Test date" textFill="#3b5998" GridPane.rowIndex="2">
                                                    <font>
                                                       <Font size="16.0" />
