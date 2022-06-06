@@ -5,6 +5,10 @@ package Controllers;
 //daily update on the length of stay
 //daily update on payment according to the length of stay
 //must check of issued date if it's null or not, and other dates
+//dates nearly done
+//if leave date is set, find invoice
+//decrease available beds
+
 
 import DatabaseConnector.DBConnector;
 import Hospital.*;
@@ -260,7 +264,6 @@ public class RegistrationController implements Initializable {
                 visitReason.setDisable(false);
                 lengthOfStay.setDisable(false);
                 departmentName.setDisable(false);
-                roomName.setDisable(false);
             }
         });
         visitReason.setOnAction((ActionEvent e) -> {
@@ -387,20 +390,28 @@ public class RegistrationController implements Initializable {
             }
         });
         register.setOnAction((ActionEvent e) -> {
-            identityValidation();
+            /*identityValidation();
             departmentValidation();
             surgeryValidation();
             testValidation();
             patientValidation();
-            insuranceValidation();
-            if (identityValidation() && departmentValidation() && patientValidation()) {
+            insuranceValidation();*/
+
+            if (leaveTime.getValue() == null || leaveDate.getValue() == null){
+                leaveDate.setValue(null);
+                leaveTime.setValue(null);
+            }
+            System.out.println(datesValidation());
+
+            /*if (identityValidation() && departmentValidation() && patientValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1) && (surgeryValidation() == 1 || surgeryValidation() == -1) && (testValidation() == 1 || surgeryValidation() == -1)) {
                 try {
                     if (leaveTime.getValue() == null || leaveDate.getValue() == null){
                         leaveDate.setValue(null);
                         leaveTime.setValue(null);
                     }
-                    datesValidation();
-                    setData();
+                    if (datesValidation()) {
+                        setData();
+                    }
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 } catch (ClassNotFoundException classNotFoundException) {
@@ -408,7 +419,7 @@ public class RegistrationController implements Initializable {
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
                 }
-            }
+            }*/
         });
     }
 
@@ -684,56 +695,110 @@ public class RegistrationController implements Initializable {
     }
 
     //must check if all dates are before current date (not test and surgery)
-    private void datesValidation() {
+    private boolean datesValidation() {
         try {
+            boolean flag = true;
             Date joinDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue().toString() + " " + joinTime.getValue().toString() + ":00");
             Date dob = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth.getValue().toString());
+            Date currentDate = new Date();
             Date leaveDT = null;
             if (leaveTime.getValue() != null && leaveDate.getValue() != null){
                 leaveDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue().toString() + " " + leaveTime.getValue().toString() + ":00");
-            }else
+            }
+
+            if (dob.compareTo(leaveDT) > 0){
+                dateOfBirth.setDefaultColor(Paint.valueOf("red"));
+                dateOfBirth.setValue(null);
+                dateOfBirth.setPromptText("ERROR");
+                flag = false;
+            }else{
+                dateOfBirth.setDefaultColor(Paint.valueOf("black"));
+            }
+
+            if (leaveTime.getValue() != null && leaveDate.getValue() != null && dob.compareTo(leaveDT) > 0) {
+                leaveDate.setDefaultColor(Paint.valueOf("red"));
+                leaveTime.setDefaultColor(Paint.valueOf("red"));
+                leaveTime.setValue(null);
+                leaveDate.setValue(null);
+                leaveTime.setPromptText("ERROR");
+                leaveDate.setPromptText("ERROR");
+                flag = false;
+            } else {
+                leaveDate.setDefaultColor(Paint.valueOf("black"));
+                leaveTime.setDefaultColor(Paint.valueOf("black"));
+            }
+
             if (insuranceCheck.isSelected()) {
                 Date inExpiry = new SimpleDateFormat("yyyy-MM-dd").parse(expiryDate.getValue().toString());
-                if (inExpiry.compareTo(joinDT) < 0) {
+                if (inExpiry.compareTo(joinDT) < 0 || currentDate.compareTo(inExpiry) > 0) {
                     expiryDate.setDefaultColor(Paint.valueOf("red"));
+                    expiryDate.setValue(null);
+                    expiryDate.setPromptText("ERROR");
+                    flag = false;
                 } else {
                     expiryDate.setDefaultColor(Paint.valueOf("black"));
                 }
             }
-            if (!surgeryName.isDisabled() && leaveTime.getValue() != null && leaveDate.getValue() != null) {
+            System.out.println("1 " + flag);
+
+            if (!surgeryName.isDisabled()) {
                 Date sDate = new SimpleDateFormat("yyyy-MM-dd").parse(surgeryDate.getValue().toString());
-                if (sDate.compareTo(joinDT) < 0 || sDate.compareTo(leaveDT) >= 0) {
+                if (sDate.compareTo(joinDT) < 0 || (leaveTime.getValue() != null && leaveDate.getValue() != null && sDate.compareTo(leaveDT) >= 0) || dob.compareTo(sDate) > 0) {
                     surgeryDate.setDefaultColor(Paint.valueOf("red"));
+                    surgeryDate.setValue(null);
+                    surgeryDate.setPromptText("ERROR");
+                    flag = false;
                 } else {
                     surgeryDate.setDefaultColor(Paint.valueOf("black"));
                 }
             }
-            if (!testName.isDisabled() && leaveTime.getValue() != null && leaveDate.getValue() != null) {
+
+            System.out.println("2 " + flag);
+
+            if (!testName.isDisabled()) {
                 Date tDate = new SimpleDateFormat("yyyy-MM-dd").parse(testDate.getValue().toString());
-                if (tDate.compareTo(joinDT) < 0 || tDate.compareTo(leaveDT) >= 0) {
+                if (tDate.compareTo(joinDT) < 0 || (leaveTime.getValue() != null && leaveDate.getValue() != null && tDate.compareTo(leaveDT) >= 0) || dob.compareTo(tDate) > 0) {
                     testDate.setDefaultColor(Paint.valueOf("red"));
+                    testDate.setValue(null);
+                    testDate.setPromptText("ERROR");
+                    flag = false;
                 } else {
                     testDate.setDefaultColor(Paint.valueOf("black"));
                 }
             }
 
-            if (dob.compareTo(joinDT) <= 0) {
+
+            System.out.println("3 " + flag);
+            System.out.println(dob.compareTo(joinDT));
+            if (dob.compareTo(joinDT) > 0) {
                 joinDate.setDefaultColor(Paint.valueOf("red"));
                 joinTime.setDefaultColor(Paint.valueOf("red"));
+                joinTime.setValue(null);
+                joinDate.setValue(null);
+                joinTime.setPromptText("ERROR");
+                joinDate.setPromptText("ERROR");
+                flag = false;
             } else {
                 joinDate.setDefaultColor(Paint.valueOf("black"));
                 joinTime.setDefaultColor(Paint.valueOf("black"));
-            }
-            if (leaveDate.getValue() != null && leaveTime.getValue() != null &&leaveDT.compareTo(joinDT) < 0) {
+            }System.out.println("4 " + flag);
+            if (leaveDate.getValue() != null && leaveTime.getValue() != null && leaveDT.compareTo(joinDT) < 0) {
                 leaveDate.setDefaultColor(Paint.valueOf("red"));
                 leaveTime.setDefaultColor(Paint.valueOf("red"));
+                leaveDate.setValue(null);
+                leaveTime.setValue(null);
+                leaveDate.setPromptText("ERROR");
+                leaveTime.setPromptText("ERROR");
+                flag = false;
             } else {
                 leaveDate.setDefaultColor(Paint.valueOf("black"));
                 leaveTime.setDefaultColor(Paint.valueOf("black"));
-            }
+            }System.out.println("5 " + flag);
+            return flag;
         } catch (ParseException parseException) {
             parseException.printStackTrace();
         }
+        return false;
     }
 
     private void disablingItems() {
@@ -880,7 +945,7 @@ public class RegistrationController implements Initializable {
         int testID = testsSQL.get(testName.getSelectionModel().getSelectedIndex()).getTestID();
         String SQL;
         DBConnector.connectDB();
-        SQL = "select ID.identity_number, ID.full_name, ID.gender, ID.date_of_birth, ID.blood_type, ID.living_address\n" +
+        SQL = "select distinct ID.identity_number, ID.full_name, ID.gender, ID.date_of_birth, ID.blood_type, ID.living_address\n" +
                 "from identity ID, medicalstaff MS, tests T, medicalstaff2tests2patient M2T2P\n" +
                 "where MS.staff_id = M2T2P.staff_id and ID.identity_number = MS.identity_number and T.test_id = " + testID + " and M2T2P.test_id = " + testID + ";";
         Statement stmt = DBConnector.getCon().createStatement();
@@ -941,7 +1006,7 @@ public class RegistrationController implements Initializable {
         int surgeryId = surgeriesSQL.get(surgeryName.getSelectionModel().getSelectedIndex()).getSurgery_id();
         String SQL;
         DBConnector.connectDB();
-        SQL = "select ID.identity_number, ID.full_name, ID.gender, ID.date_of_birth, ID.blood_type, ID.living_address\n" +
+        SQL = "select distinct ID.identity_number, ID.full_name, ID.gender, ID.date_of_birth, ID.blood_type, ID.living_address\n" +
                 "from identity ID, medicalstaff MS, surgeries S, medicalstaff2surgeries2patient M2S2P\n" +
                 "where MS.staff_id = M2S2P.staff_id and ID.identity_number = MS.identity_number and S.surgery_id = " + surgeryId + " and M2S2P.surgery_id = " + surgeryId + ";";
         Statement stmt = DBConnector.getCon().createStatement();
@@ -1004,7 +1069,7 @@ public class RegistrationController implements Initializable {
         MedicalStaff docObj = null;
         MedicalStaff2Surgeries2Patient M2S2P = null;
 
-        if (!surgeryName.isDisabled()){
+        if (!doctor.isDisabled()){
             surgery = getSurgery();
             docObj = getDoctor();
             M2S2P = new MedicalStaff2Surgeries2Patient(
@@ -1017,7 +1082,7 @@ public class RegistrationController implements Initializable {
         Tests test = null;
         MedicalStaff nurseObj = null;
         MedicalStaff2Tests2Patient M2T2P = null;
-        if (!testName.isDisabled()){
+        if (!nurse.isDisabled()){
             test = getTest();
             nurseObj = getNurse();
             M2T2P = new MedicalStaff2Tests2Patient(
@@ -1057,8 +1122,8 @@ public class RegistrationController implements Initializable {
             if (insuranceCheck.isSelected()){
                 DBConnector.ExecuteStatement("Insert into Insurance (insurance_id, payment_coverage, expire_date, identity_number) values("
                         +insurance.getInsuranceID()+", "
-                        +insurance.getPaymentCoverage()+", '"
-                        +insurance.getExpiryDateToString()+"', "
+                        +insurance.getPaymentCoverage()+", "
+                        +insurance.getExpiryDateToString()+", "
                         +insurance.getIdentityNumber()+ ");");
             }
 
