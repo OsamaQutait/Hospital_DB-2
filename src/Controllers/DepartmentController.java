@@ -22,6 +22,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
@@ -29,94 +30,115 @@ import javafx.stage.Stage;
 public class DepartmentController implements Initializable {
 
 	@FXML
-	private JFXTextField DepartmentID;
+    private Button RegistrationButton;
 
-	@FXML
-	private JFXTextField DepartmentName;
+    @FXML
+    private Button PatientsButton;
 
-	@FXML
-	private JFXComboBox<String> DepartmentFloor;
+    @FXML
+    private Button LabsButton;
 
-	@FXML
-	private JFXComboBox<String> MaxNoRooms;
+    @FXML
+    private Button SurgeriesButton;
 
-	@FXML
-	private JFXButton DepInsert;
+    @FXML
+    private Button PaymentButton;
 
-	@FXML
-	private JFXButton DepClear;
+    @FXML
+    private Button DashboardButton;
 
-	@FXML
-	private JFXTextField AccoCost;
+    @FXML
+    private JFXTextField DepartmentID;
 
-	@FXML
-	private JFXTextField RoomDescription;
+    @FXML
+    private JFXTextField DepartmentName;
 
-	@FXML
-	private JFXTextField RoomID;
+    @FXML
+    private JFXComboBox<String> DepartmentFloor;
 
-	@FXML
-	private JFXComboBox<String> NumOfBeds;
+    @FXML
+    private JFXComboBox<String> MaxNoRooms;
 
-	@FXML
-	private JFXButton RoomInsert;
+    @FXML
+    private JFXButton DepInsert;
 
-	@FXML
-	private JFXButton RoomClear;
+    @FXML
+    private JFXButton DepClear;
 
-	@FXML
-	private JFXComboBox<String> DelDepartID;
+    @FXML
+    private JFXTextField AccoCost;
 
-	@FXML
-	private JFXButton DelDepartDelete;
+    @FXML
+    private JFXTextField RoomDescription;
 
-	@FXML
-	private JFXButton DelDepartClear;
+    @FXML
+    private JFXTextField RoomID;
 
-	@FXML
-	private JFXComboBox<String> DelRoomID;
+    @FXML
+    private JFXComboBox<String> NumOfBeds;
 
-	@FXML
-	private JFXButton DelRoomDelete;
+    @FXML
+    private JFXComboBox<String> depatmentRoom;
 
-	@FXML
-	private JFXButton DelRoomClear;
+    @FXML
+    private JFXButton RoomInsert;
 
-	@FXML
-	private JFXComboBox<String> UpDepartID;
+    @FXML
+    private JFXButton RoomClear;
 
-	@FXML
-	private JFXTextField UpDepartName;
+    @FXML
+    private JFXComboBox<String> DelDepartID;
 
-	@FXML
-	private JFXComboBox<String> UpDepartNoRooms;
+    @FXML
+    private JFXButton DelDepartDelete;
 
-	@FXML
-	private JFXButton UpDepartUpdate;
+    @FXML
+    private JFXButton DelDepartClear;
 
-	@FXML
-	private JFXButton UpDepartClear;
+    @FXML
+    private JFXComboBox<String> DelRoomID;
 
-	@FXML
-	private JFXComboBox<String> UpRoomID;
+    @FXML
+    private JFXButton DelRoomDelete;
 
-	@FXML
-	private JFXTextField UpRoomDescription;
+    @FXML
+    private JFXButton DelRoomClear;
 
-	@FXML
-	private JFXTextField UpRoomAcco;
+    @FXML
+    private JFXButton ShowTablesButton;
 
-	@FXML
-	private JFXComboBox<String> UpRoomNoBeds;
+    @FXML
+    private JFXComboBox<String> UpDepartID;
 
-	@FXML
-	private JFXButton UpRoomUpdate;
+    @FXML
+    private JFXTextField UpDepartName;
 
-	@FXML
-	private JFXButton UpRoomClear;
+    @FXML
+    private JFXComboBox<String> UpDepartNoRooms;
 
-	@FXML
-	private JFXComboBox<String> depatmentRoom;
+    @FXML
+    private JFXButton UpDepartUpdate;
+
+    @FXML
+    private JFXButton UpDepartClear;
+
+    @FXML
+    private JFXComboBox<String> UpRoomID;
+
+    @FXML
+    private JFXTextField UpRoomDescription;
+
+    @FXML
+    private JFXTextField UpRoomAcco;
+
+    @FXML
+    private JFXComboBox<String> UpRoomNoBeds;
+
+    @FXML
+    private JFXButton UpRoomUpdate;
+
+    @FXML
+    private JFXButton UpRoomClear;
 
 	ArrayList<String> MaxRoomlist;
 	ArrayList<String> DepartmentFloorlist;
