@@ -984,126 +984,39 @@ public class RegistrationController implements Initializable {
                 Integer.parseInt(idNum.getText()),
                 roomName.getValue()
         );
-        Department department = new Department(
-
-        );
-        Surgeries surgery = new Surgeries();
-        Tests test = new Tests();
-        //if selected
+        //Department department = getDepartment();
+        Surgeries surgery = getSurgery();
+        Tests test = getTest();
         Insurance insurance = new Insurance();
 
-
-        String SQL;
-        DBConnector.connectDB();
-
-        SQL = "select distinct d.Department_id, d.Department_name, d.number_Of_Rooms, d.Department_floor\n" +
-                "from department d, room r\n" +
-                "where d.Department_id = r.Department_number and r.available_beds > 0;";
-        Statement stmt = DBConnector.getCon().createStatement();
-        ResultSet rs = stmt.executeQuery(SQL);
-
-        while (rs.next()) {
-            departmentsSQL.add(
-                    new Department(
-                            Integer.parseInt(rs.getString(1)),
-                            rs.getString(2),
-                            Integer.parseInt(rs.getString(3)),
-                            Integer.parseInt(rs.getString(4))
-                    )
-            );
-        }
-
-        SQL = "select distinct t.test_id, t.test_name, t.test_price, l.lab_id\n" +
-                "from tests t, medicalstaff2tests2patient m2t2p, medicalstaff ms, lab l\n" +
-                "where t.test_id = m2t2p.test_id and l.lab_id = t.lab_id and ms.staff_id = m2t2p.staff_id;";
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
-
-        while (rs.next()) {
-            testsSQL.add(
-                    new Tests(
-                            Integer.parseInt(rs.getString(1)),
-                            rs.getString(2),
-                            Integer.parseInt(rs.getString(3)),
-                            Integer.parseInt(rs.getString(4))
-                    )
-            );
-        }
-
-        SQL = "select distinct s.surgery_id, s.surgery_name, s.surgery_price\n" +
-                "from surgeries s, medicalstaff2surgeries2patient m2s2p, medicalstaff ms\n" +
-                "where s.surgery_id = m2s2p.surgery_id and ms.staff_id = m2s2p.staff_id" + ";";
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
-
-        while (rs.next()) {
-            surgeriesSQL.add(
-                    new Surgeries(
-                            Integer.parseInt(rs.getString(1)),
-                            rs.getString(2),
-                            Float.parseFloat(rs.getString(3))
-                    )
-            );
-        }
-
-        /*SQL = "select *\n" +
-                "from Identity;";
-
-        while (rs.next()) {
-            testingID.add(new Identity(
-                    Integer.parseInt(rs.getString(1)),
-                    rs.getString(2),
-                    new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(4)),
-                    rs.getString(3),
-                    rs.getString(5), rs.getString(6),
-                    new int[Integer.parseInt(rs.getString(7))]
-            ));
-        }*/
-
-        rs.close();
-        stmt.close();
-
-        DBConnector.getCon().close();
-
-        /*try {
+        try {
             DBConnector.connectDB();
-            DBConnector.ExecuteStatement("Insert into Patient (record_number, length_of_stay, join_date_time, leave_date_time) values(" +
-                    +p.getRecordNumber()+","
-                    +p.getLengthOfStay()+",'"
-                    + p.getJoinDateAndTimeToString() +"','"
-                    + p.getLeaveDateAndTimeToString()+"');");
-            System.out.println("Insert into Patient (record_number, length_of_stay, join_date_time, leave_date_time) values(" +
-                    +p.getRecordNumber()+","
-                    +p.getLengthOfStay()+",'"
-                    + p.getJoinDateAndTimeToString() +"','"
-                    + p.getLeaveDateAndTimeToString()+"');");
-            DBConnector.ExecuteStatement("Insert into Identity (identity_number, idby_record_number, full_name, gender, date_of_birth, blood_type,living_address, phone_number) values(" +
-                    +identity.getIdentityNumber()+","
-                    +identity.getIdbyRecordNumber()+",'"
-                    +identity.getFullName()+"','"
-                    +identity.getGender()+"','"
-                    +identity.getDateOfBirthToString()+"','"
-                    +identity.getBloodType()+"','"
-                    +identity.getLivingAddress()+"',"
-                    +identity.getPhoneNumber()+");");
-            System.out.println("Insert into Identity (identity_number, idby_record_number, full_name, gender, date_of_birth, blood_type,living_address, phone_number) values(" +
-                    +identity.getIdentityNumber()+","
-                    +identity.getIdbyRecordNumber()+",'"
-                    +identity.getFullName()+"','"
-                    +identity.getGender()+"','"
-                    +identity.getDateOfBirthToString()+"','"
-                    +identity.getBloodType()+"','"
-                    +identity.getLivingAddress()+"',"
-                    +identity.getPhoneNumber()+");");
+            DBConnector.ExecuteStatement("Insert into Identity (identity_number, full_name, gender, date_of_birth, blood_type, living_address) values(" +
+                    +id.getIdentityNumber()+",'"
+                    +id.getFullName()+"', '"
+                    +id.getGender()+"', '"
+                    +id.getDateOfBirthToString()+"', '"
+                    +id.getBloodType()+"', '"
+                    +id.getLivingAddress()+"');");
+
+            DBConnector.ExecuteStatement("Insert into Patient (visit_reason, emergency_status, stay_length_of_stay, stay_join_date_time, stay_leave_date_time, identity_number, Room_id) values('"
+                    +patient.getVisitReason()+"', '"
+                    +patient.getEmergencyStatus()+"', "
+                    +patient.getLengthOfStay()+", '"
+                    +patient.getJoinDateAndTimeToString()+"', '"
+                    +patient.getLeaveDateAndTimeToString()+"', "
+                    +patient.getIdentityNumber()+", '"
+                    +patient.getRoomID() + "');");
+
             DBConnector.getCon().close();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
-    private Department getDepartment() throws SQLException, ClassNotFoundException, ParseException{
+    /*private Department getDepartment() throws SQLException, ClassNotFoundException, ParseException{
         Department department = new Department();
         int depNum = departmentsSQL.get(departmentName.getSelectionModel().getSelectedIndex()).getDepartmentID();
         String roomNum = roomsSQL.get(roomName.getSelectionModel().getSelectedIndex()).getRoomID();
@@ -1129,5 +1042,64 @@ public class RegistrationController implements Initializable {
         stmt.close();
         DBConnector.getCon().close();
         return department;
+    }*/
+
+    private Surgeries getSurgery() throws SQLException, ClassNotFoundException, ParseException{
+        Surgeries surgery = new Surgeries();
+        int surgeryID = surgeriesSQL.get(surgeryName.getSelectionModel().getSelectedIndex()).getSurgery_id();
+        int docID = doctorsSQL.get(doctor.getSelectionModel().getSelectedIndex()).getIdentityNumber();
+        String SQL;
+        DBConnector.connectDB();
+        SQL = "select distinct s.surgery_id, s.surgery_name, s.surgery_price\n" +
+                "from surgeries s, medicalstaff2surgeries2patient m2s2p, medicalstaff ms, identity id\n" +
+                "where ms.staff_id = m2s2p.staff_id and s.surgery_id = " + surgeryID +
+                " and m2s2p.surgery_id = " + surgeryID +
+                " and id.identity_number = " + docID +
+                " and ms.identity_number = " + docID + ";";
+        Statement stmt = DBConnector.getCon().createStatement();
+        ResultSet rs = stmt.executeQuery(SQL);
+        stmt = DBConnector.getCon().createStatement();
+        rs = stmt.executeQuery(SQL);
+        while (rs.next()) {
+            surgery = new Surgeries(
+                    Integer.parseInt(rs.getString(1)),
+                    rs.getString(2),
+                    Float.parseFloat(rs.getString(3))
+            );
+        }
+        rs.close();
+        stmt.close();
+        DBConnector.getCon().close();
+        return surgery;
+    }
+
+    private Tests getTest() throws SQLException, ClassNotFoundException, ParseException{
+        Tests test = new Tests();
+        int testID = testsSQL.get(testName.getSelectionModel().getSelectedIndex()).getTestID();
+        int nurseID = nursesSQL.get(nurse.getSelectionModel().getSelectedIndex()).getIdentityNumber();
+        String SQL;
+        DBConnector.connectDB();
+        SQL = "select distinct t.test_id, t.test_name, t.test_price, l.lab_id\n" +
+                "from tests t, medicalstaff2tests2patient m2t2p, medicalstaff ms, lab l, identity ID\n" +
+                "wwhere l.lab_id = t.lab_id and ms.staff_id = m2t2p.staff_id and t.test_id = " + testID +
+                " and m2t2p.test_id = " + test +
+                " and ID.identity_number = = " + nurseID +
+                " and ms.identity_number = " + nurseID + ";";
+        Statement stmt = DBConnector.getCon().createStatement();
+        ResultSet rs = stmt.executeQuery(SQL);
+        stmt = DBConnector.getCon().createStatement();
+        rs = stmt.executeQuery(SQL);
+        while (rs.next()) {
+            test = new Tests(
+                    Integer.parseInt(rs.getString(1)),
+                    rs.getString(2),
+                    Float.parseFloat(rs.getString(3)),
+                    Integer.parseInt(rs.getString(4))
+            );
+        }
+        rs.close();
+        stmt.close();
+        DBConnector.getCon().close();
+        return test;
     }
 }
