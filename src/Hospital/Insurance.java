@@ -1,5 +1,6 @@
 package Hospital;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Insurance {
@@ -49,5 +50,13 @@ public class Insurance {
 
     public void setIdentityNumber(int identityNumber) {
         this.identityNumber = identityNumber;
+    }
+
+    public String getExpiryDateToString() {
+        if (this.expiryDate == null){
+            return "null";
+        }
+        String[] d = new SimpleDateFormat("dd-MM-yyyy").format(this.expiryDate).split("-");
+        return "'" + d[2] + "-" + d[1] + "-" + d[0] + "'";
     }
 }

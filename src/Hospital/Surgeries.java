@@ -1,5 +1,7 @@
 package Hospital;
 
+import java.text.SimpleDateFormat;
+
 public class Surgeries {
 
     private int surgery_id;
@@ -37,5 +39,4 @@ public class Surgeries {
     public void setSurgery_price(float surgery_price) {
         this.surgery_price = surgery_price;
     }
-
 }

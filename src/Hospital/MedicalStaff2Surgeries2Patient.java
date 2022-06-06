@@ -1,5 +1,6 @@
 package Hospital;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MedicalStaff2Surgeries2Patient {
@@ -47,5 +48,13 @@ public class MedicalStaff2Surgeries2Patient {
 
     public void setDate_of_surgery(Date date_of_surgery) {
         this.date_of_surgery = date_of_surgery;
+    }
+
+    public String getSurgeryDateToString() {
+        if (this.date_of_surgery == null){
+            return "null";
+        }
+        String[] d = new SimpleDateFormat("dd-MM-yyyy").format(this.date_of_surgery).split("-");
+        return "'" + d[2] + "-" + d[1] + "-" + d[0] + "'";
     }
 }

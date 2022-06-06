@@ -11,6 +11,13 @@ public class Payment {
 
     public Payment(){}
 
+    public Payment(Date issued_date, float invoice, float coverage, int identity_number) {
+        this.issued_date = issued_date;
+        this.invoice = invoice;
+        this.coverage = coverage;
+        this.identity_number = identity_number;
+    }
+
     public Payment(int payment_id, Date issued_date, float invoice, float coverage, int identity_number) {
         this.payment_id = payment_id;
         this.issued_date = issued_date;
@@ -29,6 +36,10 @@ public class Payment {
 
     public Date getIssued_date() {
         return issued_date;
+    }
+
+    public String getIssued_dateToString() {
+        return "null";
     }
 
     public void setIssued_date(Date issued_date) {
