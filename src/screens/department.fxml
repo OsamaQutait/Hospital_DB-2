@@ -61,12 +61,12 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="180.0" style="-fx-background-color: #3b5998;" text="Registration" textFill="#dfe3ee" GridPane.rowIndex="1">
+                              <Button fx:id="RegistrationButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="180.0" style="-fx-background-color: #3b5998;" text="Registration" textFill="#dfe3ee" GridPane.rowIndex="1">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="174.0" style="-fx-background-color: #3b5998;" text="Patients" textFill="#dfe3ee" GridPane.rowIndex="2">
+                              <Button fx:id="PatientsButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="174.0" style="-fx-background-color: #3b5998;" text="Patients" textFill="#dfe3ee" GridPane.rowIndex="2">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -76,22 +76,22 @@
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="162.0" style="-fx-background-color: #3b5998;" text="Labs" textFill="#dfe3ee" GridPane.rowIndex="4">
+                              <Button fx:id="LabsButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="162.0" style="-fx-background-color: #3b5998;" text="Labs" textFill="#dfe3ee" GridPane.rowIndex="4">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="165.0" style="-fx-background-color: #3b5998;" text="Surgeries" textFill="#dfe3ee" GridPane.rowIndex="5">
+                              <Button fx:id="SurgeriesButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="165.0" style="-fx-background-color: #3b5998;" text="Surgeries" textFill="#dfe3ee" GridPane.rowIndex="5">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Payment" textFill="#dfe3ee" GridPane.rowIndex="6">
+                              <Button fx:id="PaymentButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Payment" textFill="#dfe3ee" GridPane.rowIndex="6">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button layoutX="10.0" layoutY="23.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="198.0" style="-fx-background-color: #3b5998;" text="Dashboard" textFill="#dfe3ee">
+                              <Button fx:id="DashboardButton" layoutX="10.0" layoutY="23.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="198.0" style="-fx-background-color: #3b5998;" text="Dashboard" textFill="#dfe3ee">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -359,6 +359,14 @@
                                           <Insets />
                                        </opaqueInsets>
                                     </HBox>
+                                    <JFXButton fx:id="ShowTablesButton" prefHeight="73.0" prefWidth="334.0" style="-fx-background-color: #e4a4b4; -fx-border-color: black;" text="Show Tables">
+                                       <VBox.margin>
+                                          <Insets left="5.0" right="5.0" />
+                                       </VBox.margin>
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </JFXButton>
                                  </children>
                               </VBox>
                               <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" style="-fx-border-color: black;" GridPane.columnIndex="2">
