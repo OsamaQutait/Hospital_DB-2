@@ -5,9 +5,14 @@ package Controllers;
 //daily update on the length of stay
 //daily update on payment according to the length of stay
 //must check of issued date if it's null or not, and other dates
+
 //dates nearly done
 //if leave date is set, find invoice
+//if length of stay is set, leave date is also set
+//if length doesn't meet leave and join
 //decrease available beds
+//payment is zero if insurance is not active, its value if it's active (setData)
+//must add phone numbers
 
 
 import DatabaseConnector.DBConnector;
@@ -60,7 +65,7 @@ public class RegistrationController implements Initializable {
     private JFXTextField fullName;
 
     @FXML
-    private JFXTextField address;
+    private JFXComboBox<String> address;
 
     @FXML
     private JFXComboBox<String> bloodType;
@@ -177,6 +182,8 @@ public class RegistrationController implements Initializable {
     private ArrayList<String> doctorList;
     private ArrayList<String> testList;
     private ArrayList<String> nurseList;
+    private ArrayList<String> cityList;
+
 
     private ArrayList<Department> departmentsSQL;
     private ArrayList<Tests> testsSQL;
@@ -186,7 +193,7 @@ public class RegistrationController implements Initializable {
     private ArrayList<Room> roomsSQL;
 
 
-    private static ArrayList<String> phoneNumbers;
+    private static ArrayList<String> phoneNumbers = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -228,14 +235,14 @@ public class RegistrationController implements Initializable {
                     Surgeries::getSurgery_name
             ).collect(Collectors.toCollection(ArrayList::new));
 
-            ObservableList<String> visit = FXCollections.observableArrayList(visitReasonList);
-            visitReason.setItems(visit);
+            visitReason.setItems(FXCollections.observableArrayList(visitReasonList));
             gender.setItems(FXCollections.observableArrayList(genderList));
             bloodType.setItems(FXCollections.observableArrayList(bloodList));
             emergencyStatus.setItems(FXCollections.observableArrayList(emergencyStatList));
             departmentName.setItems(FXCollections.observableArrayList(departmentList));
             testName.setItems(FXCollections.observableArrayList(testList));
             surgeryName.setItems(FXCollections.observableArrayList(surgeryList));
+            address.setItems(FXCollections.observableArrayList(cityList));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -396,14 +403,7 @@ public class RegistrationController implements Initializable {
             testValidation();
             patientValidation();
             insuranceValidation();*/
-
-            if (leaveTime.getValue() == null || leaveDate.getValue() == null){
-                leaveDate.setValue(null);
-                leaveTime.setValue(null);
-            }
-            System.out.println(datesValidation());
-
-            /*if (identityValidation() && departmentValidation() && patientValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1) && (surgeryValidation() == 1 || surgeryValidation() == -1) && (testValidation() == 1 || surgeryValidation() == -1)) {
+            if (identityValidation() && patientValidation() && departmentValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1) && (surgeryValidation() == 1 || surgeryValidation() == -1) && (testValidation() == 1 || surgeryValidation() == -1)) {
                 try {
                     if (leaveTime.getValue() == null || leaveDate.getValue() == null){
                         leaveDate.setValue(null);
@@ -419,7 +419,7 @@ public class RegistrationController implements Initializable {
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
                 }
-            }*/
+            }
         });
     }
 
@@ -429,7 +429,7 @@ public class RegistrationController implements Initializable {
             idNum.clear();
             fullName.clear();
             dateOfBirth.setValue(null);
-            address.clear();
+            address.setValue(null);
             gender.setValue(null);
             bloodType.setValue(null);
             dateOfBirth.setPromptText("");
@@ -562,12 +562,6 @@ public class RegistrationController implements Initializable {
         } else {
             joinTime.setDefaultColor(Paint.valueOf("black"));
         }
-        if (!lengthOfStay.getText().isEmpty() && Integer.parseInt(lengthOfStay.getText()) < 0) {
-            lengthOfStay.setUnFocusColor(Paint.valueOf("RED"));
-            flag = true;
-        } else {
-            lengthOfStay.setUnFocusColor(Paint.valueOf("black"));
-        }
         return !flag;
     }
 
@@ -666,7 +660,7 @@ public class RegistrationController implements Initializable {
         } else {
             fullName.setUnFocusColor(Paint.valueOf("black"));
         }
-        if (!Pattern.matches("[A-Za-z-']+", address.getText())) {
+        if (address.getSelectionModel().isEmpty()) {
             address.setUnFocusColor(Paint.valueOf("RED"));
             flag = false;
         } else {
@@ -704,9 +698,25 @@ public class RegistrationController implements Initializable {
             Date leaveDT = null;
             if (leaveTime.getValue() != null && leaveDate.getValue() != null){
                 leaveDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue().toString() + " " + leaveTime.getValue().toString() + ":00");
+                if (leaveDate.getValue() != null && leaveTime.getValue() != null){
+                    Date d1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00");
+                    Date d2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00");
+                    float length = Math.abs((float) ((d1.getTime() - d2.getTime()) / (1000.0 * 60 * 60 * 24)));
+                    length = Math.round(length*10000)/10000.0f;
+                    lengthOfStay.setText(String.valueOf(length));
+                }
             }
 
-            if (dob.compareTo(leaveDT) > 0){
+            if (currentDate.compareTo(dob) <= 0) {
+                dateOfBirth.setDefaultColor(Paint.valueOf("red"));
+                dateOfBirth.setValue(null);
+                dateOfBirth.setPromptText("ERROR");
+                flag = false;
+            } else {
+                dateOfBirth.setDefaultColor(Paint.valueOf("black"));
+            }
+
+            if (leaveDT != null && dob.compareTo(leaveDT) > 0){
                 dateOfBirth.setDefaultColor(Paint.valueOf("red"));
                 dateOfBirth.setValue(null);
                 dateOfBirth.setPromptText("ERROR");
@@ -739,7 +749,6 @@ public class RegistrationController implements Initializable {
                     expiryDate.setDefaultColor(Paint.valueOf("black"));
                 }
             }
-            System.out.println("1 " + flag);
 
             if (!surgeryName.isDisabled()) {
                 Date sDate = new SimpleDateFormat("yyyy-MM-dd").parse(surgeryDate.getValue().toString());
@@ -753,8 +762,6 @@ public class RegistrationController implements Initializable {
                 }
             }
 
-            System.out.println("2 " + flag);
-
             if (!testName.isDisabled()) {
                 Date tDate = new SimpleDateFormat("yyyy-MM-dd").parse(testDate.getValue().toString());
                 if (tDate.compareTo(joinDT) < 0 || (leaveTime.getValue() != null && leaveDate.getValue() != null && tDate.compareTo(leaveDT) >= 0) || dob.compareTo(tDate) > 0) {
@@ -767,9 +774,6 @@ public class RegistrationController implements Initializable {
                 }
             }
 
-
-            System.out.println("3 " + flag);
-            System.out.println(dob.compareTo(joinDT));
             if (dob.compareTo(joinDT) > 0) {
                 joinDate.setDefaultColor(Paint.valueOf("red"));
                 joinTime.setDefaultColor(Paint.valueOf("red"));
@@ -781,7 +785,7 @@ public class RegistrationController implements Initializable {
             } else {
                 joinDate.setDefaultColor(Paint.valueOf("black"));
                 joinTime.setDefaultColor(Paint.valueOf("black"));
-            }System.out.println("4 " + flag);
+            }
             if (leaveDate.getValue() != null && leaveTime.getValue() != null && leaveDT.compareTo(joinDT) < 0) {
                 leaveDate.setDefaultColor(Paint.valueOf("red"));
                 leaveTime.setDefaultColor(Paint.valueOf("red"));
@@ -793,7 +797,7 @@ public class RegistrationController implements Initializable {
             } else {
                 leaveDate.setDefaultColor(Paint.valueOf("black"));
                 leaveTime.setDefaultColor(Paint.valueOf("black"));
-            }System.out.println("5 " + flag);
+            }
             return flag;
         } catch (ParseException parseException) {
             parseException.printStackTrace();
@@ -806,6 +810,7 @@ public class RegistrationController implements Initializable {
         payCoverage.setDisable(true);
         expiryDate.setDisable(true);
         roomName.setDisable(true);
+        lengthOfStay.setEditable(false);
         disableSurgery(true);
         disableTest(true);
     }
@@ -849,6 +854,18 @@ public class RegistrationController implements Initializable {
         visitReasonList.add("For surgery");
         visitReasonList.add("For test");
         visitReasonList.add("For surgery and test");
+
+        cityList = new ArrayList<>();
+        cityList.add("Salfit");
+        cityList.add("Nablus");
+        cityList.add("Ramallah");
+        cityList.add("Jenin");
+        cityList.add("Tulkarm");
+        cityList.add("Jerusalem");
+        cityList.add("Jericho");
+        cityList.add("Qalqilya");
+        cityList.add("Bethlehem");
+        cityList.add("Hebron");
 
         departmentList = new ArrayList<>();
         testList = new ArrayList<>();
@@ -915,21 +932,6 @@ public class RegistrationController implements Initializable {
                     )
             );
         }
-
-        /*SQL = "select *\n" +
-                "from Identity;";
-
-        while (rs.next()) {
-            testingID.add(new Identity(
-                    Integer.parseInt(rs.getString(1)),
-                    rs.getString(2),
-                    new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(4)),
-                    rs.getString(3),
-                    rs.getString(5), rs.getString(6),
-                    new int[Integer.parseInt(rs.getString(7))]
-            ));
-        }*/
-
         rs.close();
         stmt.close();
 
@@ -1041,18 +1043,33 @@ public class RegistrationController implements Initializable {
                 gender.getValue(),
                 new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(dateOfBirth.getValue())),
                 bloodType.getValue(),
-                address.getText()
+                address.getValue()
         );
         Patient patient = new Patient(
               visitReason.getValue(),
                 emergencyStatus.getValue(),
-                lengthOfStay.getText().isEmpty() ? 0 : Integer.parseInt(lengthOfStay.getText()),
+                lengthOfStay.getText().isEmpty() ? 0 : Float.parseFloat(lengthOfStay.getText()),
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00"),
                 leaveDate.getValue() != null ? new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00") : null,
                 Integer.parseInt(idNum.getText()),
                 roomName.getValue()
         );
-        Phone2ID phones = new Phone2ID();
+        ArrayList<Phone2ID> phones = new ArrayList<>();
+        String phones2Str = "";
+        if (phoneNumbers.size() == 1){
+            phones2Str = "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(0) + ");";
+        }else{
+            int i = 0;
+            for (i = 0; i < phoneNumbers.size() - 1; i++){
+                phones.add(new Phone2ID(id.getIdentityNumber(), Integer.parseInt(phoneNumbers.get(i))));
+                phones2Str = "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(0) + "),\n";
+            }
+            phones.add(new Phone2ID(id.getIdentityNumber(), Integer.parseInt(phoneNumbers.get(i))));
+            phones2Str = "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(0) + ");";
+        }
+
+
+
         Payment payment = new Payment(null, 0, payCoverage.getValue(), Integer.parseInt(idNum.getText()));
 
         Insurance insurance = null;
@@ -1118,6 +1135,8 @@ public class RegistrationController implements Initializable {
                     +payment.getInvoice()+", "
                     +payment.getCoverage()+", "
                     +payment.getIdentity_number()+ ");");
+
+            DBConnector.ExecuteStatement("Insert into Phone2ID (identity_number, phone_number) values" + phones2Str);
 
             if (insuranceCheck.isSelected()){
                 DBConnector.ExecuteStatement("Insert into Insurance (insurance_id, payment_coverage, expire_date, identity_number) values("

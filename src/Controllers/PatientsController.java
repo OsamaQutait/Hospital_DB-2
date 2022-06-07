@@ -1,6 +1,26 @@
 package Controllers;
+//search can be done from table or searching manually.
+//delete: have to check if patient has left the hospital or he doesnt have surgeries/tests or if he paid his bill
+//update/insert: have to check all data
+/*Reports
+* 1) according to city
+* 2) according to gender
+* 3) according to blood type
+* 4) find number of dead/alive
+* 5) find people who came for surgery, test, or both
+* 6) report about insurance coverage
+* 7) check people whom insurance has expired or will expire soon
+* 8) find person who stayed for much time in the hospital
+* 9)
+ */
+//payment is zero if insurance is not active, its value if it's active (insertPatient)
+//handle if length of stay is text
 
+import DatabaseConnector.DBConnector;
+import Hospital.*;
 import com.jfoenix.controls.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -9,26 +29,35 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Paint;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class PatientsController implements Initializable {
     @FXML
-    private TableView<?> pTable;
+    private TableView<Identity> pTable;
 
     @FXML
-    private TableColumn<?, ?> pId;
+    private TableColumn<Identity, Integer> pId;
 
     @FXML
-    private TableColumn<?, ?> pName;
+    private TableColumn<Identity, String> pName;
 
     @FXML
     private JFXTextField idNum;
@@ -37,16 +66,16 @@ public class PatientsController implements Initializable {
     private JFXTextField fullName;
 
     @FXML
-    private JFXTextField address;
+    private JFXComboBox<String> address;
 
     @FXML
     private JFXTextField phoneNumber;
 
     @FXML
-    private JFXComboBox<?> bloodType;
+    private JFXComboBox<String> bloodType;
 
     @FXML
-    private JFXComboBox<?> gender;
+    private JFXComboBox<String> gender;
 
     @FXML
     private JFXDatePicker dateOfBirth;
@@ -70,10 +99,10 @@ public class PatientsController implements Initializable {
     private JFXTextField lengthOfStay;
 
     @FXML
-    private JFXComboBox<?> emergencyStatus;
+    private JFXComboBox<String> emergencyStatus;
 
     @FXML
-    private JFXComboBox<?> visitReason;
+    private JFXComboBox<String> visitReason;
 
     @FXML
     private JFXButton pClear;
@@ -123,18 +152,63 @@ public class PatientsController implements Initializable {
     @FXML
     private Button registrationButton;
 
+    @FXML
+    private JFXButton addPhoneNumbers;
+
+    @FXML
+    private JFXToggleButton tableSearch;
+
+    @FXML
+    private JFXToggleButton manualSearch;
+
+    @FXML
+    private JFXButton seePhoneNumbers;
+
+    @FXML
+    private JFXButton upPhoneNumbers;
+
     private ArrayList<String> genderList;
     private ArrayList<String> bloodList;
     private ArrayList<String> emergencyStatList;
     private ArrayList<String> visitReasonList;
+    private static ArrayList<String> phoneNumbers;
+    private ArrayList<String> cityList;
+
+    private ArrayList<Identity> patientsSQL;
+    private ObservableList<Identity> patientsOBS;
+
+    public static int pSelection;
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        //search.setVisible(false);
         initializingArrays();
         disablingItems();
         SpinnerValueFactory<Integer> spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100);
         spinnerValueFactory.setValue(0);
         payCoverage.setValueFactory(spinnerValueFactory);
+
+        try {
+            getData();
+            visitReason.setItems(FXCollections.observableArrayList(visitReasonList));
+            gender.setItems(FXCollections.observableArrayList(genderList));
+            bloodType.setItems(FXCollections.observableArrayList(bloodList));
+            emergencyStatus.setItems(FXCollections.observableArrayList(emergencyStatList));
+            address.setItems(FXCollections.observableArrayList(cityList));
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        pId.setCellValueFactory(new PropertyValueFactory<Identity, Integer>("identityNumber"));
+        pName.setCellValueFactory(new PropertyValueFactory<Identity, String>("fullName"));
+        patientsOBS = FXCollections.observableArrayList(patientsSQL);
+        pTable.setItems(patientsOBS);
 
         EventHandler<KeyEvent> enterKeyEventHandler;
 
@@ -162,6 +236,11 @@ public class PatientsController implements Initializable {
             delete.setDisable(true);
             update.setDisable(true);
             insert.setDisable(true);
+            idNum.setEditable(false);
+            insuranceID.setEditable(false);
+            addPhoneNumbers.setVisible(false);
+            seePhoneNumbers.setVisible(true);
+            upPhoneNumbers.setVisible(false);
         });
 
         upMode.setOnAction((ActionEvent e) -> {
@@ -173,6 +252,11 @@ public class PatientsController implements Initializable {
             search.setDisable(true);
             delete.setDisable(true);
             insert.setDisable(true);
+            idNum.setEditable(false);
+            insuranceID.setEditable(false);
+            addPhoneNumbers.setVisible(false);
+            seePhoneNumbers.setVisible(false);
+            upPhoneNumbers.setVisible(true);
         });
 
         inMode.setOnAction((ActionEvent e) -> {
@@ -184,6 +268,11 @@ public class PatientsController implements Initializable {
             search.setDisable(true);
             delete.setDisable(true);
             update.setDisable(true);
+            idNum.setEditable(true);
+            insuranceID.setEditable(true);
+            addPhoneNumbers.setVisible(true);
+            seePhoneNumbers.setVisible(false);
+            upPhoneNumbers.setVisible(false);
         });
 
         dMode.setOnAction((ActionEvent e) -> {
@@ -195,6 +284,21 @@ public class PatientsController implements Initializable {
             search.setDisable(true);
             update.setDisable(true);
             insert.setDisable(true);
+            idNum.setEditable(false);
+            insuranceID.setEditable(false);
+            addPhoneNumbers.setVisible(false);
+            seePhoneNumbers.setVisible(false);
+            upPhoneNumbers.setVisible(false);
+        });
+
+        tableSearch.setOnAction((ActionEvent e) -> {
+            tableSearch.setSelected(true);
+            manualSearch.setSelected(false);
+        });
+
+        manualSearch.setOnAction((ActionEvent e) -> {
+            manualSearch.setSelected(true);
+            tableSearch.setSelected(false);
         });
 
         idClear.setOnAction((ActionEvent e) -> {
@@ -229,25 +333,102 @@ public class PatientsController implements Initializable {
             }
         });
 
+        addPhoneNumbers.setOnAction((ActionEvent e) -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/phoneNumbers.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
+        search.setOnAction((ActionEvent e) -> {
+            insuranceClear();
+            identityClear();
+            insuranceClear();
+            if (tableSearch.isSelected() && pTable.getSelectionModel().getSelectedItem() != null){
+                try {
+                    displaySelected();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException classNotFoundException) {
+                    classNotFoundException.printStackTrace();
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
+            }
+        });
+
+        update.setOnAction((ActionEvent e) -> {
+            if (identityValidation() && patientValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1)){
+                try {
+                    if (leaveTime.getValue() == null || leaveDate.getValue() == null){
+                        leaveDate.setValue(null);
+                        leaveTime.setValue(null);
+                    }
+                    if (datesValidation()) {
+                        updatePatient();
+                    }
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException classNotFoundException) {
+                    classNotFoundException.printStackTrace();
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
+            }
+        });
+
+        insert.setOnAction((ActionEvent e) -> {
+            if (identityValidation() && patientValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1)){
+                try {
+                    if (leaveTime.getValue() == null || leaveDate.getValue() == null){
+                        leaveDate.setValue(null);
+                        leaveTime.setValue(null);
+                    }
+                    if (datesValidation()) {
+                        insertPatient();
+                        pTable.refresh();
+                    }
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException classNotFoundException) {
+                    classNotFoundException.printStackTrace();
+                } catch (ParseException parseException) {
+                    parseException.printStackTrace();
+                }
+            }
+        });
 
     }
 
     private void identityClear() {
-        idNum.clear();
-        fullName.clear();
-        dateOfBirth.setValue(null);
-        address.clear();
-        phoneNumber.clear();
-        gender.setValue(null);
-        bloodType.setValue(null);
-        dateOfBirth.setPromptText("");
-        dateOfBirth.setDefaultColor(Paint.valueOf("black"));
-        bloodType.setUnFocusColor(Paint.valueOf("black"));
-        gender.setUnFocusColor(Paint.valueOf("black"));
-        address.setUnFocusColor(Paint.valueOf("black"));
-        fullName.setUnFocusColor(Paint.valueOf("black"));
-        phoneNumber.setUnFocusColor(Paint.valueOf("black"));
-        idNum.setUnFocusColor(Paint.valueOf("black"));
+        try {
+            idNum.clear();
+            fullName.clear();
+            dateOfBirth.setValue(null);
+            address.setValue(null);
+            gender.setValue(null);
+            bloodType.setValue(null);
+            dateOfBirth.setPromptText("");
+            dateOfBirth.setDefaultColor(Paint.valueOf("black"));
+            bloodType.setUnFocusColor(Paint.valueOf("black"));
+            gender.setUnFocusColor(Paint.valueOf("black"));
+            address.setUnFocusColor(Paint.valueOf("black"));
+            fullName.setUnFocusColor(Paint.valueOf("black"));
+            idNum.setUnFocusColor(Paint.valueOf("black"));
+            addPhoneNumbers.setStyle("-fx-background-color: #3b5998");
+            idNum.clear();
+            addPhoneNumbers.setVisible(false);
+            seePhoneNumbers.setVisible(false);
+            upPhoneNumbers.setVisible(false);
+        } catch (Exception e) {
+            System.out.println("");
+        }
     }
 
     private void insuranceClear() {
@@ -263,6 +444,8 @@ public class PatientsController implements Initializable {
     }
 
     private void patientClear() {
+        visitReason.setDisable(false);
+        lengthOfStay.setDisable(false);
         emergencyStatus.setValue(null);
         visitReason.setValue(null);
         joinTime.setValue(null);
@@ -306,123 +489,205 @@ public class PatientsController implements Initializable {
         visitReasonList.add("For surgery");
         visitReasonList.add("For test");
         visitReasonList.add("For surgery and test");
+
+        cityList = new ArrayList<>();
+        cityList.add("Salfit");
+        cityList.add("Nablus");
+        cityList.add("Ramallah");
+        cityList.add("Jenin");
+        cityList.add("Tulkarm");
+        cityList.add("Jerusalem");
+        cityList.add("Jericho");
+        cityList.add("Qalqilya");
+        cityList.add("Bethlehem");
+        cityList.add("Hebron");
+
+        phoneNumbers = new ArrayList<>();
+        patientsSQL = new ArrayList<>();
     }
 
     private int insuranceValidation() {
         if (insuranceCheck.isSelected()) {
+            boolean flag = false;
             if (insuranceCheck.isSelected() && (insuranceID.getText().length() != 9 || !Pattern.matches("[0-9]{9}", idNum.getText()))) {
                 insuranceID.setUnFocusColor(Paint.valueOf("RED"));
-                return 0;
+                flag = true;
             } else {
                 insuranceID.setUnFocusColor(Paint.valueOf("black"));
             }
             if (expiryDate.getValue() == null) {
                 expiryDate.setDefaultColor(Paint.valueOf("red"));
                 expiryDate.setPromptText("ERROR");
-                return 0;
+                flag = true;
             } else {
                 expiryDate.setDefaultColor(Paint.valueOf("black"));
             }
-            return 1;
+            return !flag ? 1 : 0;
         }
         return -1;
     }
 
+    private boolean datesValidation() {
+        try {
+            boolean flag = true;
+            Date joinDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue().toString() + " " + joinTime.getValue().toString() + ":00");
+            Date dob = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth.getValue().toString());
+            Date currentDate = new Date();
+            Date leaveDT = null;
+            if (leaveTime.getValue() != null && leaveDate.getValue() != null){
+                leaveDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue().toString() + " " + leaveTime.getValue().toString() + ":00");
+                if (leaveDate.getValue() != null && leaveTime.getValue() != null){
+                    Date d1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00");
+                    Date d2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00");
+                    float length = Math.abs((float) ((d1.getTime() - d2.getTime()) / (1000.0 * 60 * 60 * 24)));
+                    length = Math.round(length*10000)/10000.0f;
+                    lengthOfStay.setText(String.valueOf(length));
+                }
+            }
+
+            if (leaveDT != null && dob.compareTo(leaveDT) > 0){
+                dateOfBirth.setDefaultColor(Paint.valueOf("red"));
+                dateOfBirth.setValue(null);
+                dateOfBirth.setPromptText("ERROR");
+                flag = false;
+            }else{
+                dateOfBirth.setDefaultColor(Paint.valueOf("black"));
+            }
+
+            if (leaveTime.getValue() != null && leaveDate.getValue() != null && dob.compareTo(leaveDT) > 0) {
+                leaveDate.setDefaultColor(Paint.valueOf("red"));
+                leaveTime.setDefaultColor(Paint.valueOf("red"));
+                leaveTime.setValue(null);
+                leaveDate.setValue(null);
+                leaveTime.setPromptText("ERROR");
+                leaveDate.setPromptText("ERROR");
+                flag = false;
+            } else {
+                leaveDate.setDefaultColor(Paint.valueOf("black"));
+                leaveTime.setDefaultColor(Paint.valueOf("black"));
+            }
+
+            if (insuranceCheck.isSelected()) {
+                Date inExpiry = new SimpleDateFormat("yyyy-MM-dd").parse(expiryDate.getValue().toString());
+                if (inExpiry.compareTo(joinDT) < 0 || currentDate.compareTo(inExpiry) > 0) {
+                    expiryDate.setDefaultColor(Paint.valueOf("red"));
+                    expiryDate.setValue(null);
+                    expiryDate.setPromptText("ERROR");
+                    flag = false;
+                } else {
+                    expiryDate.setDefaultColor(Paint.valueOf("black"));
+                }
+            }
+
+            if (dob.compareTo(joinDT) > 0) {
+                joinDate.setDefaultColor(Paint.valueOf("red"));
+                joinTime.setDefaultColor(Paint.valueOf("red"));
+                joinTime.setValue(null);
+                joinDate.setValue(null);
+                joinTime.setPromptText("ERROR");
+                joinDate.setPromptText("ERROR");
+                flag = false;
+            } else {
+                joinDate.setDefaultColor(Paint.valueOf("black"));
+                joinTime.setDefaultColor(Paint.valueOf("black"));
+            }
+            if (leaveDate.getValue() != null && leaveTime.getValue() != null && leaveDT.compareTo(joinDT) < 0) {
+                leaveDate.setDefaultColor(Paint.valueOf("red"));
+                leaveTime.setDefaultColor(Paint.valueOf("red"));
+                leaveDate.setValue(null);
+                leaveTime.setValue(null);
+                leaveDate.setPromptText("ERROR");
+                leaveTime.setPromptText("ERROR");
+                flag = false;
+            } else {
+                leaveDate.setDefaultColor(Paint.valueOf("black"));
+                leaveTime.setDefaultColor(Paint.valueOf("black"));
+            }
+            return flag;
+        } catch (ParseException parseException) {
+            parseException.printStackTrace();
+        }
+        return false;
+    }
+
     private boolean patientValidation() {
+        boolean flag = false;
         if (emergencyStatus.getSelectionModel().isEmpty()) {
             emergencyStatus.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = true;
         } else {
             emergencyStatus.setUnFocusColor(Paint.valueOf("black"));
         }
         if (visitReason.getSelectionModel().isEmpty()) {
             visitReason.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = true;
         } else {
             visitReason.setUnFocusColor(Paint.valueOf("black"));
         }
         if (joinDate.getValue() == null) {
             joinDate.setDefaultColor(Paint.valueOf("red"));
             joinDate.setPromptText("ERROR");
-            return false;
+            flag = true;
         } else {
             joinDate.setDefaultColor(Paint.valueOf("black"));
         }
         if (joinTime.getValue() == null) {
             joinTime.setDefaultColor(Paint.valueOf("red"));
             joinTime.setPromptText("ERROR");
-            return false;
+            flag = true;
         } else {
             joinTime.setDefaultColor(Paint.valueOf("black"));
         }
-        if (leaveTime.getValue() == null) {
-            leaveTime.setDefaultColor(Paint.valueOf("red"));
-            leaveTime.setPromptText("ERROR");
-            return false;
-        } else {
-            leaveTime.setDefaultColor(Paint.valueOf("black"));
-        }
-        if (leaveDate.getValue() == null) {
-            leaveDate.setDefaultColor(Paint.valueOf("red"));
-            leaveDate.setPromptText("ERROR");
-            return false;
-        } else {
-            leaveDate.setDefaultColor(Paint.valueOf("black"));
-        }
-        if (!lengthOfStay.getText().isEmpty() && Integer.parseInt(lengthOfStay.getText()) < 0) {
-            lengthOfStay.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
-        } else {
-            lengthOfStay.setUnFocusColor(Paint.valueOf("black"));
-        }
-        return true;
+        return !flag;
     }
 
     private boolean identityValidation() {
+        boolean flag = true;
         if (idNum.getText().length() != 9 || !Pattern.matches("[0-9]{9}", idNum.getText())) {
             idNum.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
+            flag = false;
         } else {
             idNum.setUnFocusColor(Paint.valueOf("black"));
         }
-        if (phoneNumber.getText().length() != 10 || !Pattern.matches("05[2-9][0-9]{7}", phoneNumber.getText())) {
-            phoneNumber.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
+        /*if (phoneNumbers.isEmpty()) {
+            addPhoneNumbers.setStyle("-fx-background-color: #ff0000");
+            flag = false;
         } else {
-            phoneNumber.setUnFocusColor(Paint.valueOf("black"));
-        }
-        if (!Pattern.matches("[A-Za-z-']+", fullName.getText())) {
+            addPhoneNumbers.setStyle("-fx-background-color: #3b5998");
+        }*/
+
+        if (!Pattern.matches("[A-Za-z-' ]+", fullName.getText())) {
             fullName.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
+            flag = false;
         } else {
             fullName.setUnFocusColor(Paint.valueOf("black"));
         }
-        if (!Pattern.matches("[A-Za-z-']+", address.getText())) {
+        if (address.getSelectionModel().isEmpty()) {
             address.setUnFocusColor(Paint.valueOf("RED"));
-            return false;
+            flag = false;
         } else {
             address.setUnFocusColor(Paint.valueOf("black"));
         }
         if (gender.getSelectionModel().isEmpty()) {
             gender.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = false;
         } else {
             gender.setUnFocusColor(Paint.valueOf("black"));
         }
         if (bloodType.getSelectionModel().isEmpty()) {
             bloodType.setUnFocusColor(Paint.valueOf("red"));
-            return false;
+            flag = false;
         } else {
             bloodType.setUnFocusColor(Paint.valueOf("black"));
         }
         if (dateOfBirth.getValue() == null) {
             dateOfBirth.setDefaultColor(Paint.valueOf("red"));
             dateOfBirth.setPromptText("ERROR");
-            return false;
+            flag = false;
         } else {
             dateOfBirth.setDefaultColor(Paint.valueOf("black"));
         }
-        return true;
+        return flag;
     }
 
     private void disablingItems() {
@@ -433,5 +698,262 @@ public class PatientsController implements Initializable {
         delete.setDisable(true);
         update.setDisable(true);
         insert.setDisable(true);
+        idNum.setEditable(false);
+        insuranceID.setEditable(false);
+        addPhoneNumbers.setVisible(false);
+        seePhoneNumbers.setVisible(false);
+        upPhoneNumbers.setVisible(false);
+        lengthOfStay.setEditable(false);
     }
+
+    private void getData() throws SQLException, ClassNotFoundException, ParseException {
+        String SQL;
+        DBConnector.connectDB();
+
+        SQL = "select distinct id.identity_number, id.full_name, id.gender, id.date_of_birth, id.blood_type, id.living_address\n" +
+                "from identity id, patient p\n" +
+                "where id.identity_number = p.identity_number;";
+        Statement stmt = DBConnector.getCon().createStatement();
+        ResultSet rs = stmt.executeQuery(SQL);
+
+        while (rs.next()) {
+            patientsSQL.add(
+                    new Identity(
+                            Integer.parseInt(rs.getString(1)),
+                            rs.getString(2),
+                            rs.getString(3),
+                            new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(4)),
+                            rs.getString(5),
+                            rs.getString(6)
+                    )
+            );
+        }
+
+        rs.close();
+        stmt.close();
+
+        DBConnector.getCon().close();
+    }
+
+    private void getPatientInfo(){}
+
+    private void insertPatient() throws SQLException, ClassNotFoundException, ParseException {
+        Identity id = new Identity(
+                Integer.parseInt(idNum.getText()),
+                fullName.getText(),
+                gender.getValue(),
+                new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(dateOfBirth.getValue())),
+                bloodType.getValue(),
+                address.getValue()
+        );
+        patientsOBS.add(id);
+        Patient patient = new Patient(
+                visitReason.getValue(),
+                emergencyStatus.getValue(),
+                lengthOfStay.getText().isEmpty() ? 0 : Integer.parseInt(lengthOfStay.getText()),
+                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00"),
+                leaveDate.getValue() != null ? new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00") : null,
+                Integer.parseInt(idNum.getText()),
+                null
+        );
+        Phone2ID phones = new Phone2ID();
+        Payment payment = new Payment(null, 0, payCoverage.getValue(), Integer.parseInt(idNum.getText()));
+
+        Insurance insurance = null;
+        if (insuranceCheck.isSelected()){
+            insurance = new Insurance(
+                    Integer.parseInt(insuranceID.getText()),
+                    payCoverage.getValue(),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(expiryDate.getValue())),
+                    Integer.parseInt(idNum.getText())
+            );
+        }
+
+        DBConnector.connectDB();
+        try {
+            DBConnector.ExecuteStatement("Insert into Identity (identity_number, full_name, gender, date_of_birth, blood_type, living_address) values(" +
+                    +id.getIdentityNumber()+",'"
+                    +id.getFullName()+"', '"
+                    +id.getGender()+"', '"
+                    +id.getDateOfBirthToString()+"', '"
+                    +id.getBloodType()+"', '"
+                    +id.getLivingAddress()+"');");
+
+            DBConnector.ExecuteStatement("Insert into Patient (visit_reason, emergency_status, stay_length_of_stay, stay_join_date_time, stay_leave_date_time, identity_number, Room_id) values('"
+                    +patient.getVisitReason()+"', '"
+                    +patient.getEmergencyStatus()+"', "
+                    +patient.getLengthOfStay()+", '"
+                    +patient.getJoinDateAndTimeToString()+"', "
+                    +patient.getLeaveDateAndTimeToString()+", "
+                    +patient.getIdentityNumber()+", "
+                    +(patient.getRoomID() == null ? "null" : "'" + patient.getRoomID() + "'") + ");");
+
+            DBConnector.ExecuteStatement("Insert into Payment (issued_date, invoice, coverage, identity_number) values("
+                    +payment.getIssued_dateToString()+", "
+                    +payment.getInvoice()+", "
+                    +payment.getCoverage()+", "
+                    +payment.getIdentity_number()+ ");");
+
+            if (insuranceCheck.isSelected()){
+                DBConnector.ExecuteStatement("Insert into Insurance (insurance_id, payment_coverage, expire_date, identity_number) values("
+                        +insurance.getInsuranceID()+", "
+                        +insurance.getPaymentCoverage()+", "
+                        +insurance.getExpiryDateToString()+", "
+                        +insurance.getIdentityNumber()+ ");");
+            }
+            DBConnector.getCon().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updatePatient() throws SQLException, ClassNotFoundException, ParseException {
+        Identity id = new Identity(
+                Integer.parseInt(idNum.getText()),
+                fullName.getText(),
+                gender.getValue(),
+                new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(dateOfBirth.getValue())),
+                bloodType.getValue(),
+                address.getValue()
+        );
+        Patient patient = new Patient(
+                visitReason.getValue(),
+                emergencyStatus.getValue(),
+                lengthOfStay.getText().isEmpty() ? 0 : Integer.parseInt(lengthOfStay.getText()),
+                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00"),
+                leaveDate.getValue() != null ? new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00") : null,
+                Integer.parseInt(idNum.getText()),
+                null
+        );
+        Phone2ID phones = new Phone2ID();
+        Payment payment = new Payment(null, 0, payCoverage.getValue(), Integer.parseInt(idNum.getText()));
+
+        Insurance insurance = null;
+        if (insuranceCheck.isSelected()){
+            insurance = new Insurance(
+                    Integer.parseInt(insuranceID.getText()),
+                    payCoverage.getValue(),
+                    new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(expiryDate.getValue())),
+                    Integer.parseInt(idNum.getText())
+            );
+        }
+
+        DBConnector.connectDB();
+        try {
+            DBConnector.ExecuteStatement("Insert into Identity (identity_number, full_name, gender, date_of_birth, blood_type, living_address) values(" +
+                    +id.getIdentityNumber()+",'"
+                    +id.getFullName()+"', '"
+                    +id.getGender()+"', '"
+                    +id.getDateOfBirthToString()+"', '"
+                    +id.getBloodType()+"', '"
+                    +id.getLivingAddress()+"');");
+
+            DBConnector.ExecuteStatement("Insert into Patient (visit_reason, emergency_status, stay_length_of_stay, stay_join_date_time, stay_leave_date_time, identity_number, Room_id) values('"
+                    +patient.getVisitReason()+"', '"
+                    +patient.getEmergencyStatus()+"', "
+                    +patient.getLengthOfStay()+", '"
+                    +patient.getJoinDateAndTimeToString()+"', "
+                    +patient.getLeaveDateAndTimeToString()+", "
+                    +patient.getIdentityNumber()+", '"
+                    +patient.getRoomID() + "');");
+
+            DBConnector.ExecuteStatement("Insert into Payment (issued_date, invoice, coverage, identity_number) values("
+                    +payment.getIssued_dateToString()+", "
+                    +payment.getInvoice()+", "
+                    +payment.getCoverage()+", "
+                    +payment.getIdentity_number()+ ");");
+
+            if (insuranceCheck.isSelected()){
+                DBConnector.ExecuteStatement("Insert into Insurance (insurance_id, payment_coverage, expire_date, identity_number) values("
+                        +insurance.getInsuranceID()+", "
+                        +insurance.getPaymentCoverage()+", "
+                        +insurance.getExpiryDateToString()+", "
+                        +insurance.getIdentityNumber()+ ");");
+            }
+            DBConnector.getCon().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deletePatient() throws SQLException, ClassNotFoundException, ParseException {
+    }
+
+    public void displaySelected() throws SQLException, ClassNotFoundException, ParseException {
+        Identity id = pTable.getSelectionModel().getSelectedItem();
+        Patient patient = new Patient();
+        Insurance insurance = null;
+
+
+
+        String SQL;
+        DBConnector.connectDB();
+
+        SQL = "select distinct p.visit_reason, p.emergency_status, p.stay_length_of_stay, p.stay_join_date_time, p.stay_leave_date_time, p.identity_number, p.Room_id\n" +
+                "from patient p, identity id\n" +
+                "where id.identity_number = " + id.getIdentityNumber() + " and p.identity_number = " + id.getIdentityNumber() + ";";
+        Statement stmt = DBConnector.getCon().createStatement();
+        ResultSet rs = stmt.executeQuery(SQL);
+
+        while (rs.next()) {
+            patient = new Patient(
+                    rs.getString(1), rs.getString(2),
+                    Integer.parseInt(rs.getString(3)),
+                    rs.getString(4) == null ? null : new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(4)),
+                    rs.getString(5) == null ? null : new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(rs.getString(5)),
+                    Integer.parseInt(rs.getString(6)), rs.getString(7)
+            );
+        }
+        SQL = "select distinct insur.insurance_id, insur.payment_coverage, insur.expire_date, insur.identity_number\n" +
+                "from patient p, insurance insur\n" +
+                "where p.identity_number = " + id.getIdentityNumber() + " and insur.identity_number = " + id.getIdentityNumber() + ";";
+        stmt = DBConnector.getCon().createStatement();
+        rs = stmt.executeQuery(SQL);
+
+        while (rs.next()) {
+            insurance = new Insurance(
+                    Integer.parseInt(rs.getString(1)),
+                    Integer.parseInt(rs.getString(2)),
+                    rs.getString(3) == null ? null : new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(3)),
+                    Integer.parseInt(rs.getString(4))
+            );
+        }
+
+        System.out.println(insurance == null);
+        if (insurance != null){
+            insuranceCheck.setSelected(true);
+            insuranceID.setDisable(false);
+            expiryDate.setDisable(false);
+            payCoverage.setDisable(false);
+
+            insuranceID.setText(String.valueOf(insurance.getInsuranceID()));
+            expiryDate.setValue(insurance.expiryDateLocal());
+            SpinnerValueFactory<Integer> spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100);
+            spinnerValueFactory.setValue(insurance.getPaymentCoverage());
+            payCoverage.setValueFactory(spinnerValueFactory);
+        }
+
+        idNum.setText(String.valueOf(id.getIdentityNumber()));
+        fullName.setText(id.getFullName());
+        dateOfBirth.setValue(id.getDOBLocalDate());
+        gender.setValue(id.getGender());
+        address.setValue(id.getLivingAddress());
+        bloodType.setValue(id.getBloodType());
+
+        emergencyStatus.setValue(patient.getEmergencyStatus());
+        visitReason.setValue(patient.getVisitReason());
+        joinDate.setValue(patient.getJoinDateLocalDate());
+        joinTime.setValue(patient.getJoinTime());
+        leaveDate.setValue(patient.getLeaveDateLocalDate());
+        leaveTime.setValue(patient.getLeaveTime());
+        lengthOfStay.setText(String.valueOf(patient.getLengthOfStay()));
+
+
+        rs.close();
+        stmt.close();
+
+        DBConnector.getCon().close();
+    }
+
+
 }

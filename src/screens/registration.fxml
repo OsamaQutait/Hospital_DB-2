@@ -166,7 +166,6 @@
                                                 </Label>
                                                 <JFXTextField fx:id="idNum" unFocusColor="#3b5998" GridPane.rowIndex="1" />
                                                 <JFXTextField fx:id="fullName" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                <JFXTextField fx:id="address" unFocusColor="#3b5998" GridPane.rowIndex="5" />
                                                 <JFXComboBox fx:id="bloodType" prefHeight="25.0" prefWidth="137.0" promptText="Select blood type" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                                                 <JFXComboBox fx:id="gender" prefHeight="25.0" prefWidth="143.0" promptText="Select gender" unFocusColor="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                                 <JFXDatePicker fx:id="dateOfBirth" defaultColor="#3b5998" GridPane.rowIndex="3" />
@@ -183,6 +182,7 @@
                                                       <Insets />
                                                    </GridPane.margin>
                                                 </JFXButton>
+                                                <JFXComboBox fx:id="address" prefHeight="25.0" prefWidth="137.0" promptText="Select city" unFocusColor="#3b5998" GridPane.rowIndex="5" />
                                              </children>
                                           </GridPane>
                                        </children>

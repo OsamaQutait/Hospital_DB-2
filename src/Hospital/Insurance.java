@@ -1,6 +1,7 @@
 package Hospital;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Insurance {
@@ -58,5 +59,13 @@ public class Insurance {
         }
         String[] d = new SimpleDateFormat("dd-MM-yyyy").format(this.expiryDate).split("-");
         return "'" + d[2] + "-" + d[1] + "-" + d[0] + "'";
+    }
+
+    public LocalDate expiryDateLocal(){
+        if (this.expiryDate != null) {
+            String[] d = new SimpleDateFormat("dd-MM-yyyy").format(this.expiryDate).split("-");
+            return LocalDate.of(Integer.parseInt(d[2]), Integer.parseInt(d[1]), Integer.parseInt(d[0]));
+        }
+        return null;
     }
 }

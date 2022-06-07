@@ -121,16 +121,16 @@ public class SurgeriesController implements Initializable {
     void deleteSurgery(ActionEvent event) {
         assignComboBoxesValues();
         Predicate<Surgeries> pr = a -> (a.getSurgery_name().equals(selectSurgeriesDelete.getValue()));
-        SurgeryList.removeIf(pr );
-        for (Surgeries surgeri : SurgeryList){
+        SurgeryList.removeIf(pr);
+        SurgeryNameList.remove(selectSurgeriesDelete.getValue());
+        /*for (Surgeries surgeri : SurgeryList){
             System.out.println(surgeri.getSurgery_name());
-        }
+        }*/
         assignComboBoxesValues();
     }
 
     @FXML
     void insertSurgery(ActionEvent event) {
-        assignComboBoxesValues();
         boolean flag = true;
         if (sName.getText().isEmpty() || sName.getText().length() > 32) {
             sName.setUnFocusColor(Color.RED);
@@ -139,7 +139,7 @@ public class SurgeriesController implements Initializable {
         }else{
             sName.setUnFocusColor(Color.BLACK);
         }
-        if(surgeryID.getText().isEmpty() || !isNumeric(surgeryID.getText())){
+        if(surgeryID.getText().isEmpty() || !isNumeric(surgeryID.getText()) || !equaledID()){
             surgeryID.setUnFocusColor(Color.RED);
             surgeryID.clear();
             flag = false;
@@ -157,8 +157,9 @@ public class SurgeriesController implements Initializable {
             SurgeryList.add(new Surgeries(Integer.parseInt(surgeryID.getText()),
                     sName.getText(),
                     Float.parseFloat(surgeryPrice.getText())));
+            SurgeryNameList.add(sName.getText());
             //System.out.println(SurgeryList.get(SurgeryList.size()-1).getSurgery_name()+SurgeryList.get(SurgeryList.size()-1).getSurgery_id());
-            System.out.print(surgeryID.getText() + "..." + sName.getText() + "..." + surgeryPrice.getText());
+            //System.out.print(surgeryID.getText() + "..." + sName.getText() + "..." + surgeryPrice.getText());
             assignComboBoxesValues();
         }
 
@@ -167,7 +168,6 @@ public class SurgeriesController implements Initializable {
 
     @FXML
     void updateSurgeries(ActionEvent event) {
-        assignComboBoxesValues();
         boolean flag = true;
         if(newPrice.getText().isEmpty() || !isFloat(newPrice.getText())){
             newPrice.setUnFocusColor(Color.RED);
@@ -179,9 +179,9 @@ public class SurgeriesController implements Initializable {
         if(flag){
             for (Surgeries surgeri : SurgeryList){
                 if(surgeri.getSurgery_name().equals(SelectUpSurgeryName.getValue())){
-                    System.out.println(surgeri.getSurgery_price());
+                    //System.out.println(surgeri.getSurgery_price());
                     surgeri.setSurgery_price(Float.parseFloat(newPrice.getText()));
-                    System.out.println(surgeri.getSurgery_price());
+                    //System.out.println(surgeri.getSurgery_price());
                 }
             }
         }
@@ -251,7 +251,16 @@ public class SurgeriesController implements Initializable {
         }
         return false;
     }
-
+    public boolean equaledID(){
+        boolean flag = true;
+        for (Surgeries surgeri : SurgeryList){
+            if(surgeryID.getText().equals(String.valueOf(surgeri.getSurgery_id()))){
+                flag = false;
+                break;
+            }
+        }
+        return flag;
+    }
 
 }
 

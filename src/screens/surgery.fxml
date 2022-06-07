@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="774.0" prefWidth="1360.0" style="-fx-background-color: #8b9dc3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegistrationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="774.0" prefWidth="1360.0" style="-fx-background-color: #8b9dc3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SurgeriesController">
     <children>
         <HBox layoutY="50.0" prefHeight="750.0" prefWidth="1349.0">
             <children>
@@ -97,10 +97,10 @@
                                     <children>
                                         <HBox alignment="CENTER" prefHeight="594.0" prefWidth="1120.0" spacing="20.0">
                                  <children>
-                                    <TableView prefHeight="594.0" prefWidth="373.0">
+                                    <TableView fx:id="table" prefHeight="594.0" prefWidth="373.0">
                                       <columns>
-                                          <TableColumn prefWidth="180.0" text="Surgeries" />
-                                          <TableColumn prefWidth="162.0" text="Surgeries ID" />
+                                          <TableColumn fx:id="surgerNameTable" prefWidth="180.0" text="Surgeries" />
+                                          <TableColumn fx:id="surgerIDTable" prefWidth="162.0" text="Surgeries ID" />
                                       </columns>
                                     </TableView>
                                     <GridPane hgap="10.0" prefHeight="584.0" prefWidth="793.0" vgap="10.0">
@@ -115,7 +115,7 @@
                                        <children>
                                           <VBox prefHeight="250.0" prefWidth="741.0" style="-fx-background-color: #dfe3ee;">
                                              <children>
-                                                <Label prefHeight="53.0" prefWidth="364.0" text="              Insert Surgeries" textAlignment="CENTER" textFill="#4059a9">
+                                                <Label prefHeight="52.0" prefWidth="378.0" text="              Insert Surgeries" textAlignment="CENTER" textFill="#4059a9">
                                                    <font>
                                                       <Font size="24.0" />
                                                    </font>
@@ -126,8 +126,8 @@
                                                 <JFXTextField fx:id="surgeryID" />
                                                 <Label prefHeight="21.0" prefWidth="221.0" text="Surgery price" textFill="#3b5998" />
                                                 <JFXTextField fx:id="surgeryPrice" />
-                                                <JFXButton fx:id="insertSurgery" prefHeight="31.0" prefWidth="420.0" text="Insert surgeries" textFill="#3b5998" />
-                                                <JFXButton fx:id="clearInsert" prefHeight="31.0" prefWidth="417.0" text="Clear" textFill="#3b5998" />
+                                                <JFXButton fx:id="insertSurgery" onAction="#insertSurgery" prefHeight="31.0" prefWidth="420.0" text="Insert surgeries" textFill="#3b5998" />
+                                                <JFXButton fx:id="clearInsert" onAction="#clearInsert" prefHeight="31.0" prefWidth="417.0" text="Clear" textFill="#3b5998" />
                                              </children>
                                           </VBox>
                                           <VBox prefHeight="333.0" prefWidth="321.0" style="-fx-background-color: #dfe3ee;" GridPane.columnIndex="1">
@@ -138,9 +138,9 @@
                                                    </font>
                                                 </Label>
                                                 <Label prefHeight="21.0" prefWidth="200.0" text="Surgery Name" textFill="#3b5998" />
-                                                <JFXComboBox fx:id="selectSurgeriesDelete" prefHeight="53.0" prefWidth="394.0" promptText="Select Surgeries to Delete" />
-                                                <JFXButton fx:id="deleteSurgery" prefHeight="31.0" prefWidth="428.0" text="Delete surgeries" textFill="#3b5998" />
-                                                <JFXButton fx:id="clearDelete" prefHeight="31.0" prefWidth="403.0" text="Clear" textFill="#3b5998" />
+                                                <JFXComboBox fx:id="selectSurgeriesDelete" onAction="#selectSurgeriesToDelete" prefHeight="53.0" prefWidth="394.0" promptText="Select Surgeries to Delete" />
+                                                <JFXButton fx:id="deleteSurgery" onAction="#deleteSurgery" prefHeight="31.0" prefWidth="428.0" text="Delete surgeries" textFill="#3b5998" />
+                                                <JFXButton fx:id="clearDelete" onAction="#clearDelete" prefHeight="31.0" prefWidth="403.0" text="Clear" textFill="#3b5998" />
                                              </children>
                                           </VBox>
                                           <VBox prefHeight="235.0" prefWidth="580.0" style="-fx-background-color: #dfe3ee;" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -151,13 +151,11 @@
                                                    </font>
                                                 </Label>
                                                 <Label text="Surgery Namer" textFill="#3b5998" />
-                                                <JFXComboBox fx:id="SelectUpSurgeryName" focusColor="#3b5998" prefHeight="31.0" prefWidth="426.0" promptText="Select Surgeries to Update" />
+                                                <JFXComboBox fx:id="SelectUpSurgeryName" focusColor="#3b5998" onAction="#SelectToUpSurgeryName" prefHeight="31.0" prefWidth="426.0" promptText="Select Surgeries to Update" />
                                                 <Label text="New Surgers Price" textFill="#3b5998" />
                                                 <JFXTextField fx:id="newPrice" />
-                                                <Label text="New Surgeries Name" textFill="#3b5998" />
-                                                <JFXTextField fx:id="newName" />
-                                                <JFXButton fx:id="updateSurgeries" prefHeight="31.0" prefWidth="431.0" text="Update Surgeries" textFill="#3b5998" />
-                                                <JFXButton fx:id="clearUpdatePrice" prefHeight="31.0" prefWidth="459.0" text="Clear" textFill="#3b5998" />
+                                                <JFXButton fx:id="updateSurgeries" onAction="#updateSurgeries" prefHeight="31.0" prefWidth="431.0" text="Update Surgeries" textFill="#3b5998" />
+                                                <JFXButton fx:id="clearUpdatePrice" onAction="#clearUpdatePrice" prefHeight="31.0" prefWidth="459.0" text="Clear" textFill="#3b5998" />
                                              </children>
                                           </VBox>
                                        </children>
