@@ -328,8 +328,8 @@ public class DepartmentController implements Initializable {
 		initializeDepartmentAndRoom();
 		DeleteComboBoxesInitializing();
 	}
-	
-	public void DeleteComboBoxesInitializing(){
+
+	public void DeleteComboBoxesInitializing() {
 		String SQL;
 		Emptydepartmentlist = new ArrayList<>();
 		Emptyroomlist = new ArrayList<>();
@@ -337,19 +337,15 @@ public class DepartmentController implements Initializable {
 			DBConnector.connectDB();
 			System.out.println("Connection established");
 
-			SQL = "select D.Department_id from Department D "+
-					"where D.Department_id not in ("+
-						"select D.Department_id "+
-						"from Department D, Room R "+
-						"where D.Department_id = R.Department_number );";
+			SQL = "select D.Department_id from Department D " + "where D.Department_id not in ("
+					+ "select D.Department_id " + "from Department D, Room R "
+					+ "where D.Department_id = R.Department_number );";
 			Statement stmt = DBConnector.getCon().createStatement();
 			ResultSet rs = stmt.executeQuery(SQL);
 			while (rs.next()) {
 				Emptydepartmentlist.add(rs.getString(1));
 			}
-			SQL = "select R.Room_id "+
-					"from Room R "+
-					"where R.available_beds=R.total_number_of_beds;";
+			SQL = "select R.Room_id " + "from Room R " + "where R.available_beds=R.total_number_of_beds;";
 			stmt = DBConnector.getCon().createStatement();
 			rs = stmt.executeQuery(SQL);
 
@@ -365,6 +361,7 @@ public class DepartmentController implements Initializable {
 			e.printStackTrace();
 		}
 	}
+
 	// this method is used to initialize Department And Room lists
 	public void initializeDepartmentAndRoom() throws ParseException {
 		String SQL;
@@ -681,34 +678,35 @@ public class DepartmentController implements Initializable {
 		String SQL;
 		if (DepartmentName.getText().isEmpty()) {
 			SQL = "Insert into Department (Department_id,number_Of_Rooms,Department_floor) values ("
-					+ Integer.parseInt(DepartmentID.getText()) + ","
-					+ Integer.parseInt(MaxNoRooms.getValue()) + ",'" + DepartmentFloor.getValue() + ");";
+					+ Integer.parseInt(DepartmentID.getText()) + "," + Integer.parseInt(MaxNoRooms.getValue()) + ",'"
+					+ DepartmentFloor.getValue() + ");";
 		} else {
-			SQL = "Insert into Department values ("
-					+ Integer.parseInt(DepartmentID.getText()) + ",'" + DepartmentName.getText() + "',"
-					+ Integer.parseInt(MaxNoRooms.getValue()) + ",'" + DepartmentFloor.getValue() + "');";
+			SQL = "Insert into Department values (" + Integer.parseInt(DepartmentID.getText()) + ",'"
+					+ DepartmentName.getText() + "'," + Integer.parseInt(MaxNoRooms.getValue()) + ",'"
+					+ DepartmentFloor.getValue() + "');";
 		}
-		departments.add(new Department(Integer.parseInt(DepartmentID.getText()),DepartmentName.getText(),
-				Integer.parseInt(MaxNoRooms.getValue()),DepartmentFloor.getValue()));
+		departments.add(new Department(Integer.parseInt(DepartmentID.getText()), DepartmentName.getText(),
+				Integer.parseInt(MaxNoRooms.getValue()), DepartmentFloor.getValue()));
 		DBConnector.connectDB();
 		DBConnector.ExecuteStatement(SQL);
 		DBConnector.getCon().close();
 	}
-	
-	//// need to delete the department from the array list ... 
-	public void deleteDepartment() throws SQLException, ClassNotFoundException{
+
+	//// need to delete the department from the array list ...
+	public void deleteDepartment() throws SQLException, ClassNotFoundException {
 		DBConnector.connectDB();
-		DBConnector.ExecuteStatement("delete from  Department where Department_id="+DelDepartID.getValue() + ";");
+		DBConnector.ExecuteStatement("delete from  Department where Department_id=" + DelDepartID.getValue() + ";");
 		DBConnector.getCon().close();
 	}
-	
-	////need to update the department from the array list ... 
-	public void updateDepartment(){
-//		DBConnector.connectDB();
-//		if(!UpDepartNoRooms.getValue().isEmpty()){
-//		DBConnector.ExecuteStatement("update  department set sname = '"+name + 
-//				"' where Department_id = "+Integer.parseInt(UpDepartID.getValue())+";");
-//		}
-//		DBConnector.getCon().close();
+
+	//// need to update the department from the array list ...
+	public void updateDepartment() {
+		// DBConnector.connectDB();
+		// if(!UpDepartNoRooms.getValue().isEmpty()){
+		// DBConnector.ExecuteStatement("update department set sname = '"+name +
+		// "' where Department_id =
+		// "+Integer.parseInt(UpDepartID.getValue())+";");
+		// }
+		// DBConnector.getCon().close();
 	}
 }
