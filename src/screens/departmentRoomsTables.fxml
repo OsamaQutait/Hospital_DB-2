@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="1300.0" style="-fx-background-color: #e0dbdb;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.DepartmentController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="1300.0" style="-fx-background-color: #e0dbdb;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.DepartmentRoomsTablesController">
    <children>
       <HBox prefHeight="704.0" prefWidth="1300.0">
          <children>
@@ -46,12 +46,12 @@
                   </HBox>
                   <AnchorPane prefHeight="618.0" prefWidth="1300.0">
                      <children>
-                        <JFXButton layoutX="14.0" layoutY="19.0" prefHeight="39.0" prefWidth="112.0" ripplerFill="#4d0e0e" style="-fx-border-color: black; -fx-background-color: #e4a4b4;" text="&lt; back">
+                        <JFXButton fx:id="BackButton" layoutX="14.0" layoutY="19.0" prefHeight="39.0" prefWidth="112.0" ripplerFill="#4d0e0e" style="-fx-border-color: black; -fx-background-color: #e4a4b4;" text="&lt; back">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </JFXButton>
-                        <GridPane hgap="10.0" layoutX="150.0" layoutY="19.0" prefHeight="580.0" prefWidth="1130.0" vgap="10.0">
+                        <GridPane hgap="10.0" layoutX="150.0" layoutY="19.0" prefHeight="580.0" prefWidth="1145.0" vgap="10.0">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -80,20 +80,20 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <JFXComboBox prefHeight="40.0" prefWidth="250.0">
+                                          <JFXComboBox fx:id="DepChoice" prefHeight="40.0" prefWidth="250.0">
                                              <padding>
                                                 <Insets left="5.0" right="5.0" />
                                              </padding>
                                           </JFXComboBox>
                                        </children>
                                     </HBox>
-                                    <TableView prefHeight="461.0" prefWidth="558.0">
+                                    <TableView fx:id="TDepartment" prefHeight="461.0" prefWidth="558.0">
                                       <columns>
-                                        <TableColumn prefWidth="78.33334350585938" text="Dep. ID" />
-                                        <TableColumn prefWidth="134.66665649414062" text="Dep. Name" />
-                                          <TableColumn prefWidth="91.66668701171875" text="Dep. Floor" />
-                                          <TableColumn prefWidth="104.33331298828125" text="Max No. Rooms" />
-                                          <TableColumn prefWidth="149.66668701171875" text="Assigned No. rooms" />
+                                        <TableColumn fx:id="TDid" prefWidth="78.33334350585938" text="Dep. ID" />
+                                        <TableColumn fx:id="TDname" prefWidth="134.66665649414062" text="Dep. Name" />
+                                          <TableColumn fx:id="TDfloor" prefWidth="91.66668701171875" text="Dep. Floor" />
+                                          <TableColumn fx:id="TDMaxNoRooms" prefWidth="104.33331298828125" text="Max No. Rooms" />
+                                          <TableColumn fx:id="TDAssignedRooms" prefWidth="149.66668701171875" text="Assigned No. rooms" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets bottom="5.0" top="5.0" />
@@ -121,20 +121,20 @@
                                                 <Font size="18.0" />
                                              </font>
                                           </Label>
-                                          <JFXComboBox prefHeight="40.0" prefWidth="250.0">
+                                          <JFXComboBox fx:id="RoomChoice" prefHeight="40.0" prefWidth="250.0">
                                              <padding>
                                                 <Insets left="5.0" right="5.0" />
                                              </padding>
                                           </JFXComboBox>
                                        </children>
                                     </HBox>
-                                    <TableView prefHeight="461.0" prefWidth="558.0">
+                                    <TableView fx:id="TRooms" prefHeight="461.0" prefWidth="558.0">
                                       <columns>
-                                        <TableColumn prefWidth="76.3333740234375" text="Room ID" />
-                                        <TableColumn prefWidth="94.0" text="Acco. cost" />
-                                          <TableColumn prefWidth="101.66668701171875" text="Total No. beds" />
-                                          <TableColumn prefWidth="99.6666259765625" text="Available beds" />
-                                          <TableColumn prefWidth="184.3333740234375" text="Room description" />
+                                        <TableColumn fx:id="TRid" prefWidth="76.3333740234375" text="Room ID" />
+                                        <TableColumn fx:id="TRcost" prefWidth="94.0" text="Acco. cost" />
+                                          <TableColumn fx:id="TRtotalBeds" prefWidth="101.66668701171875" text="Total No. beds" />
+                                          <TableColumn fx:id="TRavailableBeds" prefWidth="99.6666259765625" text="Available beds" />
+                                          <TableColumn fx:id="TRdescription" prefWidth="184.3333740234375" text="Room description" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets bottom="5.0" top="5.0" />

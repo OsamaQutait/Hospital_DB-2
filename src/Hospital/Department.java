@@ -6,11 +6,11 @@ public class Department {
 	private int departmentID;
 	private String departmentName;
 	private int numberOfRooms;
-	private int departmentFloor;
+	private String departmentFloor;
 
 	public Department(){}
 
-	public Department(int departmentID, String departmentName, int numberOfRooms, int departmentFloor) {
+	public Department(int departmentID, String departmentName, int numberOfRooms, String departmentFloor) {
 		this.departmentID = departmentID;
 		this.departmentName = departmentName;
 		this.numberOfRooms = numberOfRooms;
@@ -33,11 +33,11 @@ public class Department {
 		this.departmentName = departmentName;
 	}
 
-	public int getDepartmentFloor() {
+	public String getDepartmentFloor() {
 		return departmentFloor;
 	}
 
-	public void setDepartmentFloor(int departmentFloor) {
+	public void setDepartmentFloor(String departmentFloor) {
 		this.departmentFloor = departmentFloor;
 	}
 
