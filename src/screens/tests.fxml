@@ -157,8 +157,8 @@
                                                                   <JFXTextField fx:id="testLab" />
                                                                </children>
                                                             </VBox>
-                                                                            <JFXButton fx:id="insertTest" prefHeight="31.0" prefWidth="420.0" text="Insert Test" textFill="#3b5998" GridPane.rowIndex="2" />
-                                                                            <JFXButton fx:id="clearInsert" prefHeight="31.0" prefWidth="417.0" text="Clear" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                            <JFXButton fx:id="insertTest" onAction="#insertTest" prefHeight="31.0" prefWidth="420.0" text="Insert Test" textFill="#3b5998" GridPane.rowIndex="2" />
+                                                                            <JFXButton fx:id="clearInsert" onAction="#clearInsert" prefHeight="31.0" prefWidth="417.0" text="Clear" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                          </children>
                                                       </GridPane>
                                                    </children>
@@ -173,9 +173,9 @@
                                                                     </font>
                                                                 </Label>
                                                                 <Label prefHeight="21.0" prefWidth="200.0" text="Test Name" textFill="#3b5998" />
-                                                                <JFXComboBox fx:id="selectTestDelete" prefHeight="53.0" prefWidth="394.0" promptText="Select Test to Delete" />
-                                                                <JFXButton fx:id="deleteTest" prefHeight="31.0" prefWidth="428.0" text="Delete Test" textFill="#3b5998" />
-                                                                <JFXButton fx:id="clearDelete" prefHeight="31.0" prefWidth="403.0" text="Clear" textFill="#3b5998" />
+                                                                <JFXComboBox fx:id="selectTestDelete" onAction="#selectTestDelete" prefHeight="53.0" prefWidth="394.0" promptText="Select Test to Delete" />
+                                                                <JFXButton fx:id="deleteTest" onAction="#deleteTest" prefHeight="31.0" prefWidth="428.0" text="Delete Test" textFill="#3b5998" />
+                                                                <JFXButton fx:id="clearDelete" onAction="#clearDelete" prefHeight="31.0" prefWidth="403.0" text="Clear" textFill="#3b5998" />
                                                             </children>
                                                         </VBox>
                                                         <VBox prefHeight="235.0" prefWidth="580.0" style="-fx-background-color: #dfe3ee;" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -186,11 +186,11 @@
                                                                     </font>
                                                                 </Label>
                                                                 <Label text="Test Namer" textFill="#3b5998" />
-                                                                <JFXComboBox fx:id="SelectUpTestName" focusColor="#3b5998" prefHeight="31.0" prefWidth="426.0" promptText="Select Test to Update" />
+                                                                <JFXComboBox fx:id="SelectUpTestName" focusColor="#3b5998" onAction="#SelectUpTestName" prefHeight="31.0" prefWidth="426.0" promptText="Select Test to Update" />
                                                                 <Label text="New Test Price" textFill="#3b5998" />
                                                                 <JFXTextField fx:id="newPrice" />
-                                                                <JFXButton fx:id="updateTestPrice" prefHeight="31.0" prefWidth="431.0" text="Update Tests Price" textFill="#3b5998" />
-                                                                <JFXButton fx:id="clearUpdatePrice" prefHeight="31.0" prefWidth="459.0" text="Clear" textFill="#3b5998" />
+                                                                <JFXButton fx:id="updateTestPrice" onAction="#updateTestPrice" prefHeight="31.0" prefWidth="431.0" text="Update Tests Price" textFill="#3b5998" />
+                                                                <JFXButton fx:id="clearUpdatePrice" onAction="#clearUpdatePrice" prefHeight="31.0" prefWidth="459.0" text="Clear" textFill="#3b5998" />
                                                             </children>
                                                         </VBox>
                                           <VBox prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #dfe3ee;" GridPane.rowIndex="1">
@@ -201,9 +201,11 @@
                                                    </font>
                                                 </Label>
                                                 <Label text="Test Name" textFill="#3b5998" />
-                                                <JFXComboBox fx:id="selectUpTsetLab" prefHeight="31.0" prefWidth="481.0" promptText="Select Test to Update lab ID" />
-                                                <JFXButton fx:id="upTestLabID" prefHeight="31.0" prefWidth="409.0" text="Update Tests Lab ID" textFill="#3b5998" />
-                                                <JFXButton fx:id="clearLab" prefHeight="31.0" prefWidth="436.0" text="Clear" textFill="#3b5998" />
+                                                <JFXComboBox fx:id="selectUpTsetLab" onAction="#selectUpTsetLab" prefHeight="31.0" prefWidth="481.0" promptText="Select Test to Update lab ID" />
+                                                <Label prefHeight="21.0" prefWidth="126.0" text="New Lab ID" textFill="#3b5998" />
+                                                <JFXTextField fx:id="newLabID" />
+                                                <JFXButton fx:id="upTestLabID" onAction="#upTestLabID" prefHeight="31.0" prefWidth="409.0" text="Update Tests Lab ID" textFill="#3b5998" />
+                                                <JFXButton fx:id="clearLab" onAction="#clearLab" prefHeight="31.0" prefWidth="436.0" text="Clear" textFill="#3b5998" />
                                              </children>
                                           </VBox>
                                                     </children>
