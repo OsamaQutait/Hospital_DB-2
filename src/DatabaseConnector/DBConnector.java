@@ -9,7 +9,7 @@ import java.util.Properties;
 public final class DBConnector {
     private static String dbURL;
     private static String dbUsername = "root";
-    private static String dbPassword = "Kr92#@99";
+    private static String dbPassword = "1234";
     private static String URL = "127.0.0.1";
     private static String port = "3306";
     private static String dbName = "hospital";

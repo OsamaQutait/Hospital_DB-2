@@ -17,75 +17,73 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
-public class DepartmentRoomsTablesController implements Initializable{
+public class DepartmentRoomsTablesController implements Initializable {
 
-    @FXML
-    private JFXButton BackButton;
+	@FXML
+	private JFXButton BackButton;
 
-    @FXML
-    private JFXComboBox<?> DepChoice;
+	@FXML
+	private JFXComboBox<?> DepChoice;
 
-    @FXML
-    private TableView<?> TDepartment;
+	@FXML
+	private TableView<?> TDepartment;
 
-    @FXML
-    private TableColumn<?, ?> TDid;
+	@FXML
+	private TableColumn<?, ?> TDid;
 
-    @FXML
-    private TableColumn<?, ?> TDname;
+	@FXML
+	private TableColumn<?, ?> TDname;
 
-    @FXML
-    private TableColumn<?, ?> TDfloor;
+	@FXML
+	private TableColumn<?, ?> TDfloor;
 
-    @FXML
-    private TableColumn<?, ?> TDMaxNoRooms;
+	@FXML
+	private TableColumn<?, ?> TDMaxNoRooms;
 
-    @FXML
-    private TableColumn<?, ?> TDAssignedRooms;
+	@FXML
+	private TableColumn<?, ?> TDAssignedRooms;
 
-    @FXML
-    private JFXComboBox<?> RoomChoice;
+	@FXML
+	private JFXComboBox<?> RoomChoice;
 
-    @FXML
-    private TableView<?> TRooms;
+	@FXML
+	private TableView<?> TRooms;
 
-    @FXML
-    private TableColumn<?, ?> TRid;
+	@FXML
+	private TableColumn<?, ?> TRid;
 
-    @FXML
-    private TableColumn<?, ?> TRcost;
+	@FXML
+	private TableColumn<?, ?> TRcost;
 
-    @FXML
-    private TableColumn<?, ?> TRtotalBeds;
+	@FXML
+	private TableColumn<?, ?> TRtotalBeds;
 
-    @FXML
-    private TableColumn<?, ?> TRavailableBeds;
+	@FXML
+	private TableColumn<?, ?> TRavailableBeds;
 
-    @FXML
-    private TableColumn<?, ?> TRdescription;
+	@FXML
+	private TableColumn<?, ?> TRdescription;
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-		
-		
+
 		BackButton.setOnAction((ActionEvent e) -> {
-	        backTodepartments();
-	    });
-		
+			backTodepartments();
+		});
+
 	}
-	
-	public void backTodepartments(){
+
+	public void backTodepartments() {
 		try {
 			BackButton.getScene().getWindow().hide();
-            Parent root = FXMLLoader.load(getClass().getResource("../screens/department.fxml"));
-            Stage stage = new Stage();
-            Scene scene = new Scene(root);
-            stage.setTitle("Hospital Database");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        }
+			Parent root = FXMLLoader.load(getClass().getResource("../screens/department.fxml"));
+			Stage stage = new Stage();
+			Scene scene = new Scene(root);
+			stage.setTitle("Hospital Database");
+			stage.setScene(scene);
+			stage.show();
+		} catch (IOException ioException) {
+			ioException.printStackTrace();
+		}
 	}
 }
