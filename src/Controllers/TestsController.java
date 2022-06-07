@@ -75,7 +75,7 @@ public class TestsController implements Initializable {
 
     @FXML
     void SelectUpTestName(ActionEvent event) {
-
+        SelectUpTestName.setItems(FXCollections.observableArrayList(TestsNameList));
     }
 
     @FXML
@@ -159,12 +159,12 @@ public class TestsController implements Initializable {
 
     @FXML
     void selectTestDelete(ActionEvent event) {
-
+        selectTestDelete.setItems(FXCollections.observableArrayList(TestsNameList));
     }
 
     @FXML
     void selectUpTsetLab(ActionEvent event) {
-
+        selectUpTsetLab.setItems(FXCollections.observableArrayList(TestsNameList));
     }
 
     @FXML
@@ -180,9 +180,7 @@ public class TestsController implements Initializable {
         if(flag){
             for (Tests test : TestsList){
                 if(test.getTestName().equals(SelectUpTestName.getValue())){
-                    //System.out.println(surgeri.getSurgery_price());
                     test.setLabID(Integer.parseInt(newLabID.getText()));
-                    //System.out.println(surgeri.getSurgery_price());
                 }
             }
         }
