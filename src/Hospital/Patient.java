@@ -9,7 +9,7 @@ import java.util.Date;
 public class Patient {
     private String visitReason;
     private String emergencyStatus;
-    private int lengthOfStay;
+    private float lengthOfStay;
     private Date joinDateAndTime;
     private Date leaveDateAndTime;
     private int identityNumber;
@@ -19,7 +19,7 @@ public class Patient {
 
     }
 
-    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, Date leaveDateAndTime, int identityNumber, String roomID) {
+    public Patient(String visitReason, String emergencyStatus, float lengthOfStay, Date joinDateAndTime, Date leaveDateAndTime, int identityNumber, String roomID) {
         this.visitReason = visitReason;
         this.emergencyStatus = emergencyStatus;
         this.lengthOfStay = lengthOfStay;
@@ -28,7 +28,7 @@ public class Patient {
         this.identityNumber = identityNumber;
         this.roomID = roomID;
     }
-    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, int identityNumber, String roomID) {
+    public Patient(String visitReason, String emergencyStatus, float lengthOfStay, Date joinDateAndTime, int identityNumber, String roomID) {
         this.visitReason = visitReason;
         this.emergencyStatus = emergencyStatus;
         this.lengthOfStay = lengthOfStay;
@@ -37,7 +37,7 @@ public class Patient {
         this.identityNumber = identityNumber;
         this.roomID = roomID;
     }
-    public Patient(String visitReason, String emergencyStatus, int lengthOfStay, Date joinDateAndTime, int identityNumber) {
+    public Patient(String visitReason, String emergencyStatus, float lengthOfStay, Date joinDateAndTime, int identityNumber) {
         this.visitReason = visitReason;
         this.emergencyStatus = emergencyStatus;
         this.lengthOfStay = lengthOfStay;
@@ -63,11 +63,11 @@ public class Patient {
         this.emergencyStatus = emergencyStatus;
     }
 
-    public int getLengthOfStay() {
+    public float getLengthOfStay() {
         return lengthOfStay;
     }
 
-    public void setLengthOfStay(int lengthOfStay) {
+    public void setLengthOfStay(float lengthOfStay) {
         this.lengthOfStay = lengthOfStay;
     }
 
@@ -111,7 +111,7 @@ public class Patient {
         if (this.leaveDateAndTime == null){
             return null;
         }
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(this.leaveDateAndTime);
+        return "'" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(this.leaveDateAndTime) + "'";
     }
 
     public LocalDate getJoinDateLocalDate() {

@@ -89,4 +89,8 @@ public class PhoneNumbersController implements Initializable {
         }
         return i == 0;
     }
+
+    public ArrayList<String> getPhoneNumbers() {
+        return phoneNumbers;
+    }
 }
