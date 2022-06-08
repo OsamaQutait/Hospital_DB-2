@@ -79,7 +79,7 @@ public class TestsController implements Initializable {
     }
 
     @FXML
-    void clearDelete(ActionEvent event) {
+    void clearDeleteButton(ActionEvent event) {
         selectTestDelete.setValue(null);
     }
 
@@ -102,7 +102,7 @@ public class TestsController implements Initializable {
     }
 
     @FXML
-    void deleteTest(ActionEvent event) {
+    void deleteTestButton(ActionEvent event) {
         assignComboBoxesValues();
         Predicate<Tests> pr = a -> (a.getTestName().equals(selectTestDelete.getValue()));
         TestsNameList.remove(selectTestDelete.getValue());
@@ -113,7 +113,7 @@ public class TestsController implements Initializable {
     }
 
     @FXML
-    void insertTest(ActionEvent event) {
+    void insertTestButton(ActionEvent event) {
         assignComboBoxesValues();
         boolean flag = true;
         if (testName.getText().isEmpty() || testName.getText().length() > 32) {
