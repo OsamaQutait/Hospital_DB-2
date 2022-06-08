@@ -84,9 +84,8 @@ public class SurgeriesController implements Initializable {
         SurgeryNameList = new ArrayList<>();
         data = new ArrayList<>();
         dataList = FXCollections.observableArrayList(data);
-        surgerNameTable.setCellValueFactory(new PropertyValueFactory<Surgeries, String>("surgery_name"));
-        surgerIDTable.setCellValueFactory(new PropertyValueFactory<Surgeries, Integer>("surgery_id"));
-        table.setItems(dataList);
+        assignTableValues();
+
         try {
             getData();
         } catch (ParseException e) {
@@ -126,19 +125,29 @@ public class SurgeriesController implements Initializable {
     }
 
     @FXML
-    void deleteSurgery(ActionEvent event) {
+    void deleteSurgery(ActionEvent event) throws ClassNotFoundException, SQLException{
+        int id = 0;
         assignComboBoxesValues();
         Predicate<Surgeries> pr = a -> (a.getSurgery_name().equals(selectSurgeriesDelete.getValue()));
         SurgeryList.removeIf(pr);
         SurgeryNameList.remove(selectSurgeriesDelete.getValue());
-        /*for (Surgeries surgeri : SurgeryList){
-            System.out.println(surgeri.getSurgery_name());
-        }*/
+        for (Surgeries surgeri : SurgeryList){
+            if(surgeri.getSurgery_name().equals(SelectUpSurgeryName.getValue())){
+                id = surgeri.getSurgery_id();
+            }
+        }
+        dataList = FXCollections.observableArrayList(SurgeryList);
+        assignTableValues();
         assignComboBoxesValues();
+        String sql;
+        sql = "delete from Surgeries where surgery_id = "+ id;
+        DBConnector.connectDB();
+        DBConnector.ExecuteStatement(sql);
+        DBConnector.getCon().close();
     }
 
     @FXML
-    void insertSurgery(ActionEvent event) {
+    void insertSurgery(ActionEvent event) throws ClassNotFoundException, SQLException{
         boolean flag = true;
         if (sName.getText().isEmpty() || sName.getText().length() > 32) {
             sName.setUnFocusColor(Color.RED);
@@ -166,36 +175,22 @@ public class SurgeriesController implements Initializable {
                     sName.getText(),
                     Float.parseFloat(surgeryPrice.getText())));
             SurgeryNameList.add(sName.getText());
-            //System.out.println(SurgeryList.get(SurgeryList.size()-1).getSurgery_name()+SurgeryList.get(SurgeryList.size()-1).getSurgery_id());
-
-
-
-            //System.out.print(surgeryID.getText() + "..." + sName.getText() + "..." + surgeryPrice.getText());
+            dataList = FXCollections.observableArrayList(SurgeryList);
             assignComboBoxesValues();
-            /*try {
-
-                DBConnector.connectDB();
-                String sql = "Insert into inshurance_company (inshurance_companyName, inshurance_companyDiscount)"
-                        + " values(?,?)";
-                PreparedStatement ps = (PreparedStatement) DBConnector.connectDB().prepareStatement(sql);
-                ps.setString(1, sName.getText());
-                ps.setString(2, String.valueOf(Float.parseFloat(surgeryPrice.getText())));
-//			ps.setString(3, String.valueOf(rc.getNumberOfCustomer()));
-                ps.execute();
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }*/
+            assignTableValues();
+            String sql;
+            sql = "Insert into surgeries values (" + Integer.parseInt(surgeryID.getText()) + ",'" + sName.getText() + "',"
+                    + Float.parseFloat(surgeryPrice.getText()) +")";
+            DBConnector.connectDB();
+            DBConnector.ExecuteStatement(sql);
+            DBConnector.getCon().close();
 
 
         }
-        //initialize(null,null);
     }
 
     @FXML
-    void updateSurgeries(ActionEvent event) {
+    void updateSurgeries(ActionEvent event) throws ClassNotFoundException, SQLException{
         boolean flag = true;
         if(newPrice.getText().isEmpty() || !isFloat(newPrice.getText())){
             newPrice.setUnFocusColor(Color.RED);
@@ -207,9 +202,15 @@ public class SurgeriesController implements Initializable {
         if(flag){
             for (Surgeries surgeri : SurgeryList){
                 if(surgeri.getSurgery_name().equals(SelectUpSurgeryName.getValue())){
-                    //System.out.println(surgeri.getSurgery_price());
                     surgeri.setSurgery_price(Float.parseFloat(newPrice.getText()));
-                    //System.out.println(surgeri.getSurgery_price());
+                    dataList = FXCollections.observableArrayList(SurgeryList);
+                    assignTableValues();
+                    String sql;
+                    sql = "update Surgeries set surgery_price = " + Float.parseFloat(newPrice.getText()) +
+                            " where surgery_id = " +surgeri.getSurgery_id();
+                    DBConnector.connectDB();
+                    DBConnector.ExecuteStatement(sql);
+                    DBConnector.getCon().close();
                 }
             }
         }
@@ -255,6 +256,12 @@ public class SurgeriesController implements Initializable {
     public void assignComboBoxesValues() {
         selectSurgeriesDelete.setItems(FXCollections.observableArrayList(SurgeryNameList));
         SelectUpSurgeryName.setItems(FXCollections.observableArrayList(SurgeryNameList));
+    }
+
+    public void assignTableValues(){
+        surgerNameTable.setCellValueFactory(new PropertyValueFactory<Surgeries, String>("surgery_name"));
+        surgerIDTable.setCellValueFactory(new PropertyValueFactory<Surgeries, Integer>("surgery_id"));
+        table.setItems(dataList);
     }
 
     public static boolean isNumeric(String string) {
