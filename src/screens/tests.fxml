@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="774.0" prefWidth="1360.0" style="-fx-background-color: #8b9dc3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.RegistrationController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="774.0" prefWidth="1360.0" style="-fx-background-color: #8b9dc3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.TestsController">
     <children>
         <HBox layoutY="50.0" prefHeight="750.0" prefWidth="1349.0">
             <children>
@@ -157,7 +157,7 @@
                                                                   <JFXTextField fx:id="testLab" />
                                                                </children>
                                                             </VBox>
-                                                                            <JFXButton fx:id="insertTest" onAction="#insertTest" prefHeight="31.0" prefWidth="420.0" text="Insert Test" textFill="#3b5998" GridPane.rowIndex="2" />
+                                                                            <JFXButton fx:id="insertTest" onAction="#insertTestButton" prefHeight="31.0" prefWidth="420.0" text="Insert Test" textFill="#3b5998" GridPane.rowIndex="2" />
                                                                             <JFXButton fx:id="clearInsert" onAction="#clearInsert" prefHeight="31.0" prefWidth="417.0" text="Clear" textFill="#3b5998" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                          </children>
                                                       </GridPane>
@@ -174,8 +174,8 @@
                                                                 </Label>
                                                                 <Label prefHeight="21.0" prefWidth="200.0" text="Test Name" textFill="#3b5998" />
                                                                 <JFXComboBox fx:id="selectTestDelete" onAction="#selectTestDelete" prefHeight="53.0" prefWidth="394.0" promptText="Select Test to Delete" />
-                                                                <JFXButton fx:id="deleteTest" onAction="#deleteTest" prefHeight="31.0" prefWidth="428.0" text="Delete Test" textFill="#3b5998" />
-                                                                <JFXButton fx:id="clearDelete" onAction="#clearDelete" prefHeight="31.0" prefWidth="403.0" text="Clear" textFill="#3b5998" />
+                                                                <JFXButton fx:id="deleteTest" onAction="#deleteTestButton" prefHeight="31.0" prefWidth="428.0" text="Delete Test" textFill="#3b5998" />
+                                                                <JFXButton fx:id="clearDelete" onAction="#clearDeleteButton" prefHeight="31.0" prefWidth="403.0" text="Clear" textFill="#3b5998" />
                                                             </children>
                                                         </VBox>
                                                         <VBox prefHeight="235.0" prefWidth="580.0" style="-fx-background-color: #dfe3ee;" GridPane.columnIndex="1" GridPane.rowIndex="1">

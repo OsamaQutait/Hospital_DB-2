@@ -140,7 +140,7 @@ public class SurgeriesController implements Initializable {
         assignTableValues();
         assignComboBoxesValues();
         String sql;
-        sql = "delete from Surgeries where surgery_id = "+ id;
+        sql = "delete from surgeries where surgery_id = "+id;
         DBConnector.connectDB();
         DBConnector.ExecuteStatement(sql);
         DBConnector.getCon().close();
