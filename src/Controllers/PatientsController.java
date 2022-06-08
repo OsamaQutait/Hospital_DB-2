@@ -3,11 +3,11 @@ package Controllers;
 //delete: have to check if patient has left the hospital or he doesnt have surgeries/tests or if he paid his bill
 //update/insert: have to check all data
 /*Reports
-* 1) according to city
-* 2) according to gender
-* 3) according to blood type
-* 4) find number of dead/alive
-* 5) find people who came for surgery, test, or both
+* 1) according to city -- done
+* 2) according to gender -- done
+* 3) according to blood type -- done
+* 4) find number of dead/alive -- done
+* 5) find people who came for surgery, test, or both -- done
 * 6) report about insurance coverage
 * 7) check people whom insurance has expired or will expire soon
 * 8) find person who stayed for much time in the hospital
@@ -15,6 +15,10 @@ package Controllers;
  */
 //payment is zero if insurance is not active, its value if it's active (insertPatient)
 //handle if length of stay is text
+//add margins for deleting: if he has left no problem, if not pay bill first
+//phone update is not working
+//must add phone numbers to medical staff
+//must check payment statments
 
 import DatabaseConnector.DBConnector;
 import Hospital.*;
@@ -47,7 +51,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class PatientsController implements Initializable {
     @FXML
@@ -147,7 +151,7 @@ public class PatientsController implements Initializable {
     private JFXButton insert;
 
     @FXML
-    private JFXButton statistics;
+    private JFXButton reports;
 
     @FXML
     private Button registrationButton;
@@ -172,6 +176,7 @@ public class PatientsController implements Initializable {
     private ArrayList<String> emergencyStatList;
     private ArrayList<String> visitReasonList;
     private static ArrayList<String> phoneNumbers;
+    private static ArrayList<String> phoneNumbersUP;
     private ArrayList<String> cityList;
 
     private ArrayList<Identity> patientsSQL;
@@ -239,8 +244,9 @@ public class PatientsController implements Initializable {
             idNum.setEditable(false);
             insuranceID.setEditable(false);
             addPhoneNumbers.setVisible(false);
-            seePhoneNumbers.setVisible(true);
             upPhoneNumbers.setVisible(false);
+            seePhoneNumbers.setVisible(true);
+            pSelection = 2;
         });
 
         upMode.setOnAction((ActionEvent e) -> {
@@ -257,6 +263,7 @@ public class PatientsController implements Initializable {
             addPhoneNumbers.setVisible(false);
             seePhoneNumbers.setVisible(false);
             upPhoneNumbers.setVisible(true);
+            pSelection = 3;
         });
 
         inMode.setOnAction((ActionEvent e) -> {
@@ -270,9 +277,13 @@ public class PatientsController implements Initializable {
             update.setDisable(true);
             idNum.setEditable(true);
             insuranceID.setEditable(true);
-            addPhoneNumbers.setVisible(true);
+            pSelection = 1;
+            insuranceClear();
+            identityClear();
+            patientClear();
             seePhoneNumbers.setVisible(false);
             upPhoneNumbers.setVisible(false);
+            addPhoneNumbers.setVisible(true);
         });
 
         dMode.setOnAction((ActionEvent e) -> {
@@ -335,7 +346,7 @@ public class PatientsController implements Initializable {
 
         addPhoneNumbers.setOnAction((ActionEvent e) -> {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../screens/phoneNumbers.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/phoneNumbers2Patient.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
@@ -346,10 +357,27 @@ public class PatientsController implements Initializable {
             }
         });
 
+        reports.setOnAction((ActionEvent e) -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/patientReports.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                //stage.initStyle(StageStyle.UNDECORATED);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
         search.setOnAction((ActionEvent e) -> {
+            pSelection = 2;
             insuranceClear();
             identityClear();
             insuranceClear();
+            seePhoneNumbers.setVisible(true);
+            addPhoneNumbers.setVisible(false);
+            upPhoneNumbers.setVisible(false);
             if (tableSearch.isSelected() && pTable.getSelectionModel().getSelectedItem() != null){
                 try {
                     displaySelected();
@@ -364,6 +392,10 @@ public class PatientsController implements Initializable {
         });
 
         update.setOnAction((ActionEvent e) -> {
+            upPhoneNumbers.setVisible(true);
+            addPhoneNumbers.setVisible(false);
+            seePhoneNumbers.setVisible(false);
+            pSelection = 3;
             if (identityValidation() && patientValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1)){
                 try {
                     if (leaveTime.getValue() == null || leaveDate.getValue() == null){
@@ -384,6 +416,10 @@ public class PatientsController implements Initializable {
         });
 
         insert.setOnAction((ActionEvent e) -> {
+            pSelection = 1;
+            addPhoneNumbers.setVisible(true);
+            seePhoneNumbers.setVisible(false);
+            upPhoneNumbers.setVisible(false);
             if (identityValidation() && patientValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1)){
                 try {
                     if (leaveTime.getValue() == null || leaveDate.getValue() == null){
@@ -400,6 +436,52 @@ public class PatientsController implements Initializable {
                     classNotFoundException.printStackTrace();
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
+                }
+            }
+        });
+
+        delete.setOnAction((ActionEvent e) -> {
+            addPhoneNumbers.setVisible(false);
+            seePhoneNumbers.setVisible(false);
+            upPhoneNumbers.setVisible(false);
+            try {
+                deletePatient();
+                pTable.refresh();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            } catch (ClassNotFoundException classNotFoundException) {
+                classNotFoundException.printStackTrace();
+            } catch (ParseException parseException) {
+                parseException.printStackTrace();
+            }
+        });
+
+        seePhoneNumbers.setOnAction((ActionEvent e) -> {
+            if (!idNum.getText().isEmpty()) {
+                try {
+                    Parent root = FXMLLoader.load(getClass().getResource("../screens/phoneNumbers2Patient.fxml"));
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.initStyle(StageStyle.UNDECORATED);
+                    stage.show();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+            }
+        });
+
+        upPhoneNumbers.setOnAction((ActionEvent e) -> {
+            if (!idNum.getText().isEmpty()) {
+                try {
+                    Parent root = FXMLLoader.load(getClass().getResource("../screens/phoneNumbers2Patient.fxml"));
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.initStyle(StageStyle.UNDECORATED);
+                    stage.show();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
                 }
             }
         });
@@ -545,6 +627,15 @@ public class PatientsController implements Initializable {
                 }
             }
 
+            if (currentDate.compareTo(dob) <= 0) {
+                dateOfBirth.setDefaultColor(Paint.valueOf("red"));
+                dateOfBirth.setValue(null);
+                dateOfBirth.setPromptText("ERROR");
+                flag = false;
+            } else {
+                dateOfBirth.setDefaultColor(Paint.valueOf("black"));
+            }
+
             if (leaveDT != null && dob.compareTo(leaveDT) > 0){
                 dateOfBirth.setDefaultColor(Paint.valueOf("red"));
                 dateOfBirth.setValue(null);
@@ -649,12 +740,12 @@ public class PatientsController implements Initializable {
         } else {
             idNum.setUnFocusColor(Paint.valueOf("black"));
         }
-        /*if (phoneNumbers.isEmpty()) {
+        if (phoneNumbers.isEmpty()) {
             addPhoneNumbers.setStyle("-fx-background-color: #ff0000");
             flag = false;
         } else {
             addPhoneNumbers.setStyle("-fx-background-color: #3b5998");
-        }*/
+        }
 
         if (!Pattern.matches("[A-Za-z-' ]+", fullName.getText())) {
             fullName.setUnFocusColor(Paint.valueOf("RED"));
@@ -750,14 +841,14 @@ public class PatientsController implements Initializable {
         Patient patient = new Patient(
                 visitReason.getValue(),
                 emergencyStatus.getValue(),
-                lengthOfStay.getText().isEmpty() ? 0 : Integer.parseInt(lengthOfStay.getText()),
+                lengthOfStay.getText().isEmpty() ? 0 : Float.parseFloat(lengthOfStay.getText()),
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00"),
                 leaveDate.getValue() != null ? new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00") : null,
                 Integer.parseInt(idNum.getText()),
                 null
         );
         Phone2ID phones = new Phone2ID();
-        Payment payment = new Payment(null, 0, payCoverage.getValue(), Integer.parseInt(idNum.getText()));
+        Payment payment = new Payment(null, 0, 0, payCoverage.getValue(), Integer.parseInt(idNum.getText()));
 
         Insurance insurance = null;
         if (insuranceCheck.isSelected()){
@@ -816,17 +907,30 @@ public class PatientsController implements Initializable {
                 bloodType.getValue(),
                 address.getValue()
         );
+
+        Identity temp = patientsOBS.get(IntStream.range(0, patientsOBS.size())
+                .filter(i -> patientsOBS.get(i).getIdentityNumber() == id.getIdentityNumber())
+                .findFirst()
+                .orElse(-1));
+        temp.setDateOfBirth(id.getDateOfBirth());
+        temp.setLivingAddress(id.getLivingAddress());
+        temp.setGender(id.getGender());
+        temp.setBloodType(id.getBloodType());
+        temp.setFullName(id.getFullName());
+
+
         Patient patient = new Patient(
                 visitReason.getValue(),
                 emergencyStatus.getValue(),
-                lengthOfStay.getText().isEmpty() ? 0 : Integer.parseInt(lengthOfStay.getText()),
+                lengthOfStay.getText().isEmpty() ? 0 : Float.parseFloat(lengthOfStay.getText()),
                 new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00"),
                 leaveDate.getValue() != null ? new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00") : null,
                 Integer.parseInt(idNum.getText()),
                 null
         );
+
         Phone2ID phones = new Phone2ID();
-        Payment payment = new Payment(null, 0, payCoverage.getValue(), Integer.parseInt(idNum.getText()));
+        Payment payment = new Payment(null, 0, 0, payCoverage.getValue(), Integer.parseInt(idNum.getText()));
 
         Insurance insurance = null;
         if (insuranceCheck.isSelected()){
@@ -840,35 +944,37 @@ public class PatientsController implements Initializable {
 
         DBConnector.connectDB();
         try {
-            DBConnector.ExecuteStatement("Insert into Identity (identity_number, full_name, gender, date_of_birth, blood_type, living_address) values(" +
-                    +id.getIdentityNumber()+",'"
-                    +id.getFullName()+"', '"
-                    +id.getGender()+"', '"
-                    +id.getDateOfBirthToString()+"', '"
-                    +id.getBloodType()+"', '"
-                    +id.getLivingAddress()+"');");
+            DBConnector.ExecuteStatement("Update Identity ID\n"
+                    + "SET " + "ID.identity_number = " + id.getIdentityNumber()+", "
+                    + "ID.full_name = '" + id.getFullName()+"', "
+                    + "ID.gender = '" + id.getGender()+"', "
+                    + "ID.date_of_birth = '" + id.getDateOfBirthToString()+"', "
+                    + "ID.blood_type = '" + id.getBloodType()+"', "
+                    + "ID. living_address = '" + id.getLivingAddress() + "'\n"
+                    + "WHERE " + "ID.identity_number = " + id.getIdentityNumber() + ";");
 
-            DBConnector.ExecuteStatement("Insert into Patient (visit_reason, emergency_status, stay_length_of_stay, stay_join_date_time, stay_leave_date_time, identity_number, Room_id) values('"
-                    +patient.getVisitReason()+"', '"
-                    +patient.getEmergencyStatus()+"', "
-                    +patient.getLengthOfStay()+", '"
-                    +patient.getJoinDateAndTimeToString()+"', "
-                    +patient.getLeaveDateAndTimeToString()+", "
-                    +patient.getIdentityNumber()+", '"
-                    +patient.getRoomID() + "');");
+            DBConnector.ExecuteStatement("Update Patient p\n"
+                    + "SET p.visit_reason = '" + patient.getVisitReason()+"', "
+                    + "p.emergency_status = '" + patient.getEmergencyStatus()+"', "
+                    + "p.stay_length_of_stay = " + patient.getLengthOfStay()+", "
+                    + "p.stay_join_date_time = '" + patient.getJoinDateAndTimeToString()+"', "
+                    + "p.stay_leave_date_time = " + patient.getLeaveDateAndTimeToString()+" \n"
+                    + " where p.identity_number = " + patient.getIdentityNumber()+
+                    (patient.getRoomID() == null ? ";" : " and " + " p.Room_id = '" + patient.getRoomID() + "';"));
 
-            DBConnector.ExecuteStatement("Insert into Payment (issued_date, invoice, coverage, identity_number) values("
-                    +payment.getIssued_dateToString()+", "
-                    +payment.getInvoice()+", "
-                    +payment.getCoverage()+", "
-                    +payment.getIdentity_number()+ ");");
+            /*DBConnector.ExecuteStatement("Update Payment pay\n (issued_date, invoice, coverage, identity_number) values("
+                    + "SET pay.issued_date = " + payment.getIssued_dateToString()+", "
+                    + " pay.invoice " + payment.getInvoice()+", "
+                    + "pay.coverage = " + payment.getCoverage()+", "
+                    + "" + payment.getIdentity_number()+ ");");
+                    *///The same patient may have different pays so we have to get the exact id
 
             if (insuranceCheck.isSelected()){
-                DBConnector.ExecuteStatement("Insert into Insurance (insurance_id, payment_coverage, expire_date, identity_number) values("
-                        +insurance.getInsuranceID()+", "
-                        +insurance.getPaymentCoverage()+", "
-                        +insurance.getExpiryDateToString()+", "
-                        +insurance.getIdentityNumber()+ ");");
+                DBConnector.ExecuteStatement("Update Insurance insur\n"
+                        + " SET insur.payment_coverage = " + insurance.getPaymentCoverage()+", "
+                        + " insur.expire_date = " + insurance.getExpiryDateToString()+"\n"
+                        + " where insur.insurance_id = " + insurance.getInsuranceID()+" and "
+                        + " insur.identity_number = " + insurance.getIdentityNumber()+ ";");
             }
             DBConnector.getCon().close();
         } catch (SQLException e) {
@@ -877,6 +983,39 @@ public class PatientsController implements Initializable {
     }
 
     private void deletePatient() throws SQLException, ClassNotFoundException, ParseException {
+        Identity id = new Identity(
+                Integer.parseInt(idNum.getText()),
+                fullName.getText(),
+                gender.getValue(),
+                new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(dateOfBirth.getValue())),
+                bloodType.getValue(),
+                address.getValue()
+        );
+
+        patientsOBS.remove(IntStream.range(0, patientsOBS.size())
+                .filter(i -> patientsOBS.get(i).getIdentityNumber() == id.getIdentityNumber())
+                .findFirst()
+                .orElse(-1));
+
+        Patient patient = new Patient(
+                visitReason.getValue(),
+                emergencyStatus.getValue(),
+                lengthOfStay.getText().isEmpty() ? 0 : Float.parseFloat(lengthOfStay.getText()),
+                new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00"),
+                leaveDate.getValue() != null ? new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00") : null,
+                Integer.parseInt(idNum.getText()),
+                null
+        );
+
+        DBConnector.connectDB();
+        try {
+            DBConnector.ExecuteStatement("delete from Patient P\n"
+                    + "WHERE " + "P.identity_number = " + patient.getIdentityNumber() + ";");
+            DBConnector.getCon().close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void displaySelected() throws SQLException, ClassNotFoundException, ParseException {
@@ -898,7 +1037,7 @@ public class PatientsController implements Initializable {
         while (rs.next()) {
             patient = new Patient(
                     rs.getString(1), rs.getString(2),
-                    Integer.parseInt(rs.getString(3)),
+                    Float.parseFloat(rs.getString(3)),
                     rs.getString(4) == null ? null : new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(4)),
                     rs.getString(5) == null ? null : new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(rs.getString(5)),
                     Integer.parseInt(rs.getString(6)), rs.getString(7)
@@ -919,7 +1058,16 @@ public class PatientsController implements Initializable {
             );
         }
 
-        System.out.println(insurance == null);
+        SQL = "select p2id.phone_number\n" +
+                "from phone2id p2id\n" +
+                "where p2id.identity_number = " + id.getIdentityNumber() + ";";
+
+        stmt = DBConnector.getCon().createStatement();
+        rs = stmt.executeQuery(SQL);
+        phoneNumbers = new ArrayList<>();
+        while (rs.next()) {
+            phoneNumbers.add(rs.getString(1));
+        }
         if (insurance != null){
             insuranceCheck.setSelected(true);
             insuranceID.setDisable(false);
@@ -955,5 +1103,12 @@ public class PatientsController implements Initializable {
         DBConnector.getCon().close();
     }
 
+    public static void setPhoneNumbers(ArrayList<String> pNums) {
+        PatientsController.phoneNumbersUP = pNums;
+    }
+
+    public static ArrayList<String> getPhoneNumbers() {
+        return PatientsController.phoneNumbers;
+    }
 
 }
