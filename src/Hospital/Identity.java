@@ -52,6 +52,14 @@ public class Identity {
         return d[2] + "-" + d[1] + "-" + d[0];
     }
 
+    public LocalDate getDOBLocalDate() {
+        if (this.dateOfBirth != null) {
+            String[] d = new SimpleDateFormat("dd-MM-yyyy").format(this.dateOfBirth).split("-");
+            return LocalDate.of(Integer.parseInt(d[2]), Integer.parseInt(d[1]), Integer.parseInt(d[0]));
+        }
+        return null;
+    }
+
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
