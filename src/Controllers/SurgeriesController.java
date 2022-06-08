@@ -6,11 +6,13 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 
 import java.net.URL;
@@ -20,7 +22,6 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
 import java.util.function.Predicate;
 
 public class SurgeriesController implements Initializable {
@@ -32,7 +33,7 @@ public class SurgeriesController implements Initializable {
     private TableColumn<Surgeries, String> surgerNameTable;
 
     @FXML
-    private TableColumn<Surgeries, String> surgerIDTable;
+    private TableColumn<Surgeries, Integer> surgerIDTable;
 
     @FXML
     private JFXTextField sName;
@@ -72,13 +73,21 @@ public class SurgeriesController implements Initializable {
 
     ArrayList<Surgeries> SurgeryList;
     ArrayList<String> SurgeryNameList;
+    private ArrayList<Surgeries> data;
+    private ObservableList<Surgeries> dataList;
+
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         clearAll();
+        SurgeryList = new ArrayList<>();
+        SurgeryNameList = new ArrayList<>();
+        data = new ArrayList<>();
+        dataList = FXCollections.observableArrayList(data);
+        surgerNameTable.setCellValueFactory(new PropertyValueFactory<Surgeries, String>("surgery_name"));
+        surgerIDTable.setCellValueFactory(new PropertyValueFactory<Surgeries, Integer>("surgery_id"));
+        table.setItems(dataList);
         try {
-            SurgeryList = new ArrayList<>();
-            SurgeryNameList = new ArrayList<>();
             getData();
         } catch (ParseException e) {
             e.printStackTrace();
@@ -88,7 +97,6 @@ public class SurgeriesController implements Initializable {
             e.printStackTrace();
         }
         assignComboBoxesValues();
-
     }
     @FXML
     void clearDelete(ActionEvent event) {
@@ -161,9 +169,26 @@ public class SurgeriesController implements Initializable {
             //System.out.println(SurgeryList.get(SurgeryList.size()-1).getSurgery_name()+SurgeryList.get(SurgeryList.size()-1).getSurgery_id());
             //System.out.print(surgeryID.getText() + "..." + sName.getText() + "..." + surgeryPrice.getText());
             assignComboBoxesValues();
+            /*try {
+
+                DBConnector.connectDB();
+                String sql = "Insert into inshurance_company (inshurance_companyName, inshurance_companyDiscount)"
+                        + " values(?,?)";
+                PreparedStatement ps = (PreparedStatement) DBConnector.connectDB().prepareStatement(sql);
+                ps.setString(1, sName.getText());
+                ps.setString(2, String.valueOf(Float.parseFloat(surgeryPrice.getText())));
+//			ps.setString(3, String.valueOf(rc.getNumberOfCustomer()));
+                ps.execute();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }*/
+
+
         }
-
-
+        //initialize(null,null);
     }
 
     @FXML
@@ -209,9 +234,12 @@ public class SurgeriesController implements Initializable {
         ResultSet rs = stmt.executeQuery(SQL);
 
         while (rs.next()) {
-            SurgeryList.add( new Surgeries(Integer.parseInt(rs.getString(1)),
-                                rs.getString(2),
-                                Float.parseFloat(rs.getString(3))));
+
+            Surgeries s = new  Surgeries(Integer.parseInt(rs.getString(1)),
+                    rs.getString(2),
+                    Float.parseFloat(rs.getString(3)));
+            SurgeryList.add(s);
+            dataList.add(s);
             SurgeryNameList.add(rs.getString(2));
         }
 
