@@ -167,6 +167,9 @@ public class SurgeriesController implements Initializable {
                     Float.parseFloat(surgeryPrice.getText())));
             SurgeryNameList.add(sName.getText());
             //System.out.println(SurgeryList.get(SurgeryList.size()-1).getSurgery_name()+SurgeryList.get(SurgeryList.size()-1).getSurgery_id());
+
+
+
             //System.out.print(surgeryID.getText() + "..." + sName.getText() + "..." + surgeryPrice.getText());
             assignComboBoxesValues();
             /*try {
