@@ -89,11 +89,10 @@
                                     </HBox>
                                     <TableView fx:id="TDepartment" prefHeight="461.0" prefWidth="558.0">
                                       <columns>
-                                        <TableColumn fx:id="TDid" prefWidth="78.33334350585938" text="Dep. ID" />
-                                        <TableColumn fx:id="TDname" prefWidth="134.66665649414062" text="Dep. Name" />
-                                          <TableColumn fx:id="TDfloor" prefWidth="91.66668701171875" text="Dep. Floor" />
-                                          <TableColumn fx:id="TDMaxNoRooms" prefWidth="104.33331298828125" text="Max No. Rooms" />
-                                          <TableColumn fx:id="TDAssignedRooms" prefWidth="149.66668701171875" text="Assigned No. rooms" />
+                                        <TableColumn fx:id="TDid" prefWidth="139.5" text="Dep. ID" />
+                                        <TableColumn fx:id="TDname" prefWidth="139.5" text="Dep. Name" />
+                                          <TableColumn fx:id="TDMaxNoRooms" prefWidth="139.5" text="Max No. Rooms" />
+                                          <TableColumn fx:id="TDfloor" prefWidth="145.0" text="Dep. Floor" />
                                       </columns>
                                        <VBox.margin>
                                           <Insets bottom="5.0" top="5.0" />

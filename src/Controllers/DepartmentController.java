@@ -1,3 +1,13 @@
+/*
+ * Project: Database Hospital System
+ * 
+ * Authors: 
+ * Kareem Afaneh - 1190359
+ * Ali Mohammed - 1190502
+ * Osama Qutait - 1191072
+ * 
+ * date : 9-6-2022
+ */
 package Controllers;
 
 import java.io.IOException;
@@ -167,7 +177,6 @@ public class DepartmentController implements Initializable {
 		try {
 			getData();
 		} catch (ClassNotFoundException | SQLException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		// the clear button for department section (clear all elements)
@@ -237,7 +246,11 @@ public class DepartmentController implements Initializable {
 		});
 		// the Update button for the room update section
 		UpRoomUpdate.setOnAction((ActionEvent e) -> {
-			UpdateRoomValidation();
+			try {
+				UpdateRoomValidation();
+			} catch (ClassNotFoundException | SQLException e1) {
+				e1.printStackTrace();
+			}
 		});
 
 		// to show the departments and rooms tables window
@@ -250,12 +263,12 @@ public class DepartmentController implements Initializable {
 			openRegistration();
 		});
 
-		// to switch to registration window
+		// to switch to patient window
 		PatientsButton.setOnAction((ActionEvent e) -> {
 			openPatient();
 		});
 
-		// to switch to registration window
+		// to switch to surgery window
 		SurgeriesButton.setOnAction((ActionEvent e) -> {
 			openSurgeries();
 		});
@@ -332,6 +345,7 @@ public class DepartmentController implements Initializable {
 		UpRoomAcco.setUnFocusColor(Color.BLACK);
 	}
 
+	// in this method we initialize the combo boxes values
 	public void comboBoxesInitializing() throws ParseException {
 		// MaxNoRooms range = 1-99
 		MaxRoomlist = new ArrayList<>();
@@ -356,6 +370,8 @@ public class DepartmentController implements Initializable {
 		DeleteComboBoxesInitializing();
 	}
 
+	// in this method we initialize the delete combo boxes (in department and
+	// room sections)
 	public void DeleteComboBoxesInitializing() {
 		String SQL;
 		Emptydepartmentlist = new ArrayList<>();
@@ -421,7 +437,7 @@ public class DepartmentController implements Initializable {
 		}
 	}
 
-	// in this method we assign ComboBoxes the values
+	// in this method we assign values to ComboBoxes
 	public void assignComboBoxesValues() {
 		MaxNoRooms.setItems(FXCollections.observableArrayList(MaxRoomlist));
 		DepartmentFloor.setItems(FXCollections.observableArrayList(DepartmentFloorlist));
@@ -476,13 +492,13 @@ public class DepartmentController implements Initializable {
 			for (int i = 0; i < departments.size(); i++) {
 				if (Integer.parseInt(DepartmentID.getText()) == departments.get(i).getDepartmentID()) {
 					flag = false;
-					str += ("This department with ID: " + DepartmentID.getText() + " is already exist!\n");
+					str += ("- This department with ID: " + DepartmentID.getText() + " is already exist!\n");
 					break;
 				}
 			}
-			if (checkFloor()) {
+			if (checkFloor() && flag == true) {
 				flag = false;
-				str += "The floor " + DepartmentFloor.getValue() + " is Full! There is no empty rooms!\n";
+				str += "- The floor " + DepartmentFloor.getValue() + " is Full! There is no empty rooms!\n";
 			}
 			if (flag) {
 				insertDepartment();
@@ -582,7 +598,7 @@ public class DepartmentController implements Initializable {
 		if (DelDepartID.getSelectionModel().isEmpty()) {
 			DelDepartID.setUnFocusColor(Color.RED);
 			DelDepartID.setValue(null);
-			errorPop("You didn't choose any department to delete!\n");
+			errorPop("- You didn't choose any department to delete!\n");
 			flag = false;
 		} else {
 			DelDepartID.setUnFocusColor(Color.BLACK);
@@ -603,7 +619,7 @@ public class DepartmentController implements Initializable {
 		if (DelRoomID.getSelectionModel().isEmpty()) {
 			DelRoomID.setUnFocusColor(Color.RED);
 			DelRoomID.setValue(null);
-			errorPop("You didn't choose any room to delete!\n");
+			errorPop("- You didn't choose any room to delete!\n");
 			flag = false;
 		} else {
 			DelRoomID.setUnFocusColor(Color.BLACK);
@@ -624,7 +640,7 @@ public class DepartmentController implements Initializable {
 		if (UpDepartID.getSelectionModel().isEmpty()) {
 			UpDepartID.setUnFocusColor(Color.RED);
 			UpDepartID.setValue(null);
-			errorPop("You didn't choose any department!\n");
+			errorPop("- You didn't choose any department!\n");
 			flag = false;
 		} else {
 			UpDepartID.setUnFocusColor(Color.BLACK);
@@ -645,11 +661,13 @@ public class DepartmentController implements Initializable {
 
 	// in this method we make a validation for the Update room section
 	// attributes
-	public void UpdateRoomValidation() {
+	public void UpdateRoomValidation() throws ClassNotFoundException, SQLException {
 		boolean flag = true;
+		String str = "";
 		if (UpRoomID.getSelectionModel().isEmpty()) {
 			UpRoomID.setUnFocusColor(Color.RED);
 			UpRoomID.setValue(null);
+			str += "- You didn't choose any room to Update!\n";
 			flag = false;
 		} else {
 			UpRoomID.setUnFocusColor(Color.BLACK);
@@ -657,30 +675,35 @@ public class DepartmentController implements Initializable {
 		if (UpRoomDescription.getText().length() > 128) {
 			UpRoomDescription.setUnFocusColor(Color.RED);
 			UpRoomDescription.clear();
+			str += "- The new room description is more than 128 characters\n";
 			flag = false;
 		} else {
 			UpRoomDescription.setUnFocusColor(Color.BLACK);
 		}
-		if (UpRoomAcco.getText().isEmpty() || (!Pattern.matches("[+]?[0-9]*\\.?[0-9]+", UpRoomAcco.getText())
-				&& !Pattern.matches("[0-9]+", UpRoomAcco.getText()))) {
+		if (!UpRoomAcco.getText().isEmpty() && !Pattern.matches("[+]?[0-9]*\\.?[0-9]+", UpRoomAcco.getText())
+				&& !Pattern.matches("[0-9]+", UpRoomAcco.getText())) {
 			UpRoomAcco.setUnFocusColor(Color.RED);
 			UpRoomAcco.clear();
+			str += "- The inserted cost is wrong! please get sure to insert only float numbers\n";
 			flag = false;
 		} else {
 			UpRoomAcco.setUnFocusColor(Color.BLACK);
 		}
-		if (UpRoomNoBeds.getSelectionModel().isEmpty()) {
-			UpRoomNoBeds.setUnFocusColor(Color.RED);
-			UpRoomNoBeds.setValue(null);
-			flag = false;
-		} else {
-			UpRoomNoBeds.setUnFocusColor(Color.BLACK);
-		}
 		if (flag) {
+			int j = 0;
+			for (int i = 0; i < rooms.size(); i++) {
+				if (UpRoomID.getValue().equals(rooms.get(i).getRoomID())) {
+					j = i;
+					break;
+				}
+			}
+			updateRoom(j);
 			UpdateRoomClear();
-		}
+		} else
+			errorPop(str);
 	}
 
+	// this method is used to show the error pop message
 	public void errorPop(String str) {
 		Stage primaryStage = new Stage();
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("../screens/error.fxml"));
@@ -712,10 +735,12 @@ public class DepartmentController implements Initializable {
 		}
 	}
 
+	// this method is used to open registration window and close department
+	// window
 	public void openRegistration() {
 		try {
 			ShowTablesButton.getScene().getWindow().hide();
-			Parent root = FXMLLoader.load(getClass().getResource("../screens/registeration.fxml"));
+			Parent root = FXMLLoader.load(getClass().getResource("../screens/registration.fxml"));
 			Stage stage = new Stage();
 			Scene scene = new Scene(root);
 			stage.setTitle("Hospital Database");
@@ -726,6 +751,7 @@ public class DepartmentController implements Initializable {
 		}
 	}
 
+	// this method is used to open patient window and close department window
 	public void openPatient() {
 		try {
 			ShowTablesButton.getScene().getWindow().hide();
@@ -740,6 +766,7 @@ public class DepartmentController implements Initializable {
 		}
 	}
 
+	// this method is used to open Surgeries window and close department window
 	public void openSurgeries() {
 		try {
 			ShowTablesButton.getScene().getWindow().hide();
@@ -791,6 +818,8 @@ public class DepartmentController implements Initializable {
 
 	}
 
+	// this method is used in the insertion of new department.. to check if
+	// there empty rooms at this floor
 	public boolean checkFloor() throws ClassNotFoundException, SQLException {
 		String SQL;
 
@@ -798,7 +827,7 @@ public class DepartmentController implements Initializable {
 
 		System.out.println("Connection established");
 
-		// add the departments
+		// get the number of rooms at specific floor
 		SQL = " select count(*) " + " from department d, room r "
 				+ " where d.Department_id=r.Department_number and d.Department_floor=" + DepartmentFloor.getValue()
 				+ " group by(d.Department_floor);";
@@ -819,12 +848,13 @@ public class DepartmentController implements Initializable {
 			return false;
 	}
 
+	// this method is used to insert a new department in SQL and array list
 	public void insertDepartment() throws ClassNotFoundException, SQLException {
 		String SQL;
 		if (DepartmentName.getText().isEmpty()) {
 			SQL = "Insert into Department (Department_id,number_Of_Rooms,Department_floor) values ("
 					+ Integer.parseInt(DepartmentID.getText()) + "," + Integer.parseInt(MaxNoRooms.getValue()) + ",'"
-					+ DepartmentFloor.getValue() + ");";
+					+ DepartmentFloor.getValue() + "');";
 		} else {
 			SQL = "Insert into Department values (" + Integer.parseInt(DepartmentID.getText()) + ",'"
 					+ DepartmentName.getText() + "'," + Integer.parseInt(MaxNoRooms.getValue()) + ",'"
@@ -837,6 +867,7 @@ public class DepartmentController implements Initializable {
 		DBConnector.getCon().close();
 	}
 
+	// this method is used to delete department from SQL and array list
 	public void deleteDepartment() throws SQLException, ClassNotFoundException {
 		DBConnector.connectDB();
 		DBConnector.ExecuteStatement("delete from  Department where Department_id=" + DelDepartID.getValue() + ";");
@@ -849,12 +880,13 @@ public class DepartmentController implements Initializable {
 		}
 	}
 
-	//// need to update the department from the array list ...
+	// this method is used to update some fields of the department in SQL and
+	// array list
 	public void updateDepartment() throws SQLException, ClassNotFoundException {
 		DBConnector.connectDB();
 		int j = 0;
 		for (int i = 0; i < departments.size(); i++) {
-			if (Integer.parseInt(DelDepartID.getValue()) == departments.get(i).getDepartmentID()) {
+			if (Integer.parseInt(UpDepartID.getValue()) == departments.get(i).getDepartmentID()) {
 				j = i;
 				break;
 			}
@@ -872,7 +904,7 @@ public class DepartmentController implements Initializable {
 		DBConnector.getCon().close();
 	}
 
-	//
+	// this method is used to insert a new room in SQL and array list
 	public void insertRoom(String floor) throws ClassNotFoundException, SQLException {
 		String SQL;
 		if (RoomDescription.getText().isEmpty()) {
@@ -892,6 +924,7 @@ public class DepartmentController implements Initializable {
 		DBConnector.getCon().close();
 	}
 
+	// this method is used to delete room from SQL and array list
 	public void deleteRoom() throws SQLException, ClassNotFoundException {
 		DBConnector.connectDB();
 		DBConnector.ExecuteStatement("delete from  room where Room_id=" + DelRoomID.getValue() + ";");
@@ -902,5 +935,40 @@ public class DepartmentController implements Initializable {
 				break;
 			}
 		}
+	}
+
+	// this method is used to update some fields of the room in SQL and array
+	// list
+	public void updateRoom(int j) throws SQLException, ClassNotFoundException {
+		DBConnector.connectDB();
+		if (!UpRoomNoBeds.getValue().isEmpty()) {
+			if (rooms.get(j).getTotalNumberOfBeds() <= Integer.parseInt(UpRoomNoBeds.getValue())
+					|| rooms.get(j).getTotalNumberOfBeds() - rooms.get(j).getAvailableBeds() <= Integer
+							.parseInt(UpRoomNoBeds.getValue())) {
+				int tmp = Integer.parseInt(UpRoomNoBeds.getValue())
+						- (rooms.get(j).getTotalNumberOfBeds() - rooms.get(j).getAvailableBeds());
+				DBConnector.ExecuteStatement("update room set total_number_of_beds = " + UpRoomNoBeds.getValue()
+						+ " where Room_id =" + UpRoomID.getValue() + ";");
+				DBConnector.ExecuteStatement(
+						"update room set available_beds = " + tmp + " where Room_id =" + UpRoomID.getValue() + ";");
+				rooms.get(j).setAvailableBeds(tmp);
+				rooms.get(j).setTotalNumberOfBeds(Integer.parseInt(UpRoomNoBeds.getValue()));
+			} else {
+				int tmp = rooms.get(j).getTotalNumberOfBeds() - rooms.get(j).getAvailableBeds();
+				errorPop("- There are " + tmp + " booked up beds!\n");
+			}
+		}
+		if (!UpRoomDescription.getText().isEmpty()) {
+			DBConnector.ExecuteStatement("update room set Room_Description = '" + UpRoomDescription.getText()
+					+ "' where Room_id =" + UpRoomID.getValue() + ";");
+			rooms.get(j).setRoomDescription(UpRoomDescription.getText());
+
+		}
+		if (!UpRoomAcco.getText().isEmpty()) {
+			DBConnector.ExecuteStatement("update room set accommodation_cost = " + UpRoomAcco.getText()
+					+ " where Room_id =" + UpRoomID.getValue() + ";");
+			rooms.get(j).setAccommodationCost(Float.parseFloat(UpRoomAcco.getText()));
+		}
+		DBConnector.getCon().close();
 	}
 }
