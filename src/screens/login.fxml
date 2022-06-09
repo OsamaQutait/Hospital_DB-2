@@ -22,9 +22,9 @@
       <RowConstraints />
    </rowConstraints>
    <children>
-      <VBox alignment="CENTER" cache="true" prefHeight="508.0" prefWidth="641.0" spacing="40.0" style="-fx-background-color: #204c7f; -fx-border-color: black;">
+      <VBox alignment="CENTER" cache="true" prefHeight="508.0" prefWidth="641.0" spacing="40.0" style="-fx-border-color: yellow;" styleClass="bodybg" stylesheets="@../Pictures/loginImage.css">
          <children>
-            <Label text="LOGIN" textFill="WHITE">
+            <Label text="LOGIN">
                <font>
                   <Font name="Eras Light ITC" size="36.0" />
                </font>
@@ -42,7 +42,7 @@
                               <Image url="@../Pictures/download2.png" />
                            </image>
                         </ImageView>
-                        <Label prefHeight="30.0" prefWidth="100.0" text="Username" textFill="WHITE">
+                        <Label prefHeight="30.0" prefWidth="100.0" text="Username">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -61,7 +61,7 @@
                               <Image url="@../Pictures/download1.png" />
                            </image>
                         </ImageView>
-                        <Label prefHeight="30.0" prefWidth="100.0" text="Password" textFill="WHITE">
+                        <Label prefHeight="30.0" prefWidth="100.0" text="Password">
                            <font>
                               <Font size="18.0" />
                            </font>
