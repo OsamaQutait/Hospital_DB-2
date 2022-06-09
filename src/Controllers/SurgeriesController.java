@@ -84,8 +84,6 @@ public class SurgeriesController implements Initializable {
         SurgeryNameList = new ArrayList<>();
         data = new ArrayList<>();
         dataList = FXCollections.observableArrayList(data);
-        assignTableValues();
-
         try {
             getData();
         } catch (ParseException e) {
@@ -96,6 +94,8 @@ public class SurgeriesController implements Initializable {
             e.printStackTrace();
         }
         assignComboBoxesValues();
+
+        assignTableValues();
     }
     @FXML
     void clearDelete(ActionEvent event) {
@@ -127,23 +127,28 @@ public class SurgeriesController implements Initializable {
     @FXML
     void deleteSurgery(ActionEvent event) throws ClassNotFoundException, SQLException{
         int id = 0;
-        assignComboBoxesValues();
-        Predicate<Surgeries> pr = a -> (a.getSurgery_name().equals(selectSurgeriesDelete.getValue()));
-        SurgeryList.removeIf(pr);
-        SurgeryNameList.remove(selectSurgeriesDelete.getValue());
+        System.out.println(selectSurgeriesDelete.getValue());
         for (Surgeries surgeri : SurgeryList){
-            if(surgeri.getSurgery_name().equals(SelectUpSurgeryName.getValue())){
+            if(surgeri.getSurgery_name().equals(selectSurgeriesDelete.getValue())){
                 id = surgeri.getSurgery_id();
+                System.out.println(id);
+                System.out.println(selectSurgeriesDelete.getValue());
+                break;
             }
         }
-        dataList = FXCollections.observableArrayList(SurgeryList);
-        assignTableValues();
-        assignComboBoxesValues();
         String sql;
         sql = "delete from surgeries where surgery_id = "+id;
         DBConnector.connectDB();
         DBConnector.ExecuteStatement(sql);
         DBConnector.getCon().close();
+        assignComboBoxesValues();
+        Predicate<Surgeries> pr = a -> (a.getSurgery_name().equals(selectSurgeriesDelete.getValue()));
+        SurgeryList.removeIf(pr);
+        SurgeryNameList.remove(selectSurgeriesDelete.getValue());
+        dataList = FXCollections.observableArrayList(SurgeryList);
+        assignTableValues();
+        assignComboBoxesValues();
+
     }
 
     @FXML
