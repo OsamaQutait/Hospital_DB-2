@@ -207,7 +207,7 @@ public class TestsController implements Initializable {
     @FXML
     void upTestLabID(ActionEvent event) throws SQLException, ClassNotFoundException {
         boolean flag = true;
-        if(newLabID.getText().isEmpty() || !isNumeric(newLabID.getText())){
+        if(newLabID.getText().isEmpty() || !isNumeric(newLabID.getText()) || !labIDList.contains(Integer.parseInt(testLab.getText()))){
             newLabID.setUnFocusColor(Color.RED);
             newLabID.clear();
             flag = false;
