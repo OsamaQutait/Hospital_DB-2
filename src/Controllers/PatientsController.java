@@ -1,18 +1,15 @@
 package Controllers;
-//search can be done from table or searching manually.
-//delete: have to check if patient has left the hospital or he doesnt have surgeries/tests or if he paid his bill
 //update/insert: have to check all data
 /*Reports
-* 6) report about insurance coverage
-* 7) check people whom insurance has expired or will expire soon
-* 8) find person who stayed for much time in the hospital
-* 9)
+ * 6) report about insurance coverage
+ * 7) check people whom insurance has expired or will expire soon
+ * 8) find person who stayed for much time in the hospital
  */
-//add margins for deleting: if he has left no problem, if not pay bill first
-//when update: can add insurance
-//join date and leave date can't be before any surgery/test
+//when update: can add insurance -i think it's done
+//join date and leave date can't be before any surgery/test --totally done
+//if times
 
-//blood type, gender,
+//manual search checking
 
 import DatabaseConnector.DBConnector;
 import Hospital.*;
@@ -168,6 +165,9 @@ public class PatientsController implements Initializable {
     @FXML
     private JFXButton upPhoneNumbers;
 
+    @FXML
+    private Label deleteLabel;
+
     private ArrayList<String> genderList;
     private ArrayList<String> bloodList;
     private ArrayList<String> emergencyStatList;
@@ -182,36 +182,19 @@ public class PatientsController implements Initializable {
     public static int pSelection;
     public static int swi;
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-    	swi=1;
-    	medicalStaffController.swi=0;
-        //search.setVisible(false);
+        //Delete option in available, but it's disabled since it's not logical to delete a patient and his corresponding data
+        dMode.setDisable(true);
+        deleteLabel.setDisable(true);
+        swi=1;
+        medicalStaffController.swi=0;
         initializingArrays();
         disablingItems();
         SpinnerValueFactory<Integer> spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100);
         spinnerValueFactory.setValue(0);
         payCoverage.setValueFactory(spinnerValueFactory);
-
-        try {
-            getData();
-            visitReason.setItems(FXCollections.observableArrayList(visitReasonList));
-            gender.setItems(FXCollections.observableArrayList(genderList));
-            bloodType.setItems(FXCollections.observableArrayList(bloodList));
-            emergencyStatus.setItems(FXCollections.observableArrayList(emergencyStatList));
-            address.setItems(FXCollections.observableArrayList(cityList));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        pId.setCellValueFactory(new PropertyValueFactory<Identity, Integer>("identityNumber"));
-        pName.setCellValueFactory(new PropertyValueFactory<Identity, String>("fullName"));
-        patientsOBS = FXCollections.observableArrayList(patientsSQL);
-        pTable.setItems(patientsOBS);
 
         EventHandler<KeyEvent> enterKeyEventHandler;
 
@@ -231,91 +214,192 @@ public class PatientsController implements Initializable {
         payCoverage.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, enterKeyEventHandler);
 
         sMode.setOnAction((ActionEvent e) -> {
-            upMode.setSelected(false);
-            dMode.setSelected(false);
-            inMode.setSelected(false);
-            sMode.setSelected(true);
-            search.setDisable(false);
-            delete.setDisable(true);
-            update.setDisable(true);
-            insert.setDisable(true);
-            idNum.setEditable(false);
-            insuranceID.setEditable(false);
-            addPhoneNumbers.setVisible(false);
-            upPhoneNumbers.setVisible(false);
-            seePhoneNumbers.setVisible(true);
-            pSelection = 2;
+            if (sMode.isSelected()) {
+                upMode.setSelected(false);
+                dMode.setSelected(false);
+                inMode.setSelected(false);
+                search.setDisable(false);
+                delete.setDisable(true);
+                update.setDisable(true);
+                insert.setDisable(true);
+                idNum.setEditable(true);
+                insuranceID.setEditable(false);
+                addPhoneNumbers.setVisible(false);
+                upPhoneNumbers.setVisible(false);
+                seePhoneNumbers.setVisible(true);
+                manualSearch.setDisable(false);
+                tableSearch.setDisable(false);
+                pSelection = 2;
+            }else {
+                search.setDisable(true);
+                addPhoneNumbers.setVisible(false);
+                seePhoneNumbers.setVisible(false);
+                upPhoneNumbers.setVisible(false);
+                manualSearch.setDisable(true);
+                tableSearch.setDisable(true);
+                manualSearch.setSelected(false);
+                tableSearch.setSelected(false);
+            }
         });
 
         upMode.setOnAction((ActionEvent e) -> {
-            upMode.setSelected(true);
-            dMode.setSelected(false);
-            inMode.setSelected(false);
-            sMode.setSelected(false);
-            update.setDisable(false);
-            search.setDisable(true);
-            delete.setDisable(true);
-            insert.setDisable(true);
-            idNum.setEditable(false);
-            insuranceID.setEditable(false);
-            addPhoneNumbers.setVisible(false);
-            seePhoneNumbers.setVisible(false);
-            upPhoneNumbers.setVisible(true);
-            pSelection = 3;
-            if (insuranceID.isDisabled()){
-                insuranceCheck.setDisable(false);
-                insuranceID.setEditable(true);
-            }else{
+            if (upMode.isSelected()) {
+                manualSearch.setSelected(false);
+                tableSearch.setSelected(false);
+                dMode.setSelected(false);
+                inMode.setSelected(false);
+                sMode.setSelected(false);
+                update.setDisable(false);
+                search.setDisable(true);
+                delete.setDisable(true);
+                insert.setDisable(true);
+                idNum.setEditable(false);
                 insuranceID.setEditable(false);
+                addPhoneNumbers.setVisible(false);
+                seePhoneNumbers.setVisible(false);
+                upPhoneNumbers.setVisible(true);
+                manualSearch.setDisable(true);
+                tableSearch.setDisable(true);
+                pSelection = 3;
+                if (insuranceID.isDisabled()) {
+                    insuranceCheck.setDisable(false);
+                    insuranceID.setEditable(true);
+                } else {
+                    insuranceID.setEditable(false);
+                }
+                if (pTable.getSelectionModel().getSelectedItem() != null){
+                    try {
+                        displaySelected();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    } catch (ClassNotFoundException classNotFoundException) {
+                        classNotFoundException.printStackTrace();
+                    } catch (ParseException parseException) {
+                        parseException.printStackTrace();
+                    }
+                }
+            }else {
+                update.setDisable(true);
+                addPhoneNumbers.setVisible(false);
+                seePhoneNumbers.setVisible(false);
+                upPhoneNumbers.setVisible(false);
             }
-
-
         });
 
         inMode.setOnAction((ActionEvent e) -> {
-            upMode.setSelected(false);
-            dMode.setSelected(false);
-            inMode.setSelected(true);
-            sMode.setSelected(false);
-            insert.setDisable(false);
-            search.setDisable(true);
-            delete.setDisable(true);
-            update.setDisable(true);
-            idNum.setEditable(true);
-            insuranceID.setEditable(true);
-            pSelection = 1;
-            insuranceClear();
-            identityClear();
-            patientClear();
-            seePhoneNumbers.setVisible(false);
-            upPhoneNumbers.setVisible(false);
-            addPhoneNumbers.setVisible(true);
+            if (inMode.isSelected()) {
+                manualSearch.setSelected(false);
+                tableSearch.setSelected(false);
+                manualSearch.setDisable(true);
+                tableSearch.setDisable(true);
+                upMode.setSelected(false);
+                dMode.setSelected(false);
+                sMode.setSelected(false);
+                insert.setDisable(false);
+                search.setDisable(true);
+                delete.setDisable(true);
+                update.setDisable(true);
+                idNum.setEditable(true);
+                insuranceID.setEditable(true);
+                pSelection = 1;
+                insuranceClear();
+                identityClear();
+                patientClear();
+                seePhoneNumbers.setVisible(false);
+                upPhoneNumbers.setVisible(false);
+                addPhoneNumbers.setVisible(true);
+            }else {
+                insert.setDisable(true);
+                addPhoneNumbers.setVisible(false);
+                seePhoneNumbers.setVisible(false);
+                upPhoneNumbers.setVisible(false);
+            }
         });
 
         dMode.setOnAction((ActionEvent e) -> {
-            upMode.setSelected(false);
-            dMode.setSelected(true);
-            inMode.setSelected(false);
-            sMode.setSelected(false);
-            delete.setDisable(false);
-            search.setDisable(true);
-            update.setDisable(true);
-            insert.setDisable(true);
-            idNum.setEditable(false);
-            insuranceID.setEditable(false);
-            addPhoneNumbers.setVisible(false);
-            seePhoneNumbers.setVisible(false);
-            upPhoneNumbers.setVisible(false);
+            if (dMode.isSelected()) {
+                manualSearch.setSelected(false);
+                tableSearch.setSelected(false);
+                manualSearch.setDisable(true);
+                tableSearch.setDisable(true);
+                upMode.setSelected(false);
+                inMode.setSelected(false);
+                sMode.setSelected(false);
+                delete.setDisable(false);
+                search.setDisable(true);
+                update.setDisable(true);
+                insert.setDisable(true);
+                idNum.setEditable(false);
+                insuranceID.setEditable(false);
+                addPhoneNumbers.setVisible(false);
+                seePhoneNumbers.setVisible(false);
+                upPhoneNumbers.setVisible(false);
+            }else {
+                delete.setDisable(true);
+                addPhoneNumbers.setVisible(false);
+                seePhoneNumbers.setVisible(false);
+                upPhoneNumbers.setVisible(false);
+            }
         });
 
         tableSearch.setOnAction((ActionEvent e) -> {
-            tableSearch.setSelected(true);
             manualSearch.setSelected(false);
+            if (tableSearch.isSelected()) {
+                try {
+                    patientsSQL = new ArrayList<>();
+                    getData();
+                    visitReason.setItems(FXCollections.observableArrayList(visitReasonList));
+                    gender.setItems(FXCollections.observableArrayList(genderList));
+                    bloodType.setItems(FXCollections.observableArrayList(bloodList));
+                    emergencyStatus.setItems(FXCollections.observableArrayList(emergencyStatList));
+                    address.setItems(FXCollections.observableArrayList(cityList));
+
+                    pId.setCellValueFactory(new PropertyValueFactory<Identity, Integer>("identityNumber"));
+                    pName.setCellValueFactory(new PropertyValueFactory<Identity, String>("fullName"));
+                    patientsOBS = FXCollections.observableArrayList(patientsSQL);
+                    pTable.setItems(patientsOBS);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }else{
+                patientClear();
+                insuranceClear();
+                patientClear();
+            }
         });
 
         manualSearch.setOnAction((ActionEvent e) -> {
-            manualSearch.setSelected(true);
             tableSearch.setSelected(false);
+            if (manualSearch.isSelected()) {
+                try {
+                    patientsSQL = new ArrayList<>();
+                    manuallySearch();
+                    visitReason.setItems(FXCollections.observableArrayList(visitReasonList));
+                    gender.setItems(FXCollections.observableArrayList(genderList));
+                    bloodType.setItems(FXCollections.observableArrayList(bloodList));
+                    emergencyStatus.setItems(FXCollections.observableArrayList(emergencyStatList));
+                    address.setItems(FXCollections.observableArrayList(cityList));
+
+                    pId.setCellValueFactory(new PropertyValueFactory<Identity, Integer>("identityNumber"));
+                    pName.setCellValueFactory(new PropertyValueFactory<Identity, String>("fullName"));
+                    patientsOBS = FXCollections.observableArrayList(patientsSQL);
+                    pTable.setItems(patientsOBS);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (ClassNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+            }else{
+                patientClear();
+                insuranceClear();
+                patientClear();
+            }
         });
 
         idClear.setOnAction((ActionEvent e) -> {
@@ -399,7 +483,7 @@ public class PatientsController implements Initializable {
             seePhoneNumbers.setVisible(true);
             addPhoneNumbers.setVisible(false);
             upPhoneNumbers.setVisible(false);
-            if (tableSearch.isSelected() && pTable.getSelectionModel().getSelectedItem() != null){
+            if (pTable.getSelectionModel().getSelectedItem() != null){
                 try {
                     displaySelected();
                 } catch (SQLException throwables) {
@@ -662,6 +746,19 @@ public class PatientsController implements Initializable {
                 dateOfBirth.setDefaultColor(Paint.valueOf("black"));
             }
 
+            if (currentDate.compareTo(joinDT) <= 0) {
+                joinDate.setDefaultColor(Paint.valueOf("red"));
+                joinTime.setDefaultColor(Paint.valueOf("red"));
+                joinTime.setValue(null);
+                joinDate.setValue(null);
+                joinTime.setPromptText("ERROR");
+                joinDate.setPromptText("ERROR");
+                flag = false;
+            } else {
+                joinDate.setDefaultColor(Paint.valueOf("black"));
+                joinTime.setDefaultColor(Paint.valueOf("black"));
+            }
+
             if (leaveDT != null && dob.compareTo(leaveDT) > 0){
                 dateOfBirth.setDefaultColor(Paint.valueOf("red"));
                 dateOfBirth.setValue(null);
@@ -727,7 +824,6 @@ public class PatientsController implements Initializable {
                 length = Math.round(length*10000)/10000.0f;
                 lengthOfStay.setText(String.valueOf(length));
             }
-
             return flag;
         } catch (ParseException parseException) {
             parseException.printStackTrace();
@@ -840,6 +936,8 @@ public class PatientsController implements Initializable {
         seePhoneNumbers.setVisible(false);
         upPhoneNumbers.setVisible(false);
         lengthOfStay.setEditable(false);
+        manualSearch.setDisable(true);
+        tableSearch.setDisable(true);
     }
 
     private void getData() throws SQLException, ClassNotFoundException, ParseException {
@@ -871,7 +969,74 @@ public class PatientsController implements Initializable {
         DBConnector.getCon().close();
     }
 
-    private void getPatientInfo(){}
+    private void manuallySearch() throws SQLException, ClassNotFoundException, ParseException {
+        Date d1 = dateOfBirth.getValue() == null ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(dateOfBirth.getValue()));
+        Date d2 = (joinDate.getValue() == null || joinTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(joinDate.getValue() + " " + joinTime.getValue()));
+        Date d3 = (leaveDate.getValue() == null || leaveTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(leaveDate.getValue() + " " + leaveTime.getValue()));
+        Date d4 = expiryDate.getValue() == null ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(expiryDate.getValue()));
+
+
+        String identityNubmer = idNum.getText().isEmpty() ? null : idNum.getText();
+        String DOB = d1 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(d1) + "'");
+        String sex = gender.getSelectionModel().isEmpty() ? null : ("'" + gender.getValue() + "'");
+        String city = address.getSelectionModel().isEmpty() ? null : ("'" + address.getValue() + "'");
+        String bType = bloodType.getSelectionModel().isEmpty() ? null : ("'" + bloodType.getValue() + "'");
+        String ES = emergencyStatus.getSelectionModel().isEmpty() ? null : ("'" + emergencyStatus.getValue() + "'");
+        String VR = visitReason.getSelectionModel().isEmpty() ? null : ("'" + visitReason.getValue() + "'");
+        String joinDT = d2 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(d2) + "'");
+        String leaveDT = d3 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(d3) + "'");
+        String insuranceNumber;
+        String coverage;
+        String ED;
+        if (insuranceCheck.isSelected()){
+            insuranceNumber = insuranceID.getText().isEmpty() ? null : ("'" + insuranceID.getText() + "'");
+            coverage = String.valueOf(payCoverage.getValue());
+            ED = d4 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(d4) + "'");
+        }else{
+            insuranceNumber = null;
+            coverage = null;
+            ED = null;
+        }
+
+        String SQL;
+        DBConnector.connectDB();
+        SQL = "select distinct id.identity_number, id.full_name, id.gender, id.date_of_birth, id.blood_type, id.living_address\n" +
+                "from identity id, patient p, insurance insu\n" +
+                "where id.identity_number = p.identity_number" + (insuranceCheck.isSelected() ? (" and id.identity_number = insu.identity_number") : "") +
+                (identityNubmer == null ? "\n" : ("\n" + "and p.identity_number = " + identityNubmer + "\n")) +
+                (DOB == null ? "\n" : ("\n" + "and id.date_of_birth = " + DOB + "\n")) +
+                (sex == null ? "\n" : ("\n" + "and id.gender = " + sex + "\n")) +
+                (city == null ? "\n" : ("\n" + "and id.living_address = " + city + "\n")) +
+                (bType == null ? "\n" : ("\n" + "and id.blood_type = " + bType + "\n")) +
+                (ES == null ? "\n" : ("\n" + "and p.emergency_status = " + ES + "\n")) +
+                (VR == null ? "\n" : ("\n" + "and p.visit_reason = " + VR + "\n")) +
+                (joinDT == null ? "\n" : ("\n" + "and p.stay_join_date_time = " + joinDT + "\n")) +
+                (leaveDT == null ? "\n" : ("\n" + "and p.stay_leave_date_time = " + leaveDT + "\n")) +
+                (insuranceNumber == null ? "\n" : ("\n" + "and insu.insurance_id = " + insuranceNumber + "\n")) +
+                (coverage == null ? "\n" : ("\n" + "and insu.payment_coverage = " + coverage + "\n")) +
+                (ED == null ? "\n" : ("\n" + "and insu.expire_date = " + ED + "\n")) + ";";
+
+        Statement stmt = DBConnector.getCon().createStatement();
+        ResultSet rs = stmt.executeQuery(SQL);
+
+        while (rs.next()) {
+            patientsSQL.add(
+                    new Identity(
+                            Integer.parseInt(rs.getString(1)),
+                            rs.getString(2),
+                            rs.getString(3),
+                            new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(4)),
+                            rs.getString(5),
+                            rs.getString(6)
+                    )
+            );
+        }
+
+        rs.close();
+        stmt.close();
+
+        DBConnector.getCon().close();
+    }
 
     private void insertPatient() throws SQLException, ClassNotFoundException, ParseException {
         Identity id = new Identity(
@@ -1192,8 +1357,6 @@ public class PatientsController implements Initializable {
                 "where ins.identity_number = " + id + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         boolean res = rs.next();
         rs.close();
         stmt.close();
@@ -1201,4 +1364,58 @@ public class PatientsController implements Initializable {
         return res;
     }
 
+    private boolean isNewDatesOverlapSurgeries() throws SQLException, ClassNotFoundException, ParseException {
+        String SQL;
+        DBConnector.connectDB();
+        Date d2 = (joinDate.getValue() == null || joinTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(joinDate.getValue() + " " + joinTime.getValue()));
+        Date d3 = (leaveDate.getValue() == null || leaveTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(leaveDate.getValue() + " " + leaveTime.getValue()));
+
+        String joinDT = d2 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d2) + "'");
+        String leaveDT = d3 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d3) + "'");
+
+        SQL = "select *\n" +
+                "from surgeries s, medicalstaff2surgeries2patient m2s2p\n" +
+                "where s.surgery_id = m2s2p.identity_number" +
+                (joinDT == null ? "\n" : ("\n" + "and m2s2p.date_of_surgery > " + joinDT)) +
+                (leaveDT == null ? "\n" : ("\n" + "and m2s2p.date_of_surgery < " + leaveDT)) + ";";
+
+        ;
+        Statement stmt = DBConnector.getCon().createStatement();
+        ResultSet rs = stmt.executeQuery(SQL);
+
+        boolean res = rs.next();
+        rs.close();
+        stmt.close();
+
+        DBConnector.getCon().close();
+        return res;
+    }
+
+    private boolean isNewDatesOverlapTests() throws SQLException, ClassNotFoundException, ParseException {
+        String SQL;
+        DBConnector.connectDB();
+
+        Date d2 = (joinDate.getValue() == null || joinTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(joinDate.getValue() + " " + joinTime.getValue()));
+        Date d3 = (leaveDate.getValue() == null || leaveTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(leaveDate.getValue() + " " + leaveTime.getValue()));
+
+        String joinDT = d2 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d2) + "'");
+        String leaveDT = d3 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d3) + "'");
+
+        SQL = "select *\n" +
+                "from tests t, medicalstaff2tests2patient m2t2p\n" +
+                "where t.test_id = m2t2p.test_id" +
+                (joinDT == null ? "\n" : ("\n" + "and m2t2p.date_of_test > " + joinDT)) +
+                (leaveDT == null ? "\n" : ("\n" + "and m2t2p.date_of_test < " + leaveDT)) + ";";
+        Statement stmt = DBConnector.getCon().createStatement();
+        ResultSet rs = stmt.executeQuery(SQL);
+
+        boolean res = rs.next();
+        rs.close();
+        stmt.close();
+
+        DBConnector.getCon().close();
+
+        return res;
+
+    }
 }
