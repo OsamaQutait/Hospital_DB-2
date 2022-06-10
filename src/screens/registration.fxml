@@ -89,7 +89,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Payment" textFill="#dfe3ee" GridPane.rowIndex="6">
+                              <Button fx:id="paymentButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Payment" textFill="#dfe3ee" GridPane.rowIndex="6">
                                  <font>
                                     <Font size="18.0" />
                                  </font>

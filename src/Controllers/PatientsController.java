@@ -12,6 +12,8 @@ package Controllers;
 //when update: can add insurance
 //join date and leave date can't be before any surgery/test
 
+//blood type, gender,
+
 import DatabaseConnector.DBConnector;
 import Hospital.*;
 import com.jfoenix.controls.*;
@@ -147,6 +149,9 @@ public class PatientsController implements Initializable {
 
     @FXML
     private Button registrationButton;
+
+    @FXML
+    private Button paymentButton;
 
     @FXML
     private JFXButton addPhoneNumbers;
@@ -336,7 +341,21 @@ public class PatientsController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("../screens/registration.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
-                stage.setTitle("Hospital Database");
+                stage.setTitle("Hospital Database | Registration");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
+        paymentButton.setOnAction((ActionEvent e) -> {
+            try {
+                addPhoneNumbers.getScene().getWindow().hide();
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/payment.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Hospital Database | Payment");
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException ioException) {
@@ -351,6 +370,7 @@ public class PatientsController implements Initializable {
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.initStyle(StageStyle.UNDECORATED);
+                stage.setTitle("Hospital Database | Add phone numbers");
                 stage.show();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
@@ -363,7 +383,7 @@ public class PatientsController implements Initializable {
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
-                //stage.initStyle(StageStyle.UNDECORATED);
+                stage.setTitle("Hospital Database | Patients - Reports");
                 stage.show();
             } catch (IOException ioException) {
                 ioException.printStackTrace();

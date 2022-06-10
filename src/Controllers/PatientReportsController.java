@@ -273,7 +273,7 @@ public class PatientReportsController implements Initializable {
         pieChartData.forEach(data1 ->
                 data1.nameProperty().bind(
                         Bindings.concat(
-                                " No. of ", data1.getName(), ": ", data1.pieValueProperty()
+                                "No. of ", data1.getName(), ": ", data1.pieValueProperty()
                         )
                 ));
 
@@ -296,7 +296,7 @@ public class PatientReportsController implements Initializable {
 
         SQL = "select p.visit_reason, count(*)\n" +
                 "from identity id, patient p\n" +
-                "where id.identity_number = p.identity_number\n"+
+                "where id.identity_number = p.identity_number and p.visit_reason is not null\n"+
                 "group by p.visit_reason;";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
@@ -332,7 +332,7 @@ public class PatientReportsController implements Initializable {
         pieChartData.forEach(data1 ->
                 data1.nameProperty().bind(
                         Bindings.concat(
-                                " No. of ", data1.getName(), ": ", data1.pieValueProperty()
+                                data1.getName(), ": ", data1.pieValueProperty()
                         )
                 ));
 

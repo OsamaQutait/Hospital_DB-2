@@ -81,7 +81,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Payment" textFill="#dfe3ee" GridPane.rowIndex="6">
+                              <Button fx:id="patientButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Patients" textFill="#dfe3ee" GridPane.rowIndex="2">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -91,7 +91,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="180.0" style="-fx-background-color: #dfe3ee;" text="Patients" textFill="#3b5998" GridPane.rowIndex="2">
+                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="180.0" style="-fx-background-color: #dfe3ee;" text="Payment" textFill="#3b5998" GridPane.rowIndex="6">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
