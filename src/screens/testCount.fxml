@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="847.0" style="-fx-background-color: #8b9dc3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.LabController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="847.0" style="-fx-background-color: #8b9dc3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.testCountController">
     <children>
         <HBox prefHeight="434.0" prefWidth="400.0">
             <children>
@@ -87,8 +87,8 @@
         </HBox>
       <TableView fx:id="table" layoutX="404.0" layoutY="14.0" prefHeight="429.0" prefWidth="429.0">
         <columns>
-          <TableColumn fx:id="testID" prefWidth="209.0" text="Test ID" />
-          <TableColumn fx:id="testName" prefWidth="219.0" text="Test Name" />
+          <TableColumn fx:id="labID" prefWidth="209.0" text="Lab ID" />
+          <TableColumn fx:id="testCount1" prefWidth="219.0" text="Test Count" />
         </columns>
       </TableView>
     </children>
