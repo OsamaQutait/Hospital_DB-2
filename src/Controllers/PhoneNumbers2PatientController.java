@@ -112,6 +112,7 @@ public class PhoneNumbers2PatientController implements Initializable {
             }
         });
     }
+
     private boolean phoneNumbersValidation(){
         int i = 0;
         boolean f1 = pNum1.getText().isEmpty();
