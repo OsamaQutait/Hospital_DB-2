@@ -38,6 +38,9 @@ public class PaymentController implements Initializable {
     private Button registrationButton;
 
     @FXML
+    private Button patientButton;
+
+    @FXML
     private TableView<Identity> pTable;
 
     @FXML
@@ -135,6 +138,34 @@ public class PaymentController implements Initializable {
         pName.setCellValueFactory(new PropertyValueFactory<Identity, String>("fullName"));
         patientsOBS = FXCollections.observableArrayList(patientsSQL);
         pTable.setItems(patientsOBS);
+
+        patientButton.setOnAction((ActionEvent e) -> {
+            try {
+                createBill.getScene().getWindow().hide();
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/patients.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Hospital Database");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
+        registrationButton.setOnAction((ActionEvent e) -> {
+            try {
+                createBill.getScene().getWindow().hide();
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/registration.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Hospital Database");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
 
         createBill.setOnAction((ActionEvent e) -> {
             surgeriesSQL = new ArrayList<>();
