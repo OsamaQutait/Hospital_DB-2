@@ -2,18 +2,26 @@ package Hospital;
 
 public class MedicalStaff {
     private int staff_id;
+    private String role;
     private String specialization;
     private int rating;
     private int identity_number;
 
     public MedicalStaff(){}
-    public MedicalStaff(int staff_id, String specialization, int rating, int identity_number) {
+    public MedicalStaff(int staff_id,String role ,String specialization, int rating, int identity_number) {
         this.staff_id = staff_id;
         this.specialization = specialization;
         this.rating = rating;
         this.identity_number = identity_number;
+        this.role=role;
     }
-
+    
+    public MedicalStaff(String role ,String specialization, int rating, int identity_number) {
+        this.specialization = specialization;
+        this.rating = rating;
+        this.identity_number = identity_number;
+        this.role=role;
+    }
     public int getStaff_id() {
         return staff_id;
     }
@@ -22,7 +30,14 @@ public class MedicalStaff {
         this.staff_id = staff_id;
     }
 
-    public String getSpecialization() {
+    public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	public String getSpecialization() {
         return specialization;
     }
 

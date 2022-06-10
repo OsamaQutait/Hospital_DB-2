@@ -16,7 +16,7 @@ public class TryUI extends Application{
         //Parent root = loader.load();
         //ErrorMessage alertController = loader.getController();
         //alertController.setErrorLabel("The inserted name was more than 32 characters!");
-		Parent root = FXMLLoader.load(getClass().getResource("../screens/departmentRoomsTables.fxml"));
+		Parent root = FXMLLoader.load(getClass().getResource("../screens/medicalStaff.fxml"));
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
