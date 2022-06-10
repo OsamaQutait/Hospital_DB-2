@@ -8,6 +8,13 @@ public class Tests {
 
     public Tests(){}
 
+    public Tests(int testID, String testName, float testPrice) {
+        this.testID = testID;
+        this.testName = testName;
+        this.testPrice = testPrice;
+        this.labID = labID;
+    }
+
     public Tests(int testID, String testName, float testPrice, int labID) {
         this.testID = testID;
         this.testName = testName;

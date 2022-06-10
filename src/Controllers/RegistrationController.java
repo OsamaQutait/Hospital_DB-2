@@ -1,20 +1,12 @@
 package Controllers;
-//must handle all dates and validate them
-//i think leave date is not compulsory
 //decrease the number of available beds
-//daily update on the length of stay
-//daily update on payment according to the length of stay
 //must check of issued date if it's null or not, and other dates
 
-//dates nearly done
 //if leave date is set, find invoice
-//if length of stay is set, leave date is also set
-//if length doesn't meet leave and join
 //decrease available beds
 //payment is zero if insurance is not active, its value if it's active (setData)
-//must add phone numbers
-//registration if dead
 //join date before or equal current date
+//must add phone numbers to medical staff
 
 import DatabaseConnector.DBConnector;
 import Hospital.*;
@@ -193,7 +185,6 @@ public class RegistrationController implements Initializable {
     private ArrayList<Identity> doctorsSQL;
     private ArrayList<Identity> nursesSQL;
     private ArrayList<Room> roomsSQL;
-    private Payment payment;
 
     private static ArrayList<String> phoneNumbers = null;
 
@@ -423,7 +414,6 @@ public class RegistrationController implements Initializable {
                     }
                     if (datesValidation()) {
                         setData();
-                        setPayment();
                     }
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -443,7 +433,6 @@ public class RegistrationController implements Initializable {
                         surgeryDate.setDefaultColor(Paint.valueOf("black"));
                         if (datesValidation()) {
                             insertSurgery();
-                            updatePayment();
                         }
                     }else{
                         surgeryName.setUnFocusColor(Paint.valueOf("red"));
@@ -471,7 +460,6 @@ public class RegistrationController implements Initializable {
                         testDate.setDefaultColor(Paint.valueOf("black"));
                         if (datesValidation()) {
                             insertTest();
-                            updatePayment();
                         }
                     }else{
                         testName.setUnFocusColor(Paint.valueOf("red"));
@@ -585,7 +573,7 @@ public class RegistrationController implements Initializable {
     private int insuranceValidation() {
         if (insuranceCheck.isSelected()) {
             boolean flag = false;
-            if (insuranceCheck.isSelected() && (insuranceID.getText().length() != 9 || !Pattern.matches("[0-9]{9}", idNum.getText()))) {
+            if (insuranceCheck.isSelected() && !Pattern.matches("[0-9]{1,}", idNum.getText())) {
                 insuranceID.setUnFocusColor(Paint.valueOf("RED"));
                 flag = true;
             } else {
@@ -1150,14 +1138,11 @@ public class RegistrationController implements Initializable {
                     int i = 0;
                     for (i = 0; i < phoneNumbers.size() - 1; i++) {
                         phones.add(new Phone2ID(id.getIdentityNumber(), Integer.parseInt(phoneNumbers.get(i))));
-                        phones2Str = "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(i) + "),\n";
+                        phones2Str += "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(i) + "),\n";
                     }
                     phones.add(new Phone2ID(id.getIdentityNumber(), Integer.parseInt(phoneNumbers.get(i))));
-                    phones2Str = "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(i) + ");";
+                    phones2Str += "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(i) + ");";
                 }
-
-                payment = new Payment(patient.getLeaveDateAndTime(), 0, 0, payCoverage.getValue(), Integer.parseInt(idNum.getText()));
-                payment.setLengthOfStay(lengthOfStay.getText().isEmpty() ? 0 : Float.parseFloat(lengthOfStay.getText()));
 
                 Insurance insurance = null;
                 if (insuranceCheck.isSelected()) {
@@ -1171,9 +1156,6 @@ public class RegistrationController implements Initializable {
                 if (insurance != null && insuranceExistence(insurance.getInsuranceID())){
                     insuranceID.setUnFocusColor(Paint.valueOf("red"));
                 }else {
-                    float totalPay = 500 * patient.getLengthOfStay();
-                    payment.setTotal_bill(totalPay);
-                    payment.setInvoice(totalPay);
                     insuranceID.setUnFocusColor(Paint.valueOf("black"));
                     DBConnector.connectDB();
                     try {
@@ -1240,15 +1222,12 @@ public class RegistrationController implements Initializable {
                     int i = 0;
                     for (i = 0; i < phoneNumbers.size() - 1; i++) {
                         phones.add(new Phone2ID(id.getIdentityNumber(), Integer.parseInt(phoneNumbers.get(i))));
-                        phones2Str = "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(i) + "),\n";
+                        phones2Str += "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(i) + "),\n";
                     }
                     phones.add(new Phone2ID(id.getIdentityNumber(), Integer.parseInt(phoneNumbers.get(i))));
-                    phones2Str = "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(i) + ");";
+                    phones2Str += "(" + id.getIdentityNumber() + ", " + phoneNumbers.get(i) + ");";
                 }
 
-
-                payment = new Payment(patient.getLeaveDateAndTime(), 0, 0, payCoverage.getValue(), Integer.parseInt(idNum.getText()));
-                payment.setLengthOfStay(lengthOfStay.getText().isEmpty() ? 0 : Float.parseFloat(lengthOfStay.getText()));
                 Insurance insurance = null;
                 if (insuranceCheck.isSelected()) {
                     insurance = new Insurance(
@@ -1262,8 +1241,6 @@ public class RegistrationController implements Initializable {
                     insuranceID.setUnFocusColor(Paint.valueOf("red"));
                 } else {
                     Room room = roomsSQL.get(roomList.indexOf(roomName.getValue()));
-                    payment.setRoomPrice(room.getAccommodationCost());
-                    float totalPay = 0;
                     insuranceID.setUnFocusColor(Paint.valueOf("black"));
                     Surgeries surgery = null;
                     MedicalStaff docObj = null;
@@ -1292,12 +1269,6 @@ public class RegistrationController implements Initializable {
                                 new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(testDate.getValue()))
                         );
                     }
-                    if (patient.getLeaveDateAndTime() != null) {
-                        totalPay += (patient.getLengthOfStay() * room.getAccommodationCost());
-                    }
-
-                    payment.setInvoice((float) (totalPay * (1.0 - payment.getCoverage()/100.0)));
-                    payment.setTotal_bill(totalPay);
                     DBConnector.connectDB();
                     try {
                         DBConnector.ExecuteStatement("Insert into Identity (identity_number, full_name, gender, date_of_birth, blood_type, living_address) values(" +
@@ -1349,93 +1320,6 @@ public class RegistrationController implements Initializable {
                 }
             }
         }
-    }
-
-    private void setPayment() throws SQLException, ClassNotFoundException, ParseException {
-        float surgeriesPrice = surgeriesPrice();
-        float testsPrice = testsPrice();
-        float totalPay = (payment.getRoomPrice() * payment.getLengthOfStay()) + surgeriesPrice + testsPrice;
-        payment.setInvoice((float) (totalPay * (1.0 - payment.getCoverage()/100.0)));
-        payment.setTotal_bill(totalPay);
-        DBConnector.connectDB();
-        try {
-            DBConnector.ExecuteStatement("Insert into Payment (issued_date, invoice, total_bill, coverage, identity_number) values("
-                    + payment.getIssued_dateToString() + ", "
-                    + payment.getInvoice() + ", "
-                    + payment.getTotal_bill() + ", "
-                    + payment.getCoverage() + ", "
-                    + payment.getIdentity_number() + ");");
-            DBConnector.getCon().close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void updatePayment() throws SQLException, ClassNotFoundException, ParseException {
-        float surgeriesPrice = surgeriesPrice();
-        float testsPrice = testsPrice();
-        float totalPay = (payment.getRoomPrice() * payment.getLengthOfStay()) + surgeriesPrice + testsPrice;
-        float oldBill = payment.getTotal_bill();
-        float oldInvoice = payment.getTotal_bill();
-        payment.setInvoice((float) (totalPay * (1.0 - payment.getCoverage()/100.0)));
-        payment.setTotal_bill(totalPay);
-        DBConnector.connectDB();
-        try {
-            DBConnector.ExecuteStatement("Update Payment p\n"
-                    + "Set p.invoice = " + payment.getInvoice() + ", "
-                    + "p.total_bill = " + payment.getTotal_bill() + "\n"
-                    + "where p.identity_number = " + payment.getIdentity_number() + " and "
-                    + "p.coverage = " + payment.getCoverage() + ";");
-            DBConnector.getCon().close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private float surgeriesPrice() throws SQLException, ClassNotFoundException, ParseException {
-        if (surgeryName.isDisabled()){
-            return 0;
-        }
-        float surgeriesPrices = 0;
-        String SQL;
-        DBConnector.connectDB();
-        SQL = "select sum(s.surgery_price) \n" +
-                "from surgeries s, medicalstaff2surgeries2patient m\n" +
-                "where s.surgery_id = m.surgery_id and m.identity_number = " + payment.getIdentity_number() + ";";
-        Statement stmt = DBConnector.getCon().createStatement();
-        ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
-        while (rs.next()) {
-            surgeriesPrices = Float.parseFloat(rs.getString(1));
-        }
-        rs.close();
-        stmt.close();
-        DBConnector.getCon().close();
-        return surgeriesPrices;
-    }
-
-    private float testsPrice() throws SQLException, ClassNotFoundException, ParseException {
-        if (testName.isDisabled()){
-            return 0;
-        }
-        float testsPrices = 0;
-        String SQL;
-        DBConnector.connectDB();
-        SQL = "select distinct sum(t.test_price) \n" +
-                "from tests t, medicalstaff2tests2patient m2t2p\n" +
-                "where t.test_id = m2t2p.test_id and m2t2p.identity_number = " + payment.getIdentity_number() + ";";
-        Statement stmt = DBConnector.getCon().createStatement();
-        ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
-        while (rs.next()) {
-            testsPrices = Float.parseFloat(rs.getString(1));
-        }
-        rs.close();
-        stmt.close();
-        DBConnector.getCon().close();
-        return testsPrices;
     }
 
     private void insertSurgery() throws SQLException, ClassNotFoundException, ParseException {

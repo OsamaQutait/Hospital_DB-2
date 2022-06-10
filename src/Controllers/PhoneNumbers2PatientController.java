@@ -31,7 +31,7 @@ public class PhoneNumbers2PatientController implements Initializable {
     @FXML
     private JFXButton addPhones;
 
-    private static ArrayList<String> phoneNumbers;
+    private ArrayList<String> phoneNumbers;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -44,8 +44,8 @@ public class PhoneNumbers2PatientController implements Initializable {
         if (PatientsController.pSelection == 2){
             phoneNumbers = PatientsController.getPhoneNumbers();
             pNum1.setText("0" + phoneNumbers.get(0));
-            pNum2.setText(phoneNumbers.size() == 2 ? "0" + phoneNumbers.get(1) : "");
-            pNum3.setText(phoneNumbers.size() == 3 ? "0" + phoneNumbers.get(2) : "");
+            pNum2.setText(phoneNumbers.size() >= 2 ? ("0" + phoneNumbers.get(1)) : "");
+            pNum3.setText(phoneNumbers.size() == 3 ? ("0" + phoneNumbers.get(2)) : "");
 
             pNum1.setEditable(false);
             pNum2.setEditable(false);
@@ -57,8 +57,8 @@ public class PhoneNumbers2PatientController implements Initializable {
         if (PatientsController.pSelection == 3){
             phoneNumbers = PatientsController.getPhoneNumbers();
             pNum1.setText("0" + phoneNumbers.get(0));
-            pNum2.setText(phoneNumbers.size() == 2 ? "0" + phoneNumbers.get(1) : "");
-            pNum3.setText(phoneNumbers.size() == 3 ? "0" + phoneNumbers.get(2) : "");
+            pNum2.setText(phoneNumbers.size() >= 2 ? ("0" + phoneNumbers.get(1)) : "");
+            pNum3.setText(phoneNumbers.size() == 3 ? ("0" + phoneNumbers.get(2)) : "");
 
             addPhones.setVisible(false);
             close.setVisible(false);
@@ -141,9 +141,5 @@ public class PhoneNumbers2PatientController implements Initializable {
             }
         }
         return i == 0;
-    }
-
-    public static ArrayList<String> getPhoneNumbers() {
-        return phoneNumbers;
     }
 }
