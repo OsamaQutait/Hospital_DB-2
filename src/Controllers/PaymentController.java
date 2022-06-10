@@ -1,7 +1,4 @@
 package Controllers;
-//yearly: according to year
-//monthly: according to month
-
 import DatabaseConnector.DBConnector;
 import Hospital.*;
 import com.jfoenix.controls.JFXButton;
@@ -252,14 +249,13 @@ public class PaymentController implements Initializable {
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
-                //stage.initStyle(StageStyle.UNDECORATED);
+                stage.setTitle("Payment reports");
                 stage.show();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         });
     }
-
 
     private void getData() throws SQLException, ClassNotFoundException, ParseException {
         String SQL;
@@ -270,7 +266,6 @@ public class PaymentController implements Initializable {
                 "where id.identity_number = p.identity_number and p.stay_leave_date_time is not null;";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-
         while (rs.next()) {
             patientsSQL.add(
                     new Identity(
@@ -283,13 +278,11 @@ public class PaymentController implements Initializable {
                     )
             );
         }
-
         rs.close();
         stmt.close();
 
         DBConnector.getCon().close();
     }
-
 
     private void setPayment() throws SQLException, ClassNotFoundException, ParseException {
         DBConnector.connectDB();
@@ -305,7 +298,6 @@ public class PaymentController implements Initializable {
             e.printStackTrace();
         }
     }
-
 
     private void getSurgeries() throws SQLException, ClassNotFoundException, ParseException {
         String SQL;
@@ -431,7 +423,6 @@ public class PaymentController implements Initializable {
                 "where R.Room_id = '" + patient.getRoomID()  + "';";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-
         while (rs.next()) {
             room = new Room(
                     rs.getString(1), rs.getString(2),
@@ -454,8 +445,6 @@ public class PaymentController implements Initializable {
                 "where p.identity_number =  " + id + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         boolean res = rs.next();
         rs.close();
         stmt.close();
