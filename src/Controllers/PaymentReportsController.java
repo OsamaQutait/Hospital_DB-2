@@ -1,162 +1,68 @@
 package Controllers;
 
 import DatabaseConnector.DBConnector;
-import Hospital.Identity;
-import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXDatePicker;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.scene.control.Label;
 
-import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
 
-public class PatientReportsController implements Initializable {
+public class PaymentReportsController implements Initializable {
     @FXML
-    private Button city;
+    private Button lifeStatus;
 
     @FXML
-    private Button bloodType;
+    private Button profits;
 
     @FXML
-    private Button lifeStat;
+    private Label tDate;
 
     @FXML
-    private Button visitReason;
+    private JFXDatePicker expiryDate;
 
     @FXML
-    private Button gender;
+    private JFXDatePicker sDate;
 
     @FXML
-    private BarChart<String, String> barChart;
+    private BarChart<?, ?> barChart;
 
     @FXML
     private PieChart pieChart;
 
-    @FXML
-    private JFXButton register;
 
-    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         /*manualSearch.setOnAction((ActionEvent e) -> {
             manualSearch.setSelected(true);
             tableSearch.setSelected(false);
         });*/
-        gender.setStyle("-fx-background-color: #3b5998;" +
+        lifeStatus.setStyle("-fx-background-color: #3b5998;" +
                 "-fx-text-fill: #dfe3ee;");
-        city.setStyle("-fx-background-color: #3b5998;" +
+        profits.setStyle("-fx-background-color: #3b5998;" +
                 "-fx-text-fill: #dfe3ee;");
-        bloodType.setStyle("-fx-background-color: #3b5998;" +
-                "-fx-text-fill: #dfe3ee;");
-        lifeStat.setStyle("-fx-background-color: #3b5998;" +
-                "-fx-text-fill: #dfe3ee;");
-        visitReason.setStyle("-fx-background-color: #3b5998;" +
-                "-fx-text-fill: #dfe3ee;");
-
 
         pieChart.setVisible(false);
         barChart.setVisible(false);
 
-        gender.setOnAction((ActionEvent e) -> {
-            gender.setStyle("-fx-background-color: #dfe3ee;" +
+        lifeStatus.setOnAction((ActionEvent e) -> {
+            lifeStatus.setStyle("-fx-background-color: #dfe3ee;" +
                     "-fx-text-fill: #3b5998;");
-            city.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            bloodType.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            lifeStat.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            visitReason.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            try {
-                getGender();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
-            } catch (ParseException parseException) {
-                parseException.printStackTrace();
-            }
-        });
-
-        bloodType.setOnAction((ActionEvent e) -> {
-            gender.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            city.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            bloodType.setStyle("-fx-background-color: #dfe3ee;" +
-                    "-fx-text-fill: #3b5998;");
-            lifeStat.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            visitReason.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            try {
-                getBloodType();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
-            } catch (ParseException parseException) {
-                parseException.printStackTrace();
-            }
-        });
-
-        city.setOnAction((ActionEvent e) -> {
-            gender.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            city.setStyle("-fx-background-color: #dfe3ee;" +
-                    "-fx-text-fill: #3b5998;");
-            bloodType.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            lifeStat.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            visitReason.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            try {
-                getCity();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } catch (ClassNotFoundException classNotFoundException) {
-                classNotFoundException.printStackTrace();
-            } catch (ParseException parseException) {
-                parseException.printStackTrace();
-            }
-        });
-
-        lifeStat.setOnAction((ActionEvent e) -> {
-            gender.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            city.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            bloodType.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            lifeStat.setStyle("-fx-background-color: #dfe3ee;" +
-                    "-fx-text-fill: #3b5998;");
-            visitReason.setStyle("-fx-background-color: #3b5998;" +
+            profits.setStyle("-fx-background-color: #3b5998;" +
                     "-fx-text-fill: #dfe3ee;");
             try {
                 getLifeStat();
@@ -168,19 +74,14 @@ public class PatientReportsController implements Initializable {
                 parseException.printStackTrace();
             }
         });
-        visitReason.setOnAction((ActionEvent e) -> {
-            gender.setStyle("-fx-background-color: #3b5998;" +
+
+        profits.setOnAction((ActionEvent e) -> {
+            lifeStatus.setStyle("-fx-background-color: #3b5998;" +
                     "-fx-text-fill: #dfe3ee;");
-            city.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            bloodType.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            lifeStat.setStyle("-fx-background-color: #3b5998;" +
-                    "-fx-text-fill: #dfe3ee;");
-            visitReason.setStyle("-fx-background-color: #dfe3ee;" +
+            profits.setStyle("-fx-background-color: #dfe3ee;" +
                     "-fx-text-fill: #3b5998;");
             try {
-                getVisitReason();
+                getBloodType();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             } catch (ClassNotFoundException classNotFoundException) {
@@ -189,8 +90,8 @@ public class PatientReportsController implements Initializable {
                 parseException.printStackTrace();
             }
         });
-
     }
+
     private void getGender() throws SQLException, ClassNotFoundException, ParseException {
         pieChart.getData().removeAll(Collections.singleton(pieChart.getData().setAll()));
         pieChart.setVisible(true);
@@ -241,9 +142,9 @@ public class PatientReportsController implements Initializable {
         String SQL;
         DBConnector.connectDB();
 
-        SQL = "select p.emergency_status, count(*)\n" +
-                "from identity id, patient p\n" +
-                "where id.identity_number = p.identity_number\n"+
+        SQL = "select p.emergency_status, sum(pay.total_bill)\n" +
+                "from patient p, payment pay\n" +
+                "where p.identity_number = pay.identity_number\n"+
                 "group by p.emergency_status;";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
@@ -273,66 +174,7 @@ public class PatientReportsController implements Initializable {
         pieChartData.forEach(data1 ->
                 data1.nameProperty().bind(
                         Bindings.concat(
-                                " No. of ", data1.getName(), ": ", data1.pieValueProperty()
-                        )
-                ));
-
-        pieChart.getData().addAll(pieChartData);
-    }
-
-    private void getVisitReason() throws SQLException, ClassNotFoundException, ParseException {
-        pieChart.getData().removeAll(Collections.singleton(pieChart.getData().setAll()));
-        pieChart.setVisible(true);
-        barChart.setVisible(false);
-        ObservableList<PieChart.Data> pieChartData;
-        ArrayList<PieChart.Data> data = new ArrayList<>();
-
-        boolean sFlag = false;
-        boolean tFlag = false;
-        boolean stFlag = false;
-
-        String SQL;
-        DBConnector.connectDB();
-
-        SQL = "select p.visit_reason, count(*)\n" +
-                "from identity id, patient p\n" +
-                "where id.identity_number = p.identity_number\n"+
-                "group by p.visit_reason;";
-        Statement stmt = DBConnector.getCon().createStatement();
-        ResultSet rs = stmt.executeQuery(SQL);
-
-        while (rs.next()) {
-            data.add(new PieChart.Data(rs.getString(1), Integer.parseInt(rs.getString(2))));
-            if (rs.getString(1).equals("For test")){
-                tFlag = true;
-            }
-            if (rs.getString(1).equals("For surgery")){
-                sFlag = true;
-            }
-            if (rs.getString(1).equals("For surgery and test")){
-                stFlag = true;
-            }
-        }
-        if (!tFlag){
-            data.add(new PieChart.Data("For test", 0));
-        }
-        if (!sFlag){
-            data.add(new PieChart.Data("For surgery", 0));
-        }
-        if (!stFlag){
-            data.add(new PieChart.Data("For surgery and test", 0));
-        }
-
-        rs.close();
-        stmt.close();
-
-        DBConnector.getCon().close();
-
-        pieChartData = FXCollections.observableArrayList(data);
-        pieChartData.forEach(data1 ->
-                data1.nameProperty().bind(
-                        Bindings.concat(
-                                " No. of ", data1.getName(), ": ", data1.pieValueProperty()
+                                "Profit of ", data1.getName(), ": ", data1.pieValueProperty()
                         )
                 ));
 

@@ -10,8 +10,6 @@ public class Payment {
     private float total_bill;
     private float coverage;
     private int identity_number;
-    private float lengthOfStay;
-    private float roomPrice;
 
     public Payment(){}
 
@@ -85,21 +83,5 @@ public class Payment {
 
     public void setTotal_bill(float total_bill) {
         this.total_bill = total_bill;
-    }
-
-    public float getLengthOfStay() {
-        return lengthOfStay;
-    }
-
-    public void setLengthOfStay(float lengthOfStay) {
-        this.lengthOfStay = lengthOfStay;
-    }
-
-    public float getRoomPrice() {
-        return roomPrice;
-    }
-
-    public void setRoomPrice(float roomPrice) {
-        this.roomPrice = roomPrice;
     }
 }

@@ -106,7 +106,7 @@
                               <Insets top="10.0" />
                            </padding>
                            <children>
-                              <HBox alignment="CENTER" prefHeight="523.0" prefWidth="1121.0" spacing="5.0">
+                              <HBox alignment="CENTER" prefHeight="591.0" prefWidth="1122.0" spacing="5.0">
                                  <children>
                                     <TableView fx:id="pTable" prefHeight="523.0" prefWidth="337.0" style="-fx-background-radius: 15;">
                                        <columns>
@@ -176,15 +176,12 @@
                                                                   <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                   <RowConstraints maxHeight="77.0" minHeight="8.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                   <RowConstraints maxHeight="129.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="129.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints maxHeight="129.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                </rowConstraints>
                                                                <children>
-                                                                  <JFXTextField fx:id="surgeryBill" GridPane.columnIndex="1" />
-                                                                  <JFXTextField fx:id="testBill" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                  <Label prefHeight="41.0" prefWidth="152.0" text="Surgeries bill" textFill="#3b5998">
-                                                                     <font>
-                                                                        <Font size="16.0" />
-                                                                     </font>
-                                                                  </Label>
+                                                                  <JFXTextField fx:id="surgeryBill" editable="false" GridPane.columnIndex="1" />
+                                                                  <JFXTextField fx:id="testBill" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                                   <Label prefHeight="41.0" prefWidth="152.0" text="Tests bill" textFill="#3b5998" GridPane.rowIndex="1">
                                                                      <font>
                                                                         <Font size="16.0" />
@@ -195,7 +192,24 @@
                                                                         <Font size="16.0" />
                                                                      </font>
                                                                   </Label>
-                                                                  <JFXTextField fx:id="hospitalFees" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                  <JFXTextField fx:id="hospitalFees" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                  <Label fx:id="roomLabel" prefHeight="41.0" prefWidth="152.0" text="Room cost" textFill="#3b5998" GridPane.rowIndex="3">
+                                                                     <font>
+                                                                        <Font size="16.0" />
+                                                                     </font>
+                                                                  </Label>
+                                                                  <JFXTextField fx:id="roomCost" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                                                  <Label prefHeight="41.0" prefWidth="152.0" text="Surgeries bill" textFill="#3b5998">
+                                                                     <font>
+                                                                        <Font size="16.0" />
+                                                                     </font>
+                                                                  </Label>
+                                                                  <Label prefHeight="41.0" prefWidth="152.0" text="Hospital stay" textFill="#3b5998" GridPane.rowIndex="4">
+                                                                     <font>
+                                                                        <Font size="16.0" />
+                                                                     </font>
+                                                                  </Label>
+                                                                  <JFXTextField fx:id="hosStay" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                                                </children>
                                                             </GridPane>
                                                             <GridPane prefHeight="198.0" prefWidth="317.0">
@@ -224,9 +238,9 @@
                                                                         <Font size="16.0" />
                                                                      </font>
                                                                   </Label>
-                                                                  <JFXTextField fx:id="coverage" GridPane.columnIndex="1" />
-                                                                  <JFXTextField fx:id="totalBIll" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                                                  <JFXTextField fx:id="invoice" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                                                  <JFXTextField fx:id="coverage" editable="false" GridPane.columnIndex="1" />
+                                                                  <JFXTextField fx:id="totalBIll" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                                  <JFXTextField fx:id="invoice" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                                                </children>
                                                             </GridPane>
                                                          </children>

@@ -1,5 +1,6 @@
 package Controllers;
-//payment existance only show without create
+//yearly: according to year
+//monthly: according to month
 
 import DatabaseConnector.DBConnector;
 import Hospital.*;
@@ -9,12 +10,18 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,6 +29,8 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 public class PaymentController implements Initializable {
@@ -53,7 +62,7 @@ public class PaymentController implements Initializable {
     private TableColumn<Tests, String> tName;
 
     @FXML
-    private TableColumn<Tests, String> tPrice;
+    private TableColumn<Tests, Float> tPrice;
 
     @FXML
     private JFXTextField surgeryBill;
@@ -74,10 +83,19 @@ public class PaymentController implements Initializable {
     private JFXTextField invoice;
 
     @FXML
+    private JFXTextField roomCost;
+
+    @FXML
+    private JFXTextField hosStay;
+
+    @FXML
     private JFXButton reports;
 
     @FXML
     private JFXButton createBill;
+
+    @FXML
+    private Label roomLabel;
 
     private ArrayList<Identity> patientsSQL;
     private ObservableList<Identity> patientsOBS;
@@ -91,6 +109,7 @@ public class PaymentController implements Initializable {
     private float testsPrice;
     private float surgeriesPrice;
     private final float hospitalFeesValue = 1000;
+    private final float deadFeesValue = 550;
 
     private Payment payment;
     private Insurance insurance = null;
@@ -118,8 +137,9 @@ public class PaymentController implements Initializable {
         pTable.setItems(patientsOBS);
 
         createBill.setOnAction((ActionEvent e) -> {
-            surgeryTable.getItems().clear();
-            testsTable.getItems().clear();
+            surgeriesSQL = new ArrayList<>();
+            testsSQL = new ArrayList<>();
+            payment = new Payment();
 
             identity = pTable.getSelectionModel().getSelectedItem();
             if (identity != null){
@@ -129,6 +149,20 @@ public class PaymentController implements Initializable {
                     getInsurance();
                     getPatient();
                     getRoom();
+                    if (patient.getEmergencyStatus().equals("Dead")){
+                        roomLabel.setText("Death cost");
+                    }else{
+                        roomLabel.setText("Room cost");
+                    }
+                    tName.setCellValueFactory(new PropertyValueFactory<Tests, String>("testName"));
+                    tPrice.setCellValueFactory(new PropertyValueFactory<Tests, Float>("testPrice"));
+                    testsOBS = FXCollections.observableArrayList(testsSQL);
+                    testsTable.setItems(testsOBS);
+
+                    sName.setCellValueFactory(new PropertyValueFactory<Surgeries, String>("surgery_name"));
+                    sPrice.setCellValueFactory(new PropertyValueFactory<Surgeries, Float>("surgery_price"));
+                    surgeriesOBS = FXCollections.observableArrayList(surgeriesSQL);
+                    surgeryTable.setItems(surgeriesOBS);
 
                     if (patient != null && room != null) {
                         surgeriesOBS = FXCollections.observableArrayList(surgeriesSQL);
@@ -149,8 +183,27 @@ public class PaymentController implements Initializable {
                         float valueOfInvoice = (float) ((1.0 - coverageValue / 100.0) * valueOfBill);
                         valueOfInvoice = Math.round(valueOfInvoice * 100) / 100.0f;
 
-                        totalBIll.setText(String.valueOf(valueOfBill));
-                        invoice.setText(String.valueOf(valueOfInvoice));
+                        if (patient.getEmergencyStatus().equals("Dead")) {
+                            valueOfBill = hospitalFeesValue + deadFeesValue * patient.getLengthOfStay();
+                            valueOfBill = Math.round(valueOfBill * 100) / 100.0f;
+                            totalBIll.setText(String.valueOf(valueOfBill));
+                            invoice.setText(String.valueOf(valueOfBill));
+                            roomCost.setText(String.valueOf(deadFeesValue));
+                        }else{
+                            totalBIll.setText(String.valueOf(valueOfBill));
+                            invoice.setText(String.valueOf(valueOfInvoice));
+                            roomCost.setText(String.valueOf(room.getAccommodationCost()));
+                        }
+
+                        hosStay.setText(String.valueOf(Math.round(patient.getLengthOfStay() * 10) / 10.0f) + " days");
+                        payment.setCoverage(coverageValue);
+                        payment.setInvoice(valueOfInvoice);
+                        payment.setTotal_bill(valueOfBill);
+                        payment.setIdentity_number(patient.getIdentityNumber());
+                        payment.setIssued_date(new Date());
+                        if (!paymentExistence(payment.getIdentity_number())) {
+                            setPayment();
+                        }
                     }
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -159,6 +212,19 @@ public class PaymentController implements Initializable {
                 } catch (ParseException parseException) {
                     parseException.printStackTrace();
                 }
+            }
+        });
+
+        reports.setOnAction((ActionEvent e) -> {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/paymentReports.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                //stage.initStyle(StageStyle.UNDECORATED);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
             }
         });
     }
@@ -194,12 +260,7 @@ public class PaymentController implements Initializable {
     }
 
 
-    /*private void setPayment() throws SQLException, ClassNotFoundException, ParseException {
-        float surgeriesPrice = surgeriesPrice();
-        float testsPrice = testsPrice();
-        float totalPay = (payment.getRoomPrice() * payment.getLengthOfStay()) + surgeriesPrice + testsPrice;
-        payment.setInvoice((float) (totalPay * (1.0 - payment.getCoverage()/100.0)));
-        payment.setTotal_bill(totalPay);
+    private void setPayment() throws SQLException, ClassNotFoundException, ParseException {
         DBConnector.connectDB();
         try {
             DBConnector.ExecuteStatement("Insert into Payment (issued_date, invoice, total_bill, coverage, identity_number) values("
@@ -212,13 +273,13 @@ public class PaymentController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }*/
+    }
 
 
     private void getSurgeries() throws SQLException, ClassNotFoundException, ParseException {
         String SQL;
         DBConnector.connectDB();
-        SQL = "select distinct s.surgery_id, s.surgery_name, s.surgery_price\n" +
+        SQL = "select s.surgery_id, s.surgery_name, s.surgery_price\n" +
                 "from surgeries s, medicalstaff2surgeries2patient m\n" +
                 "where s.surgery_id = m.surgery_id and m.identity_number = " + identity.getIdentityNumber() + ";";
         Statement stmt = DBConnector.getCon().createStatement();
@@ -243,17 +304,18 @@ public class PaymentController implements Initializable {
             while (rs.next()) {
                 surgeriesPrice = Float.parseFloat(rs.getString(1));
             }
+        }else{
+            surgeriesPrice = 0;
         }
         rs.close();
         stmt.close();
         DBConnector.getCon().close();
-        surgeriesPrice = 0;
     }
 
     private void getTests() throws SQLException, ClassNotFoundException, ParseException {
         String SQL;
         DBConnector.connectDB();
-        SQL = "select distinct t.test_id, t.test_name, t.test_price, l.lab_id\n" +
+        SQL = "select t.test_id, t.test_name, t.test_price, l.lab_id\n" +
                 "from tests t, medicalstaff2tests2patient m2t2p, lab l\n" +
                 "where l.lab_id = t.lab_id and t.test_id = m2t2p.test_id and m2t2p.identity_number = " + identity.getIdentityNumber() + ";";
         Statement stmt = DBConnector.getCon().createStatement();
@@ -278,11 +340,12 @@ public class PaymentController implements Initializable {
             while (rs.next()) {
                 testsPrice = Float.parseFloat(rs.getString(1));
             }
+        }else{
+            testsPrice = 0;
         }
         rs.close();
         stmt.close();
         DBConnector.getCon().close();
-        testsPrice = 0;
     }
 
     private void getInsurance() throws SQLException, ClassNotFoundException, ParseException {
@@ -352,4 +415,20 @@ public class PaymentController implements Initializable {
         DBConnector.getCon().close();
     }
 
+    private boolean paymentExistence(int id) throws SQLException, ClassNotFoundException, ParseException {
+        String SQL;
+        DBConnector.connectDB();
+        SQL = "select distinct * \n" +
+                "from payment p \n" +
+                "where p.identity_number =  " + id + ";";
+        Statement stmt = DBConnector.getCon().createStatement();
+        ResultSet rs = stmt.executeQuery(SQL);
+        stmt = DBConnector.getCon().createStatement();
+        rs = stmt.executeQuery(SQL);
+        boolean res = rs.next();
+        rs.close();
+        stmt.close();
+        DBConnector.getCon().close();
+        return res;
+    }
 }
