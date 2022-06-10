@@ -4,6 +4,7 @@ import DatabaseConnector.DBConnector;
 import Hospital.Surgeries;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +26,12 @@ import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
 public class SurgeriesController implements Initializable {
+
+    @FXML
+    private JFXTextArea price;
+
+    @FXML
+    private JFXComboBox<String> selectSurgeriesprice;
 
     @FXML
     private TableView<Surgeries> table;
@@ -70,6 +77,10 @@ public class SurgeriesController implements Initializable {
 
     @FXML
     private JFXButton clearUpdatePrice;
+
+    @FXML
+    private JFXButton clearDesc;
+
 
     ArrayList<Surgeries> SurgeryList;
     ArrayList<String> SurgeryNameList;
@@ -127,12 +138,10 @@ public class SurgeriesController implements Initializable {
     @FXML
     void deleteSurgery(ActionEvent event) throws ClassNotFoundException, SQLException{
         int id = 0;
-        System.out.println(selectSurgeriesDelete.getValue());
         for (Surgeries surgeri : SurgeryList){
             if(surgeri.getSurgery_name().equals(selectSurgeriesDelete.getValue())){
                 id = surgeri.getSurgery_id();
                 System.out.println(id);
-                System.out.println(selectSurgeriesDelete.getValue());
                 break;
             }
         }
@@ -189,8 +198,6 @@ public class SurgeriesController implements Initializable {
             DBConnector.connectDB();
             DBConnector.ExecuteStatement(sql);
             DBConnector.getCon().close();
-
-
         }
     }
 
@@ -261,6 +268,7 @@ public class SurgeriesController implements Initializable {
     public void assignComboBoxesValues() {
         selectSurgeriesDelete.setItems(FXCollections.observableArrayList(SurgeryNameList));
         SelectUpSurgeryName.setItems(FXCollections.observableArrayList(SurgeryNameList));
+        selectSurgeriesprice.setItems(FXCollections.observableArrayList(SurgeryNameList));
     }
 
     public void assignTableValues(){
@@ -305,5 +313,25 @@ public class SurgeriesController implements Initializable {
         return flag;
     }
 
+    public void selectSurgeriesToGetPrice(ActionEvent actionEvent) {
+        selectSurgeriesprice.setItems(FXCollections.observableArrayList(SurgeryNameList));
+    }
+
+    public void priceSurgery(ActionEvent actionEvent) {
+        assignComboBoxesValues();
+        price.clear();
+        for (Surgeries surgeri : SurgeryList){
+            if(surgeri.getSurgery_name().equals(selectSurgeriesprice.getValue())){
+                price.appendText(String.valueOf(surgeri.getSurgery_price()));
+                break;
+            }
+        }
+    }
+
+    public void clearPrice(ActionEvent actionEvent) {
+        selectSurgeriesprice.setValue(null);
+        price.clear();
+
+    }
 }
 
