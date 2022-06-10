@@ -18,15 +18,11 @@ import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 
 import DatabaseConnector.DBConnector;
-import Hospital.Department;
 import Hospital.Identity;
 import Hospital.MedicalStaff;
 import Hospital.MedicalStaff2Surgeries;
 import Hospital.MedicalStaff2Tests;
 import Hospital.Phone2ID;
-import Hospital.Room;
-import Hospital.Surgeries;
-import Hospital.Tests;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
