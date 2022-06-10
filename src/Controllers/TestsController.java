@@ -108,6 +108,7 @@ public class TestsController implements Initializable {
     @FXML
     void clearLab(ActionEvent event) {
         selectUpTsetLab.setValue(null);
+        newLabID.clear();
     }
 
     @FXML
@@ -207,7 +208,7 @@ public class TestsController implements Initializable {
     @FXML
     void upTestLabID(ActionEvent event) throws SQLException, ClassNotFoundException {
         boolean flag = true;
-        if(newLabID.getText().isEmpty() || !isNumeric(newLabID.getText()) || !labIDList.contains(Integer.parseInt(testLab.getText()))){
+        if(newLabID.getText().isEmpty() || !isNumeric(newLabID.getText()) || !labIDList.contains(Integer.parseInt(newLabID.getText()))){
             newLabID.setUnFocusColor(Color.RED);
             newLabID.clear();
             flag = false;
@@ -319,6 +320,7 @@ public class TestsController implements Initializable {
         ResultSet rs = stmt.executeQuery(SQL);
         while (rs.next()) {
             labIDList.add(Integer.parseInt(rs.getString(1)));
+            //System.out.println(rs.getString(1));
         }
         rs.close();
         stmt.close();
