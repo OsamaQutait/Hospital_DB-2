@@ -5,9 +5,17 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.paint.Paint;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +31,12 @@ public class LoginController implements Initializable {
 
     @FXML
     private JFXButton login;
+    
+    @FXML
+    private Label labelpass;
+    
+    @FXML
+    private Label labeluser;
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
@@ -37,9 +51,16 @@ public class LoginController implements Initializable {
                 Statement stmt = DBConnector.getCon().createStatement();
                 ResultSet rs = stmt.executeQuery(SQL);
                 if (rs.next()){
+                	labelpass.setTextFill(Paint.valueOf("BLACK"));
+                	labeluser.setTextFill(Paint.valueOf("BLACK"));
                     System.out.println("The user exists in the system");
+                    openDashBoard();
                 }else{
-                    System.out.println("The user does not exist");		// error message needed
+                	labelpass.setTextFill(Paint.valueOf("RED"));
+                	labeluser.setTextFill(Paint.valueOf("RED"));
+                	username.clear();
+                	password.clear();
+                    System.out.println("The user does not exist");
                 }
                 rs.close();
                 stmt.close();
@@ -50,5 +71,18 @@ public class LoginController implements Initializable {
                 throwables.printStackTrace();
             }
         });
+    }
+    public void openDashBoard(){
+    	try {
+    		labelpass.getScene().getWindow().hide();
+			Parent root = FXMLLoader.load(getClass().getResource("../screens/patients.fxml"));
+			Stage stage = new Stage();
+			Scene scene = new Scene(root);
+			stage.setTitle("Hospital Database");
+			stage.setScene(scene);
+			stage.show();
+		} catch (IOException ioException) {
+			ioException.printStackTrace();
+		}
     }
 }
