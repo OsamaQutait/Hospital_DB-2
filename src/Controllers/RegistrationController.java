@@ -6,7 +6,7 @@ package Controllers;
 //decrease available beds
 //payment is zero if insurance is not active, its value if it's active (setData)
 //join date before or equal current date
-//must add phone numbers to medical staff
+//must add phone numbers to medical staff d
 
 import DatabaseConnector.DBConnector;
 import Hospital.*;
