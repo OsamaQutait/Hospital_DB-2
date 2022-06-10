@@ -1,12 +1,4 @@
 package Controllers;
-//decrease the number of available beds
-//must check of issued date if it's null or not, and other dates
-
-//if leave date is set, find invoice
-//decrease available beds
-//payment is zero if insurance is not active, its value if it's active (setData)
-//join date before or equal current date
-//must add phone numbers to medical staff d
 
 import DatabaseConnector.DBConnector;
 import Hospital.*;
@@ -161,6 +153,9 @@ public class RegistrationController implements Initializable {
     private Button patientButton;
 
     @FXML
+    private Button paymentButton;
+
+    @FXML
     private JFXComboBox<String> nurse;
 
     @FXML
@@ -257,7 +252,7 @@ public class RegistrationController implements Initializable {
                 visitReason.setDisable(true);
                 departmentName.setDisable(true);
                 roomName.setDisable(true);
-            }else{
+            } else {
                 testClear();
                 surgeryClear();
                 departmentClear();
@@ -307,6 +302,7 @@ public class RegistrationController implements Initializable {
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.initStyle(StageStyle.UNDECORATED);
+                stage.setTitle("Hospital Database | Add phone numbers");
                 stage.show();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
@@ -318,7 +314,20 @@ public class RegistrationController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("../screens/patients.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
-                stage.setTitle("Hospital Database");
+                stage.setTitle("Hospital Database | Patients");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+        paymentButton.setOnAction((ActionEvent e) -> {
+            try {
+                addPhoneNumbers.getScene().getWindow().hide();
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/payment.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Hospital Database | Payment");
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException ioException) {
@@ -408,7 +417,7 @@ public class RegistrationController implements Initializable {
         register.setOnAction((ActionEvent e) -> {
             if (identityValidation() && patientValidation() && departmentValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1) && (surgeryValidation() == 1 || surgeryValidation() == -1) && (testValidation() == 1 || testValidation() == -1)) {
                 try {
-                    if ((leaveTime.getValue() == null || leaveDate.getValue() == null) && !emergencyStatus.getValue().equals("Dead")){
+                    if ((leaveTime.getValue() == null || leaveDate.getValue() == null) && !emergencyStatus.getValue().equals("Dead")) {
                         leaveDate.setValue(null);
                         leaveTime.setValue(null);
                     }
@@ -427,14 +436,14 @@ public class RegistrationController implements Initializable {
         addSurgery.setOnAction((ActionEvent e) -> {
             if (identityValidation() && patientValidation() && departmentValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1) && (surgeryValidation() == 1 || surgeryValidation() == -1) && (testValidation() == 1 || testValidation() == -1)) {
                 try {
-                    if (identityExistence(Integer.parseInt(idNum.getText())) && !surgeryExistence()){
+                    if (identityExistence(Integer.parseInt(idNum.getText())) && !surgeryExistence()) {
                         surgeryName.setUnFocusColor(Paint.valueOf("black"));
                         doctor.setUnFocusColor(Paint.valueOf("black"));
                         surgeryDate.setDefaultColor(Paint.valueOf("black"));
                         if (datesValidation()) {
                             insertSurgery();
                         }
-                    }else{
+                    } else {
                         surgeryName.setUnFocusColor(Paint.valueOf("red"));
                         doctor.setUnFocusColor(Paint.valueOf("red"));
                         surgeryDate.setValue(null);
@@ -454,14 +463,14 @@ public class RegistrationController implements Initializable {
         addTest.setOnAction((ActionEvent e) -> {
             if (identityValidation() && patientValidation() && departmentValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1) && (surgeryValidation() == 1 || surgeryValidation() == -1) && (testValidation() == 1 || testValidation() == -1)) {
                 try {
-                    if (identityExistence(Integer.parseInt(idNum.getText())) && !testExistence()){
+                    if (identityExistence(Integer.parseInt(idNum.getText())) && !testExistence()) {
                         testName.setUnFocusColor(Paint.valueOf("black"));
                         nurse.setUnFocusColor(Paint.valueOf("black"));
                         testDate.setDefaultColor(Paint.valueOf("black"));
                         if (datesValidation()) {
                             insertTest();
                         }
-                    }else{
+                    } else {
                         testName.setUnFocusColor(Paint.valueOf("red"));
                         nurse.setUnFocusColor(Paint.valueOf("red"));
                         testDate.setValue(null);
@@ -479,7 +488,6 @@ public class RegistrationController implements Initializable {
         });
 
     }
-
 
     private void identityClear() {
         try {
@@ -569,7 +577,6 @@ public class RegistrationController implements Initializable {
         nurse.setDisable(true);
     }
 
-    //must check if insurance exists
     private int insuranceValidation() {
         if (insuranceCheck.isSelected()) {
             boolean flag = false;
@@ -687,7 +694,6 @@ public class RegistrationController implements Initializable {
         return -1;
     }
 
-    //must add date
     private boolean departmentValidation() {
         boolean flag = true;
         if (!visitReason.isDisabled() && departmentName.getSelectionModel().isEmpty()) {
@@ -705,7 +711,6 @@ public class RegistrationController implements Initializable {
         return flag;
     }
 
-    //must check if id exists
     private boolean identityValidation() {
         boolean flag = true;
         if (idNum.getText().length() != 9 || !Pattern.matches("[0-9]{9}", idNum.getText())) {
@@ -755,7 +760,6 @@ public class RegistrationController implements Initializable {
         return flag;
     }
 
-    //must check if all dates are before current date (not test and surgery)
     private boolean datesValidation() {
         try {
             boolean flag = true;
@@ -763,7 +767,7 @@ public class RegistrationController implements Initializable {
             Date dob = new SimpleDateFormat("yyyy-MM-dd").parse(dateOfBirth.getValue().toString());
             Date currentDate = new Date();
             Date leaveDT = null;
-            if (leaveTime.getValue() != null && leaveDate.getValue() != null){
+            if (leaveTime.getValue() != null && leaveDate.getValue() != null) {
                 leaveDT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue().toString() + " " + leaveTime.getValue().toString() + ":00");
             }
 
@@ -776,12 +780,25 @@ public class RegistrationController implements Initializable {
                 dateOfBirth.setDefaultColor(Paint.valueOf("black"));
             }
 
-            if (leaveDT != null && dob.compareTo(leaveDT) > 0){
+            if (currentDate.compareTo(joinDT) <= 0) {
+                joinDate.setDefaultColor(Paint.valueOf("red"));
+                joinTime.setDefaultColor(Paint.valueOf("red"));
+                joinTime.setValue(null);
+                joinDate.setValue(null);
+                joinTime.setPromptText("ERROR");
+                joinDate.setPromptText("ERROR");
+                flag = false;
+            } else {
+                joinDate.setDefaultColor(Paint.valueOf("black"));
+                joinTime.setDefaultColor(Paint.valueOf("black"));
+            }
+
+            if (leaveDT != null && dob.compareTo(leaveDT) > 0) {
                 dateOfBirth.setDefaultColor(Paint.valueOf("red"));
                 dateOfBirth.setValue(null);
                 dateOfBirth.setPromptText("ERROR");
                 flag = false;
-            }else{
+            } else {
                 dateOfBirth.setDefaultColor(Paint.valueOf("black"));
             }
 
@@ -858,11 +875,11 @@ public class RegistrationController implements Initializable {
                 leaveDate.setDefaultColor(Paint.valueOf("black"));
                 leaveTime.setDefaultColor(Paint.valueOf("black"));
             }
-            if (leaveDate.getValue() != null && leaveTime.getValue() != null && flag){
+            if (leaveDate.getValue() != null && leaveTime.getValue() != null && flag) {
                 Date d1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(joinDate.getValue() + " " + joinTime.getValue() + ":00");
                 Date d2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(leaveDate.getValue() + " " + leaveTime.getValue() + ":00");
                 float length = Math.abs((float) ((d1.getTime() - d2.getTime()) / (1000.0 * 60 * 60 * 24)));
-                length = Math.round(length*10000)/10000.0f;
+                length = Math.round(length * 10000) / 10000.0f;
                 lengthOfStay.setText(String.valueOf(length));
             }
 
@@ -987,7 +1004,7 @@ public class RegistrationController implements Initializable {
 
         SQL = "select distinct s.surgery_id, s.surgery_name, s.surgery_price\n" +
                 "from surgeries s, medicalstaff2surgeries2patient m2s2p, medicalstaff ms\n" +
-                 "where s.surgery_id = m2s2p.surgery_id and ms.staff_id = m2s2p.staff_id" + ";";
+                "where s.surgery_id = m2s2p.surgery_id and ms.staff_id = m2s2p.staff_id" + ";";
         stmt = DBConnector.getCon().createStatement();
         rs = stmt.executeQuery(SQL);
 
@@ -1020,8 +1037,6 @@ public class RegistrationController implements Initializable {
                 "where MS.staff_id = M2T2P.staff_id and ID.identity_number = MS.identity_number and T.test_id = " + testID + " and M2T2P.test_id = " + testID + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         while (rs.next()) {
             nursesSQL.add(
                     new Identity(
@@ -1049,10 +1064,6 @@ public class RegistrationController implements Initializable {
                 "where D.Department_id = R.Department_number and R.available_beds > 0 and D.Department_id = " + depNum + " and R.department_number = " + depNum + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
-
         while (rs.next()) {
             roomsSQL.add(
                     new Room(
@@ -1081,8 +1092,6 @@ public class RegistrationController implements Initializable {
                 "where MS.staff_id = M2S2P.staff_id and ID.identity_number = MS.identity_number and S.surgery_id = " + surgeryId + " and M2S2P.surgery_id = " + surgeryId + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         while (rs.next()) {
             doctorsSQL.add(
                     new Identity(
@@ -1105,7 +1114,7 @@ public class RegistrationController implements Initializable {
     }
 
     private void setData() throws SQLException, ClassNotFoundException, ParseException {
-        if (emergencyStatus.getValue().equals("Dead")){
+        if (emergencyStatus.getValue().equals("Dead")) {
             Identity id = new Identity(
                     Integer.parseInt(idNum.getText()),
                     fullName.getText(),
@@ -1114,9 +1123,9 @@ public class RegistrationController implements Initializable {
                     bloodType.getValue(),
                     address.getValue()
             );
-            if (identityExistence(id.getIdentityNumber())){
+            if (identityExistence(id.getIdentityNumber())) {
                 idNum.setUnFocusColor(Paint.valueOf("RED"));
-            }else {
+            } else {
                 idNum.setUnFocusColor(Paint.valueOf("black"));
 
                 Patient patient = new Patient(
@@ -1153,9 +1162,9 @@ public class RegistrationController implements Initializable {
                             Integer.parseInt(idNum.getText())
                     );
                 }
-                if (insurance != null && insuranceExistence(insurance.getInsuranceID())){
+                if (insurance != null && insuranceExistence(insurance.getInsuranceID())) {
                     insuranceID.setUnFocusColor(Paint.valueOf("red"));
-                }else {
+                } else {
                     insuranceID.setUnFocusColor(Paint.valueOf("black"));
                     DBConnector.connectDB();
                     try {
@@ -1191,7 +1200,7 @@ public class RegistrationController implements Initializable {
                     }
                 }
             }
-        }else {
+        } else {
             Identity id = new Identity(
                     Integer.parseInt(idNum.getText()),
                     fullName.getText(),
@@ -1290,6 +1299,9 @@ public class RegistrationController implements Initializable {
 
                         DBConnector.ExecuteStatement("Insert into Phone2ID (identity_number, phone_number) values" + phones2Str);
 
+                        DBConnector.ExecuteStatement("update room set available_beds = " + (room.getAvailableBeds() - 1)
+                                + " where Room_id = '" + room.getRoomID() + "';");
+
                         if (insuranceCheck.isSelected() && insurance != null) {
                             DBConnector.ExecuteStatement("Insert into Insurance (insurance_id, payment_coverage, expire_date, identity_number) values("
                                     + insurance.getInsuranceID() + ", "
@@ -1375,35 +1387,7 @@ public class RegistrationController implements Initializable {
         }
     }
 
-    /*private Department getDepartment() throws SQLException, ClassNotFoundException, ParseException{
-        Department department = new Department();
-        int depNum = departmentsSQL.get(departmentName.getSelectionModel().getSelectedIndex()).getDepartmentID();
-        String roomNum = roomsSQL.get(roomName.getSelectionModel().getSelectedIndex()).getRoomID();
-        String SQL;
-        DBConnector.connectDB();
-        SQL = "select distinct d.Department_id, d.Department_name, d.number_Of_Rooms, d.Department_floor\n" +
-                "from department d, room r\n" +
-                "where d.Department_id = " + depNum + " and r.Department_number = " + depNum +
-                " and r.room_id = " + roomNum + ";";
-        Statement stmt = DBConnector.getCon().createStatement();
-        ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
-        while (rs.next()) {
-            department = new Department(
-                    Integer.parseInt(rs.getString(1)),
-                    rs.getString(2),
-                    Integer.parseInt(rs.getString(3)),
-                    Integer.parseInt(rs.getString(4))
-            );
-        }
-        rs.close();
-        stmt.close();
-        DBConnector.getCon().close();
-        return department;
-    }*/
-
-    private Surgeries getSurgery() throws SQLException, ClassNotFoundException, ParseException{
+    private Surgeries getSurgery() throws SQLException, ClassNotFoundException, ParseException {
         Surgeries surgery = new Surgeries();
         int surgeryID = surgeriesSQL.get(surgeryName.getSelectionModel().getSelectedIndex()).getSurgery_id();
         int docID = doctorsSQL.get(doctor.getSelectionModel().getSelectedIndex()).getIdentityNumber();
@@ -1417,8 +1401,6 @@ public class RegistrationController implements Initializable {
                 " and ms.identity_number = " + docID + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         while (rs.next()) {
             surgery = new Surgeries(
                     Integer.parseInt(rs.getString(1)),
@@ -1432,7 +1414,7 @@ public class RegistrationController implements Initializable {
         return surgery;
     }
 
-    private Tests getTest() throws SQLException, ClassNotFoundException, ParseException{
+    private Tests getTest() throws SQLException, ClassNotFoundException, ParseException {
         Tests test = new Tests();
         int testID = testsSQL.get(testName.getSelectionModel().getSelectedIndex()).getTestID();
         int nurseID = nursesSQL.get(nurse.getSelectionModel().getSelectedIndex()).getIdentityNumber();
@@ -1446,8 +1428,6 @@ public class RegistrationController implements Initializable {
                 " and ms.identity_number = " + nurseID + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         while (rs.next()) {
             test = new Tests(
                     Integer.parseInt(rs.getString(1)),
@@ -1473,11 +1453,9 @@ public class RegistrationController implements Initializable {
                 "where MS.staff_id = M2T2P.staff_id and ID.identity_number = " + nurseID + " and MS.identity_number = " + nurseID + " and T.test_id = " + testID + " and M2T2P.test_id = " + testID + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         while (rs.next()) {
             nurseObj = new MedicalStaff(
-                Integer.parseInt(rs.getString(1)),
+                    Integer.parseInt(rs.getString(1)),
                     rs.getString(2),
                     Integer.parseInt(rs.getString(3)),
                     Integer.parseInt(rs.getString(4))
@@ -1500,8 +1478,6 @@ public class RegistrationController implements Initializable {
                 "where ms.staff_id = m2s2p.staff_id and id.identity_number = " + doctorID + " and MS.identity_number = " + doctorID + " and s.surgery_id = " + surgeryID + " and m2s2p.surgery_id = " + surgeryID + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         while (rs.next()) {
             doctorObj = new MedicalStaff(
                     Integer.parseInt(rs.getString(1)),
@@ -1524,8 +1500,6 @@ public class RegistrationController implements Initializable {
                 "where id.identity_number = " + identityNum + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         boolean res = rs.next();
         rs.close();
         stmt.close();
@@ -1541,8 +1515,6 @@ public class RegistrationController implements Initializable {
                 "where ins.insurance_id = " + insuranceNum + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         boolean res = rs.next();
         rs.close();
         stmt.close();
@@ -1563,8 +1535,6 @@ public class RegistrationController implements Initializable {
                 " and m2s2p.date_of_surgery = " + dateOfSurgery + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         boolean res = rs.next();
         rs.close();
         stmt.close();
@@ -1585,8 +1555,6 @@ public class RegistrationController implements Initializable {
                 " and m2t2p.date_of_test = " + dateOfSurgery + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         boolean res = rs.next();
         rs.close();
         stmt.close();

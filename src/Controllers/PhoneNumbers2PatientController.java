@@ -35,14 +35,17 @@ public class PhoneNumbers2PatientController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        if (PatientsController.pSelection == 1){
+    	if(PatientsController.swi == 1)
+    		 phoneNumbers = PatientsController.getPhoneNumbers();
+    	else if (medicalStaffController.swi ==1)
+    		phoneNumbers = medicalStaffController.getPhoneNumbers();
+        if (PatientsController.pSelection == 1 || medicalStaffController.pSelection == 1){
             phoneNumbers = new ArrayList<>();
             addPhones.setVisible(true);
             close.setVisible(false);
             upPhones.setVisible(false);
         }
-        if (PatientsController.pSelection == 2){
-            phoneNumbers = PatientsController.getPhoneNumbers();
+        if (PatientsController.pSelection == 2 || medicalStaffController.pSelection == 2){
             pNum1.setText("0" + phoneNumbers.get(0));
             pNum2.setText(phoneNumbers.size() >= 2 ? ("0" + phoneNumbers.get(1)) : "");
             pNum3.setText(phoneNumbers.size() == 3 ? ("0" + phoneNumbers.get(2)) : "");
@@ -54,8 +57,7 @@ public class PhoneNumbers2PatientController implements Initializable {
             close.setVisible(true);
             upPhones.setVisible(false);
         }
-        if (PatientsController.pSelection == 3){
-            phoneNumbers = PatientsController.getPhoneNumbers();
+        if (PatientsController.pSelection == 3 || medicalStaffController.pSelection == 3){
             pNum1.setText("0" + phoneNumbers.get(0));
             pNum2.setText(phoneNumbers.size() >= 2 ? ("0" + phoneNumbers.get(1)) : "");
             pNum3.setText(phoneNumbers.size() == 3 ? ("0" + phoneNumbers.get(2)) : "");
@@ -76,7 +78,10 @@ public class PhoneNumbers2PatientController implements Initializable {
                 if (!pNum3.getText().isEmpty() && !phoneNumbers.contains(pNum3.getText())){
                     phoneNumbers.add(pNum3.getText());
                 }
-                PatientsController.setPhoneNumbers(phoneNumbers);
+                if(PatientsController.swi == 1)
+                	PatientsController.setPhoneNumbers(phoneNumbers);
+                else if (medicalStaffController.swi ==1)
+                	medicalStaffController.setPhoneNumbers(phoneNumbers);
                 pNum1.getScene().getWindow().hide();
             }
         });
@@ -99,7 +104,10 @@ public class PhoneNumbers2PatientController implements Initializable {
                 if (!pNum3.getText().isEmpty() && !phoneNumbers.contains(pNum3.getText())){
                     phoneNumbers.add(pNum3.getText());
                 }
-                PatientsController.setPhoneNumbers(phoneNumbers);
+                if(PatientsController.swi == 1)
+                	PatientsController.setPhoneNumbers(phoneNumbers);
+                else if (medicalStaffController.swi ==1)
+                	medicalStaffController.setPhoneNumbers(phoneNumbers);
                 pNum1.getScene().getWindow().hide();
             }
         });

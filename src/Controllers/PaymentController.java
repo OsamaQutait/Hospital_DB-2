@@ -1,7 +1,4 @@
 package Controllers;
-//yearly: according to year
-//monthly: according to month
-
 import DatabaseConnector.DBConnector;
 import Hospital.*;
 import com.jfoenix.controls.JFXButton;
@@ -36,6 +33,9 @@ import java.util.ResourceBundle;
 public class PaymentController implements Initializable {
     @FXML
     private Button registrationButton;
+
+    @FXML
+    private Button patientButton;
 
     @FXML
     private TableView<Identity> pTable;
@@ -136,6 +136,34 @@ public class PaymentController implements Initializable {
         patientsOBS = FXCollections.observableArrayList(patientsSQL);
         pTable.setItems(patientsOBS);
 
+        patientButton.setOnAction((ActionEvent e) -> {
+            try {
+                createBill.getScene().getWindow().hide();
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/patients.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Hospital Database | Patients");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
+        registrationButton.setOnAction((ActionEvent e) -> {
+            try {
+                createBill.getScene().getWindow().hide();
+                Parent root = FXMLLoader.load(getClass().getResource("../screens/registration.fxml"));
+                Stage stage = new Stage();
+                Scene scene = new Scene(root);
+                stage.setTitle("Hospital Database | Registration");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+        });
+
         createBill.setOnAction((ActionEvent e) -> {
             surgeriesSQL = new ArrayList<>();
             testsSQL = new ArrayList<>();
@@ -221,14 +249,13 @@ public class PaymentController implements Initializable {
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
-                //stage.initStyle(StageStyle.UNDECORATED);
+                stage.setTitle("Hospital Database | Payment - Reports");
                 stage.show();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         });
     }
-
 
     private void getData() throws SQLException, ClassNotFoundException, ParseException {
         String SQL;
@@ -239,7 +266,6 @@ public class PaymentController implements Initializable {
                 "where id.identity_number = p.identity_number and p.stay_leave_date_time is not null;";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-
         while (rs.next()) {
             patientsSQL.add(
                     new Identity(
@@ -252,13 +278,11 @@ public class PaymentController implements Initializable {
                     )
             );
         }
-
         rs.close();
         stmt.close();
 
         DBConnector.getCon().close();
     }
-
 
     private void setPayment() throws SQLException, ClassNotFoundException, ParseException {
         DBConnector.connectDB();
@@ -274,7 +298,6 @@ public class PaymentController implements Initializable {
             e.printStackTrace();
         }
     }
-
 
     private void getSurgeries() throws SQLException, ClassNotFoundException, ParseException {
         String SQL;
@@ -400,7 +423,6 @@ public class PaymentController implements Initializable {
                 "where R.Room_id = '" + patient.getRoomID()  + "';";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-
         while (rs.next()) {
             room = new Room(
                     rs.getString(1), rs.getString(2),
@@ -423,8 +445,6 @@ public class PaymentController implements Initializable {
                 "where p.identity_number =  " + id + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
-        stmt = DBConnector.getCon().createStatement();
-        rs = stmt.executeQuery(SQL);
         boolean res = rs.next();
         rs.close();
         stmt.close();
