@@ -180,11 +180,12 @@ public class PatientsController implements Initializable {
     private ObservableList<Identity> patientsOBS;
 
     public static int pSelection;
-
+    public static int swi;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    	swi=1;
+    	medicalStaffController.swi=0;
         //search.setVisible(false);
         initializingArrays();
         disablingItems();
