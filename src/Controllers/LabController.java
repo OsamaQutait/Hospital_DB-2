@@ -4,6 +4,7 @@ import DatabaseConnector.DBConnector;
 import Hospital.Lab;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,18 +28,23 @@ import java.util.function.Predicate;
 public class LabController implements Initializable {
 
     ArrayList<Lab> LabList;
+    ArrayList<Integer> LabCountList;
+    ArrayList<Integer> LabIDList;
     ArrayList<String> LabNameList;
     private ArrayList<Lab> data;
     private ObservableList<Lab> dataList;
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         clearAll();
+        LabCountList = new ArrayList<>();
+        LabIDList = new ArrayList<>();
         LabList = new ArrayList<>();
         LabNameList = new ArrayList<>();
         data = new ArrayList<>();
         dataList = FXCollections.observableArrayList(data);
         try {
             getData();
+            getLabCount();
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (SQLException throwables) {
@@ -97,6 +103,32 @@ public class LabController implements Initializable {
 
     @FXML
     void SelectToUpLabName(ActionEvent event) {
+
+    }
+
+    @FXML
+    private JFXTextArea description;
+
+    @FXML
+    private JFXComboBox<String> selectLabToGetDecsription;
+
+    public void selectLabToGetDecsription(ActionEvent actionEvent) {
+    }
+
+    public void clearDescription(ActionEvent actionEvent) {
+        selectLabToGetDecsription.setValue(null);
+        description.clear();
+    }
+
+    public void dsescriptionButton(ActionEvent actionEvent) {
+        assignComboBoxesValues();
+        description.clear();
+        for (Lab lab : LabList){
+            if(lab.getLab_name().equals(selectLabToGetDecsription.getValue())){
+                description.appendText(lab.getLab_description());
+                break;
+            }
+        }
 
     }
 
@@ -223,6 +255,8 @@ public class LabController implements Initializable {
         selectLabDelete.setValue(null);
         SelectUpLabName.setValue(null);
         newDescription.clear();
+        selectLabToGetDecsription.setValue(null);
+        description.clear();
     }
 
     private void getData()  throws SQLException, ClassNotFoundException, ParseException  {
@@ -248,9 +282,32 @@ public class LabController implements Initializable {
         DBConnector.getCon().close();
     }
 
+    private void getLabCount()  throws SQLException, ClassNotFoundException, ParseException  {
+        String SQL;
+
+        DBConnector.connectDB();
+        System.out.println("Connection established");
+
+        SQL = "select t.lab_id, count(*)\n" +
+                "from lab l, tests t\n" +
+                "where l.lab_id = t.test_id\n" +
+                "group by t.lab_id; ";
+        Statement stmt = DBConnector.getCon().createStatement();
+        ResultSet rs = stmt.executeQuery(SQL);
+
+        while (rs.next()) {
+            LabIDList.add(Integer.parseInt(rs.getString(1)));
+            LabCountList.add(Integer.parseInt(rs.getString(2)));
+        }
+        rs.close();
+        stmt.close();
+        DBConnector.getCon().close();
+    }
+
     public void assignComboBoxesValues() {
         selectLabDelete.setItems(FXCollections.observableArrayList(LabNameList));
         SelectUpLabName.setItems(FXCollections.observableArrayList(LabNameList));
+        selectLabToGetDecsription.setItems(FXCollections.observableArrayList(LabNameList));
     }
 
     public void assignTableValues(){

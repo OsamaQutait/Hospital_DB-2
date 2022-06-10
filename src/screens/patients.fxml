@@ -363,7 +363,7 @@
                                                             <Font size="16.0" />
                                                          </font>
                                                       </Label>
-                                                      <Label prefHeight="44.0" prefWidth="152.0" text="Delete" textFill="#3b5998" GridPane.rowIndex="1">
+                                                      <Label fx:id="deleteLabel" prefHeight="44.0" prefWidth="152.0" text="Delete" textFill="#3b5998" GridPane.rowIndex="1">
                                                          <font>
                                                             <Font size="16.0" />
                                                          </font>

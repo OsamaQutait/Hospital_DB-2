@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextArea?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -16,11 +17,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="774.0" prefWidth="1360.0" style="-fx-background-color: #8b9dc3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SurgeriesController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="892.0" prefWidth="1360.0" style="-fx-background-color: #8b9dc3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SurgeriesController">
     <children>
         <HBox layoutY="50.0" prefHeight="750.0" prefWidth="1349.0">
             <children>
-                <VBox prefHeight="750.0" prefWidth="1381.0">
+                <VBox prefHeight="782.0" prefWidth="1349.0">
                     <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1339.0" spacing="20.0" style="-fx-border-color: #dfe3ee; -fx-border-width: 4;">
                             <children>
@@ -34,9 +35,9 @@
                                 <Insets />
                             </opaqueInsets>
                         </HBox>
-                        <HBox prefHeight="619.0" prefWidth="1369.0" spacing="10.0" style="-fx-border-width: 4;">
+                        <HBox prefHeight="650.0" prefWidth="1349.0" spacing="10.0" style="-fx-border-width: 4;">
                             <children>
-                                <GridPane prefHeight="714.0" prefWidth="150.0">
+                                <GridPane prefHeight="640.0" prefWidth="150.0">
                                     <columnConstraints>
                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                     </columnConstraints>
@@ -48,6 +49,8 @@
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     </rowConstraints>
                                     <children>
                                         <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="180.0" style="-fx-background-color: #3b5998;" text="Registration" textFill="#dfe3ee" GridPane.rowIndex="1">
@@ -85,6 +88,16 @@
                                                 <Font size="18.0" />
                                             </font>
                                         </Button>
+                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Tests" textFill="#dfe3ee" GridPane.rowIndex="7">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Medical Staff" textFill="#dfe3ee" GridPane.rowIndex="8">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
                                     </children>
                                 </GridPane>
                                 <VBox prefHeight="602.0" prefWidth="1126.0" spacing="10.0">
@@ -156,6 +169,20 @@
                                                 <JFXTextField fx:id="newPrice" />
                                                 <JFXButton fx:id="updateSurgeries" onAction="#updateSurgeries" prefHeight="31.0" prefWidth="431.0" text="Update Surgeries" textFill="#3b5998" />
                                                 <JFXButton fx:id="clearUpdatePrice" onAction="#clearUpdatePrice" prefHeight="31.0" prefWidth="459.0" text="Clear" textFill="#3b5998" />
+                                             </children>
+                                          </VBox>
+                                          <VBox prefHeight="333.0" prefWidth="321.0" style="-fx-background-color: #dfe3ee;" GridPane.rowIndex="1">
+                                             <children>
+                                                <Label prefHeight="54.0" prefWidth="382.0" text="             Get Surgeries Price" textAlignment="CENTER" textFill="#4059a9">
+                                                   <font>
+                                                      <Font size="24.0" />
+                                                   </font>
+                                                </Label>
+                                                <Label prefHeight="21.0" prefWidth="200.0" text="Surgery Name" textFill="#3b5998" />
+                                                <JFXComboBox fx:id="selectSurgeriesprice" onAction="#selectSurgeriesToGetPrice" prefHeight="53.0" prefWidth="394.0" promptText="Select Surgeries to Get Price" />
+                                                <JFXTextArea fx:id="price" prefHeight="64.0" prefWidth="376.0" />
+                                                <JFXButton fx:id="priceSurgery1" onAction="#priceSurgery" prefHeight="31.0" prefWidth="428.0" text="Get Price " textFill="#3b5998" />
+                                                <JFXButton fx:id="clearPrice" onAction="#clearPrice" prefHeight="31.0" prefWidth="403.0" text="Clear" textFill="#3b5998" />
                                              </children>
                                           </VBox>
                                        </children>

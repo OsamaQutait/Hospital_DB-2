@@ -1457,6 +1457,7 @@ public class RegistrationController implements Initializable {
             nurseObj = new MedicalStaff(
                     Integer.parseInt(rs.getString(1)),
                     rs.getString(2),
+                    rs.getString(3),
                     Integer.parseInt(rs.getString(3)),
                     Integer.parseInt(rs.getString(4))
             );
@@ -1482,6 +1483,7 @@ public class RegistrationController implements Initializable {
             doctorObj = new MedicalStaff(
                     Integer.parseInt(rs.getString(1)),
                     rs.getString(2),
+                    rs.getString(3),
                     Integer.parseInt(rs.getString(3)),
                     Integer.parseInt(rs.getString(4))
             );
