@@ -341,7 +341,7 @@ public class PatientsController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("../screens/registration.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
-                stage.setTitle("Hospital Database");
+                stage.setTitle("Hospital Database | Registration");
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException ioException) {
@@ -355,7 +355,7 @@ public class PatientsController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("../screens/payment.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
-                stage.setTitle("Hospital Database");
+                stage.setTitle("Hospital Database | Payment");
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException ioException) {
@@ -370,6 +370,7 @@ public class PatientsController implements Initializable {
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.initStyle(StageStyle.UNDECORATED);
+                stage.setTitle("Hospital Database | Add phone numbers");
                 stage.show();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
@@ -382,7 +383,7 @@ public class PatientsController implements Initializable {
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
-                //stage.initStyle(StageStyle.UNDECORATED);
+                stage.setTitle("Hospital Database | Patients - Reports");
                 stage.show();
             } catch (IOException ioException) {
                 ioException.printStackTrace();

@@ -302,6 +302,7 @@ public class RegistrationController implements Initializable {
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.initStyle(StageStyle.UNDECORATED);
+                stage.setTitle("Hospital Database | Add phone numbers");
                 stage.show();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
@@ -313,7 +314,7 @@ public class RegistrationController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("../screens/patients.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
-                stage.setTitle("Hospital Database");
+                stage.setTitle("Hospital Database | Patients");
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException ioException) {
@@ -326,7 +327,7 @@ public class RegistrationController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("../screens/payment.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
-                stage.setTitle("Hospital Database");
+                stage.setTitle("Hospital Database | Payment");
                 stage.setScene(scene);
                 stage.show();
             } catch (IOException ioException) {
