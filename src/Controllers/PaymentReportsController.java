@@ -1,5 +1,5 @@
 package Controllers;
-
+//if end date < start date
 import DatabaseConnector.DBConnector;
 import com.jfoenix.controls.JFXDatePicker;
 import javafx.beans.binding.Bindings;

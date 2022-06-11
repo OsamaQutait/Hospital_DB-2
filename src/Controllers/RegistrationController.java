@@ -986,8 +986,8 @@ public class RegistrationController implements Initializable {
         }
 
         SQL = "select distinct t.test_id, t.test_name, t.test_price, l.lab_id\n" +
-                "from tests t, medicalstaff2tests2patient m2t2p, medicalstaff ms, lab l\n" +
-                "where t.test_id = m2t2p.test_id and l.lab_id = t.lab_id and ms.staff_id = m2t2p.staff_id;";
+                "from tests t, lab l, medicalstaff ms, medicalstaff2tests m2s\n" +
+                "where t.lab_id = l.lab_id and ms.staff_id = m2s.staff_id and t.test_id = m2s.test_id;";
         stmt = DBConnector.getCon().createStatement();
         rs = stmt.executeQuery(SQL);
 
@@ -1003,8 +1003,8 @@ public class RegistrationController implements Initializable {
         }
 
         SQL = "select distinct s.surgery_id, s.surgery_name, s.surgery_price\n" +
-                "from surgeries s, medicalstaff2surgeries2patient m2s2p, medicalstaff ms\n" +
-                "where s.surgery_id = m2s2p.surgery_id and ms.staff_id = m2s2p.staff_id" + ";";
+                "from surgeries s, medicalstaff ms, medicalstaff2surgeries m2s\n" +
+                "where s.surgery_id = m2s.surgery_id and ms.staff_id = m2s.staff_id;";
         stmt = DBConnector.getCon().createStatement();
         rs = stmt.executeQuery(SQL);
 
@@ -1033,8 +1033,8 @@ public class RegistrationController implements Initializable {
         String SQL;
         DBConnector.connectDB();
         SQL = "select distinct ID.identity_number, ID.full_name, ID.gender, ID.date_of_birth, ID.blood_type, ID.living_address\n" +
-                "from identity ID, medicalstaff MS, tests T, medicalstaff2tests2patient M2T2P\n" +
-                "where MS.staff_id = M2T2P.staff_id and ID.identity_number = MS.identity_number and T.test_id = " + testID + " and M2T2P.test_id = " + testID + ";";
+                "from identity ID, medicalstaff MS, tests T, medicalstaff2tests m2t\n" +
+                "where ID.identity_number = MS.identity_number and MS.staff_id = m2t.staff_id and T.test_id = " + testID + " and m2t.test_id = " + testID + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
         while (rs.next()) {
@@ -1088,8 +1088,8 @@ public class RegistrationController implements Initializable {
         String SQL;
         DBConnector.connectDB();
         SQL = "select distinct ID.identity_number, ID.full_name, ID.gender, ID.date_of_birth, ID.blood_type, ID.living_address\n" +
-                "from identity ID, medicalstaff MS, surgeries S, medicalstaff2surgeries2patient M2S2P\n" +
-                "where MS.staff_id = M2S2P.staff_id and ID.identity_number = MS.identity_number and S.surgery_id = " + surgeryId + " and M2S2P.surgery_id = " + surgeryId + ";";
+                "from identity ID, medicalstaff MS, surgeries s, medicalstaff2surgeries m2s\n" +
+                "where ID.identity_number = MS.identity_number and MS.staff_id = m2s.staff_id and s.surgery_id = " + surgeryId + " and m2s.surgery_id = " + surgeryId + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
         while (rs.next()) {
