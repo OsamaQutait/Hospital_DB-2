@@ -1,16 +1,7 @@
 package Controllers;
 
-import java.io.IOException;
-import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-
-import com.jfoenix.controls.JFXComboBox;
-
 import DatabaseConnector.DBConnector;
+import com.jfoenix.controls.JFXComboBox;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,6 +16,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
 
 public class DashBoardController implements Initializable{
 
@@ -95,6 +94,8 @@ public class DashBoardController implements Initializable{
 		try {
 			findingCurrentStaff();
 			findingCurrentPatients();
+			findingCurrentSurgery();
+			findingCurrentTests();
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}		
@@ -172,7 +173,7 @@ public class DashBoardController implements Initializable{
 
 		System.out.println("Connection established");
 
-		
+
 		SQL = " select count(*) " + " from Patient P\n"+
 		"where p.emergency_status!='dead' ;";
 		Statement stmt = DBConnector.getCon().createStatement();
@@ -185,6 +186,54 @@ public class DashBoardController implements Initializable{
 		rs.close();
 		stmt.close();
 		CurrentPatient.setText(num+"");
+		DBConnector.getCon().close();
+	}
+
+	public void findingCurrentSurgery() throws ClassNotFoundException, SQLException{
+		availableSurgeries.setText(null);
+
+		String SQL;
+
+		DBConnector.connectDB();
+
+		System.out.println("Connection established");
+
+
+		SQL = " select count(*) " + " from surgeries\n";
+		Statement stmt = DBConnector.getCon().createStatement();
+		ResultSet rs = stmt.executeQuery(SQL);
+
+		int num = 0;
+		while (rs.next())
+			num = Integer.parseInt(rs.getString(1));
+
+		rs.close();
+		stmt.close();
+		availableSurgeries.setText(num+"");
+		DBConnector.getCon().close();
+	}
+
+	public void findingCurrentTests() throws ClassNotFoundException, SQLException{
+		availableTests.setText(null);
+
+		String SQL;
+
+		DBConnector.connectDB();
+
+		System.out.println("Connection established");
+
+
+		SQL = " select count(*) " + " from tests\n";
+		Statement stmt = DBConnector.getCon().createStatement();
+		ResultSet rs = stmt.executeQuery(SQL);
+
+		int num = 0;
+		while (rs.next())
+			num = Integer.parseInt(rs.getString(1));
+
+		rs.close();
+		stmt.close();
+		availableTests.setText(num+"");
 		DBConnector.getCon().close();
 	}
 	
