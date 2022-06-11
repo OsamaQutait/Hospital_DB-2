@@ -18,10 +18,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -342,31 +341,27 @@ public class SurgeriesController implements Initializable {
 
     public void tests(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../screens/tests.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("../screens/tests.fxml"));
             Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.setTitle("tests");
-            stage.setScene(new Scene(root1));
+            Scene scene = new Scene(root);
+            stage.setTitle("Hospital Database");
+            stage.setScene(scene);
             stage.show();
-        }catch (Exception e){
-            System.out.println("cant lode new window");
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 
     public void labs(ActionEvent actionEvent) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../screens/lab.fxml"));
-            Parent root1 = (Parent) fxmlLoader.load();
+            Parent root = FXMLLoader.load(getClass().getResource("../screens/lab.fxml"));
             Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initStyle(StageStyle.UNDECORATED);
-            stage.setTitle("lab");
-            stage.setScene(new Scene(root1));
+            Scene scene = new Scene(root);
+            stage.setTitle("Hospital Database");
+            stage.setScene(scene);
             stage.show();
-        }catch (Exception e){
-            System.out.println("cant lode new window");
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
         }
     }
 }
