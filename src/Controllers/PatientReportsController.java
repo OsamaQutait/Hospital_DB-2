@@ -61,9 +61,6 @@ public class PatientReportsController implements Initializable {
     @FXML
     private PieChart pieChart;
 
-    @FXML
-    private JFXButton register;
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         /*manualSearch.setOnAction((ActionEvent e) -> {
