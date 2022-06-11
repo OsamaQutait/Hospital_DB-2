@@ -1,12 +1,7 @@
 package Controllers;
 //update/insert: have to check all data
-/*Reports
- * 6) report about insurance coverage
- * 7) check people whom insurance has expired or will expire soon
- */
 //when update: can add insurance -i think it's done
 //join date and leave date can't be before any surgery/test --totally done not added to code
-//if times
 
 import DatabaseConnector.DBConnector;
 import Hospital.*;
@@ -504,8 +499,25 @@ public class PatientsController implements Initializable {
                         leaveDate.setValue(null);
                         leaveTime.setValue(null);
                     }
-                    if (datesValidation()) {
+                    if (datesValidation() && isNewDatesOverlapSurgeries() && isNewDatesOverlapTests()) {
                         updatePatient();
+                        joinDate.setDefaultColor(Paint.valueOf("black"));
+                        joinTime.setDefaultColor(Paint.valueOf("black"));
+                        leaveDate.setDefaultColor(Paint.valueOf("black"));
+                        leaveTime.setDefaultColor(Paint.valueOf("black"));
+                    }else{
+                        joinDate.setDefaultColor(Paint.valueOf("red"));
+                        joinTime.setDefaultColor(Paint.valueOf("red"));
+                        joinTime.setValue(null);
+                        joinDate.setValue(null);
+                        joinTime.setPromptText("ERROR");
+                        joinDate.setPromptText("ERROR");
+                        leaveDate.setDefaultColor(Paint.valueOf("red"));
+                        leaveTime.setDefaultColor(Paint.valueOf("red"));
+                        leaveDate.setValue(null);
+                        leaveTime.setValue(null);
+                        leaveDate.setPromptText("ERROR");
+                        leaveTime.setPromptText("ERROR");
                     }
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -1370,22 +1382,27 @@ public class PatientsController implements Initializable {
         String joinDT = d2 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d2) + "'");
         String leaveDT = d3 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d3) + "'");
 
-        SQL = "select *\n" +
+        SQL = "select distinct m2t2p.date_of_test\n" +
                 "from surgeries s, medicalstaff2surgeries2patient m2s2p\n" +
-                "where s.surgery_id = m2s2p.identity_number" +
-                (joinDT == null ? "\n" : ("\n" + "and m2s2p.date_of_surgery > " + joinDT)) +
-                (leaveDT == null ? "\n" : ("\n" + "and m2s2p.date_of_surgery < " + leaveDT)) + ";";
-
-        ;
+                "where t.test_id = m2t2p.test_id and m2t2p.identity_number = " + idNum.getText() + ";";
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
+        boolean flag = true;
+        while (rs.next()) {
+            Date d1 = new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(1));
 
-        boolean res = rs.next();
+            if (d1.compareTo(d2) > 0 && d1.compareTo(d3) < 0){
+                flag = true;
+            }else{
+                flag = false;
+            }
+
+        }
         rs.close();
         stmt.close();
 
         DBConnector.getCon().close();
-        return res;
+        return flag;
     }
 
     private boolean isNewDatesOverlapTests() throws SQLException, ClassNotFoundException, ParseException {
@@ -1398,21 +1415,30 @@ public class PatientsController implements Initializable {
         String joinDT = d2 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d2) + "'");
         String leaveDT = d3 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d3) + "'");
 
-        SQL = "select *\n" +
+        SQL = "select distinct m2t2p.date_of_test\n" +
                 "from tests t, medicalstaff2tests2patient m2t2p\n" +
-                "where t.test_id = m2t2p.test_id" +
-                (joinDT == null ? "\n" : ("\n" + "and m2t2p.date_of_test > " + joinDT)) +
-                (leaveDT == null ? "\n" : ("\n" + "and m2t2p.date_of_test < " + leaveDT)) + ";";
+                "where t.test_id = m2t2p.test_id and m2t2p.identity_number = " + idNum.getText() + ";";
+
         Statement stmt = DBConnector.getCon().createStatement();
         ResultSet rs = stmt.executeQuery(SQL);
 
-        boolean res = rs.next();
+        boolean flag = true;
+        while (rs.next()) {
+            Date d1 = new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(1));
+
+            if (d1.compareTo(d2) > 0 && d1.compareTo(d3) < 0){
+                flag = true;
+            }else{
+                flag = false;
+            }
+
+        }
         rs.close();
         stmt.close();
 
         DBConnector.getCon().close();
 
-        return res;
+        return flag;
 
     }
 }

@@ -82,7 +82,7 @@
                                     <Font size="18.0" />
                                  </font>
                               </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="165.0" style="-fx-background-color: #3b5998;" text="Insurance" textFill="#dfe3ee" GridPane.rowIndex="5">
+                              <Button fx:id="insurance" mnemonicParsing="false" prefHeight="70.0" prefWidth="165.0" style="-fx-background-color: #3b5998;" text="Insurance" textFill="#dfe3ee" GridPane.rowIndex="5">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
