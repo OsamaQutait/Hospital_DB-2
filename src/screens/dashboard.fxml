@@ -126,22 +126,22 @@
                                     </HBox>
                                     <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                        <children>
-                                          <Label fx:id="CurrentStaff" alignment="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #eae6e6;">
+                                          <Label fx:id="CurrentStaff" alignment="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #eae6e6;" textFill="#ff2626" underline="true">
                                              <font>
                                                 <Font size="48.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="CurrentPatient" alignment="CENTER" contentDisplay="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #c5c5c5;">
+                                          <Label fx:id="CurrentPatient" alignment="CENTER" contentDisplay="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #c5c5c5;" textFill="#ff2626" underline="true">
                                              <font>
                                                 <Font size="48.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="availableSurgeries" alignment="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #eae6e6;">
+                                          <Label fx:id="availableSurgeries" alignment="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #eae6e6;" textFill="#ff2626" underline="true">
                                              <font>
                                                 <Font size="48.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="availableTests" alignment="CENTER" contentDisplay="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #c5c5c5;">
+                                          <Label fx:id="availableTests" alignment="CENTER" contentDisplay="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #c5c5c5;" textFill="#ff2626" underline="true">
                                              <font>
                                                 <Font size="48.0" />
                                              </font>
