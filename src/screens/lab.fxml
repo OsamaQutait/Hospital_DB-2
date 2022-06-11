@@ -73,7 +73,7 @@
                                                 <Font size="18.0" />
                                             </font>
                                         </Button>
-                                        <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="165.0" style="-fx-background-color: #3b5998;" text="Surgeries" textFill="#dfe3ee" GridPane.rowIndex="5">
+                                        <Button fx:id="surgeries" mnemonicParsing="false" onAction="#surgeries" prefHeight="70.0" prefWidth="165.0" style="-fx-background-color: #3b5998;" text="Surgeries" textFill="#dfe3ee" GridPane.rowIndex="5">
                                             <font>
                                                 <Font size="18.0" />
                                             </font>
@@ -88,7 +88,7 @@
                                                 <Font size="18.0" />
                                             </font>
                                         </Button>
-                              <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="151.0" style="-fx-background-color: #3b5998;" text="Tests" textFill="#dfe3ee" GridPane.rowIndex="7">
+                              <Button mnemonicParsing="false" onAction="#tests" prefHeight="70.0" prefWidth="151.0" style="-fx-background-color: #3b5998;" text="Tests" textFill="#dfe3ee" GridPane.rowIndex="7">
                                  <font>
                                     <Font size="18.0" />
                                  </font>
@@ -190,7 +190,7 @@
                                         </HBox>
                               <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <JFXButton prefHeight="99.0" prefWidth="466.0" style="-fx-background-color: #dfe3ee;" text=" count Tests that done in the lab" textFill="#171297">
+                                    <JFXButton onAction="#count" prefHeight="99.0" prefWidth="466.0" style="-fx-background-color: #dfe3ee;" text=" count Tests that done in the lab" textFill="#171297">
                                        <font>
                                           <Font size="24.0" />
                                        </font>

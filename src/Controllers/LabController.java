@@ -10,11 +10,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -28,23 +34,19 @@ import java.util.function.Predicate;
 public class LabController implements Initializable {
 
     ArrayList<Lab> LabList;
-    ArrayList<Integer> LabCountList;
-    ArrayList<Integer> LabIDList;
+
     ArrayList<String> LabNameList;
     private ArrayList<Lab> data;
     private ObservableList<Lab> dataList;
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
         clearAll();
-        LabCountList = new ArrayList<>();
-        LabIDList = new ArrayList<>();
         LabList = new ArrayList<>();
         LabNameList = new ArrayList<>();
         data = new ArrayList<>();
         dataList = FXCollections.observableArrayList(data);
         try {
             getData();
-            getLabCount();
         } catch (ParseException e) {
             e.printStackTrace();
         } catch (SQLException throwables) {
@@ -282,27 +284,7 @@ public class LabController implements Initializable {
         DBConnector.getCon().close();
     }
 
-    private void getLabCount()  throws SQLException, ClassNotFoundException, ParseException  {
-        String SQL;
 
-        DBConnector.connectDB();
-        System.out.println("Connection established");
-
-        SQL = "select t.lab_id, count(*)\n" +
-                "from lab l, tests t\n" +
-                "where l.lab_id = t.test_id\n" +
-                "group by t.lab_id; ";
-        Statement stmt = DBConnector.getCon().createStatement();
-        ResultSet rs = stmt.executeQuery(SQL);
-
-        while (rs.next()) {
-            LabIDList.add(Integer.parseInt(rs.getString(1)));
-            LabCountList.add(Integer.parseInt(rs.getString(2)));
-        }
-        rs.close();
-        stmt.close();
-        DBConnector.getCon().close();
-    }
 
     public void assignComboBoxesValues() {
         selectLabDelete.setItems(FXCollections.observableArrayList(LabNameList));
@@ -352,4 +334,48 @@ public class LabController implements Initializable {
         return flag;
     }
 
+    public void tests(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../screens/tests.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setTitle("lab");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        }catch (Exception e){
+            System.out.println("cant lode new window");
+        }
+    }
+
+    public void surgeries(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../screens/surgery.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setTitle("lab");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        }catch (Exception e){
+            System.out.println("cant lode new window");
+        }
+    }
+
+    public void count(ActionEvent actionEvent) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../screens/testCount.fxml"));
+            Parent root1 = (Parent) fxmlLoader.load();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UNDECORATED);
+            stage.setTitle("lab");
+            stage.setScene(new Scene(root1));
+            stage.show();
+        }catch (Exception e){
+            System.out.println("cant lode new window");
+        }
+    }
 }

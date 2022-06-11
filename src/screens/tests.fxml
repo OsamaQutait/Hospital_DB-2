@@ -67,12 +67,12 @@
                                                 <Font size="18.0" />
                                             </font>
                                         </Button>
-                                        <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="162.0" style="-fx-background-color: #3b5998;" text="Labs" textFill="#dfe3ee" GridPane.rowIndex="4">
+                                        <Button mnemonicParsing="false" onAction="#lab" prefHeight="70.0" prefWidth="162.0" style="-fx-background-color: #3b5998;" text="Labs" textFill="#dfe3ee" GridPane.rowIndex="4">
                                             <font>
                                                 <Font size="18.0" />
                                             </font>
                                         </Button>
-                                        <Button mnemonicParsing="false" prefHeight="70.0" prefWidth="165.0" style="-fx-background-color: #3b5998;" text="Surgeries" textFill="#dfe3ee" GridPane.rowIndex="5">
+                                        <Button mnemonicParsing="false" onAction="#surgeries" prefHeight="70.0" prefWidth="165.0" style="-fx-background-color: #3b5998;" text="Surgeries" textFill="#dfe3ee" GridPane.rowIndex="5">
                                             <font>
                                                 <Font size="18.0" />
                                             </font>
