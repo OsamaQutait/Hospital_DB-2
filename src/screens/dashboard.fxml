@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="1300.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.DashBoardController">
+   <children>
+      <HBox prefHeight="800.0" prefWidth="1300.0">
+         <children>
+            <VBox prefHeight="800.0" prefWidth="1620.0">
+               <children>
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-color: #e4a4b4; -fx-border-width: 4;">
+                     <children>
+                        <ImageView fitHeight="58.0" fitWidth="59.0">
+                           <image>
+                              <Image url="@../Pictures/hospital.jpg" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" prefHeight="58.0" prefWidth="1185.0" style="-fx-background-color: #e4a4b4; -fx-background-radius: 100; -fx-border-radius: 100; -fx-border-color: #3b5998; -fx-border-width: 3.5;" text="Al-Quds Hospital" textFill="#3b5998">
+                           <font>
+                              <Font name="Gabriola" size="46.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="58.0" fitWidth="59.0">
+                           <image>
+                              <Image url="@../Pictures/hospital.jpg" />
+                           </image>
+                        </ImageView>
+                     </children>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </HBox>
+                  <HBox prefHeight="602.0" prefWidth="1300.0" spacing="10.0" style="-fx-border-color: #dfe3ee; -fx-border-width: 4;">
+                     <children>
+                        <GridPane prefHeight="714.0" prefWidth="150.0" vgap="5.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Button fx:id="RegistrationButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="180.0" style="-fx-background-color: #3b5998;" text="Registration" textFill="#dfe3ee" GridPane.rowIndex="1">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="PatientsButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="174.0" style="-fx-background-color: #3b5998;" text="Patients" textFill="#dfe3ee" GridPane.rowIndex="2">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="DepartmentsButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Departments" textFill="#dfe3ee" GridPane.rowIndex="3">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="LabsButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="162.0" style="-fx-background-color: #3b5998;" text="Labs" textFill="#dfe3ee" GridPane.rowIndex="4">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="SurgeriesButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="165.0" style="-fx-background-color: #3b5998;" text="Surgeries" textFill="#dfe3ee" GridPane.rowIndex="5">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="PaymentButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Payment" textFill="#dfe3ee" GridPane.rowIndex="6">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="DashboardButton" layoutX="10.0" layoutY="23.0" mnemonicParsing="false" prefHeight="70.0" prefWidth="198.0" text="Dashboard" textFill="#3b5998">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="StaffButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Medcial Staff" textFill="#dfe3ee" GridPane.rowIndex="7">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="TestsButton" mnemonicParsing="false" prefHeight="70.0" prefWidth="163.0" style="-fx-background-color: #3b5998;" text="Tests" textFill="#dfe3ee" GridPane.rowIndex="8">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Button>
+                           </children>
+                        </GridPane>
+                        <AnchorPane prefHeight="594.0" prefWidth="1120.0">
+                           <children>
+                              <VBox layoutX="17.0" layoutY="14.0" prefHeight="132.0" prefWidth="1024.0">
+                                 <children>
+                                    <HBox prefHeight="32.0" prefWidth="1027.0" spacing="10.0">
+                                       <children>
+                                          <Label alignment="CENTER" prefHeight="70.0" prefWidth="256.0" text="Current Staff" textFill="#0e20e0" />
+                                          <Label alignment="CENTER" prefHeight="70.0" prefWidth="256.0" text="Current Patients" textFill="#0e20e0" />
+                                          <Label alignment="CENTER" prefHeight="70.0" prefWidth="256.0" text="Available Surgeries" textFill="#0e20e0" />
+                                          <Label alignment="CENTER" prefHeight="70.0" prefWidth="256.0" text="Available Tests" textFill="#0e20e0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                                       <children>
+                                          <Label fx:id="CurrentStaff" alignment="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #eae6e6;" textFill="#ff2626" underline="true">
+                                             <font>
+                                                <Font size="48.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="CurrentPatient" alignment="CENTER" contentDisplay="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #c5c5c5;" textFill="#ff2626" underline="true">
+                                             <font>
+                                                <Font size="48.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="availableSurgeries" alignment="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #eae6e6;" textFill="#ff2626" underline="true">
+                                             <font>
+                                                <Font size="48.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="availableTests" alignment="CENTER" contentDisplay="CENTER" prefHeight="195.0" prefWidth="256.0" style="-fx-background-color: #c5c5c5;" textFill="#ff2626" underline="true">
+                                             <font>
+                                                <Font size="48.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <HBox layoutX="112.0" layoutY="176.0" prefHeight="32.0" prefWidth="372.0" />
+                              <HBox layoutX="686.0" layoutY="179.0" prefHeight="32.0" prefWidth="372.0" />
+                              <VBox layoutX="21.0" layoutY="169.0" prefHeight="404.0" prefWidth="1024.0" spacing="15.0">
+                                 <children>
+                                    <HBox prefHeight="49.0" prefWidth="1024.0" spacing="300.0">
+                                       <children>
+                                          <JFXComboBox fx:id="ComboChart" prefHeight="49.0" prefWidth="400.0" promptText="Select what you want to show in chart" />
+                                          <JFXComboBox fx:id="ComboTable" prefHeight="49.0" prefWidth="400.0" promptText="Select what you want to show in table" />
+                                       </children>
+                                    </HBox>
+                                    <HBox prefHeight="365.0" prefWidth="1024.0" spacing="24.0">
+                                       <children>
+                                          <BarChart fx:id="barChart" prefHeight="203.0" prefWidth="500.0">
+                                            <xAxis>
+                                              <CategoryAxis side="BOTTOM" />
+                                            </xAxis>
+                                            <yAxis>
+                                              <NumberAxis side="LEFT" />
+                                            </yAxis>
+                                          </BarChart>
+                                          <TableView fx:id="Tpatient" prefHeight="348.0" prefWidth="500.0">
+                                            <columns>
+                                              <TableColumn fx:id="Tid" prefWidth="250.0" text="Patient Identity" />
+                                              <TableColumn fx:id="Tname" minWidth="0.0" prefWidth="250.0" text="Patient Name" />
+                                            </columns>
+                                          </TableView>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

@@ -3,13 +3,10 @@ package Controllers;
 /*Reports
  * 6) report about insurance coverage
  * 7) check people whom insurance has expired or will expire soon
- * 8) find person who stayed for much time in the hospital
  */
 //when update: can add insurance -i think it's done
-//join date and leave date can't be before any surgery/test --totally done
+//join date and leave date can't be before any surgery/test --totally done not added to code
 //if times
-
-//manual search checking
 
 import DatabaseConnector.DBConnector;
 import Hospital.*;
@@ -501,7 +498,6 @@ public class PatientsController implements Initializable {
             addPhoneNumbers.setVisible(false);
             seePhoneNumbers.setVisible(false);
             pSelection = 3;
-            System.out.println(identityValidation() + " " + patientValidation()  + " " +  (insuranceValidation() == 1 || insuranceValidation() == -1));
             if (identityValidation() && patientValidation() && (insuranceValidation() == 1 || insuranceValidation() == -1)){
                 try {
                     if (leaveTime.getValue() == null || leaveDate.getValue() == null){
@@ -510,7 +506,6 @@ public class PatientsController implements Initializable {
                     }
                     if (datesValidation()) {
                         updatePatient();
-                        System.out.println("hi");
                     }
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
@@ -971,13 +966,14 @@ public class PatientsController implements Initializable {
 
     private void manuallySearch() throws SQLException, ClassNotFoundException, ParseException {
         Date d1 = dateOfBirth.getValue() == null ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(dateOfBirth.getValue()));
-        Date d2 = (joinDate.getValue() == null || joinTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(joinDate.getValue() + " " + joinTime.getValue()));
-        Date d3 = (leaveDate.getValue() == null || leaveTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(leaveDate.getValue() + " " + leaveTime.getValue()));
+        Date d2 = (joinDate.getValue() == null || joinTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(String.valueOf(joinDate.getValue() + " " + joinTime.getValue() + ":00"));
+        Date d3 = (leaveDate.getValue() == null || leaveTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(String.valueOf(leaveDate.getValue() + " " + leaveTime.getValue()  + ":00"));
         Date d4 = expiryDate.getValue() == null ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(expiryDate.getValue()));
 
 
         String identityNubmer = idNum.getText().isEmpty() ? null : idNum.getText();
-        String DOB = d1 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(d1) + "'");
+        String pName = fullName.getText().isEmpty() ? null : ("'%" + fullName.getText() + "%'");
+        String DOB = d1 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d1) + "'");
         String sex = gender.getSelectionModel().isEmpty() ? null : ("'" + gender.getValue() + "'");
         String city = address.getSelectionModel().isEmpty() ? null : ("'" + address.getValue() + "'");
         String bType = bloodType.getSelectionModel().isEmpty() ? null : ("'" + bloodType.getValue() + "'");
@@ -991,7 +987,7 @@ public class PatientsController implements Initializable {
         if (insuranceCheck.isSelected()){
             insuranceNumber = insuranceID.getText().isEmpty() ? null : ("'" + insuranceID.getText() + "'");
             coverage = String.valueOf(payCoverage.getValue());
-            ED = d4 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(d4) + "'");
+            ED = d4 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d4) + "'");
         }else{
             insuranceNumber = null;
             coverage = null;
@@ -1004,6 +1000,7 @@ public class PatientsController implements Initializable {
                 "from identity id, patient p, insurance insu\n" +
                 "where id.identity_number = p.identity_number" + (insuranceCheck.isSelected() ? (" and id.identity_number = insu.identity_number") : "") +
                 (identityNubmer == null ? "\n" : ("\n" + "and p.identity_number = " + identityNubmer + "\n")) +
+                (pName == null ? "\n" : ("\n" + "and id.full_name like " + pName + "\n")) +
                 (DOB == null ? "\n" : ("\n" + "and id.date_of_birth = " + DOB + "\n")) +
                 (sex == null ? "\n" : ("\n" + "and id.gender = " + sex + "\n")) +
                 (city == null ? "\n" : ("\n" + "and id.living_address = " + city + "\n")) +
@@ -1272,7 +1269,7 @@ public class PatientsController implements Initializable {
             patient = new Patient(
                     rs.getString(1), rs.getString(2),
                     Float.parseFloat(rs.getString(3)),
-                    rs.getString(4) == null ? null : new SimpleDateFormat("yyyy-MM-dd").parse(rs.getString(4)),
+                    rs.getString(4) == null ? null : new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(rs.getString(4)),
                     rs.getString(5) == null ? null : new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(rs.getString(5)),
                     Integer.parseInt(rs.getString(6)), rs.getString(7)
             );
@@ -1395,7 +1392,7 @@ public class PatientsController implements Initializable {
         String SQL;
         DBConnector.connectDB();
 
-        Date d2 = (joinDate.getValue() == null || joinTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(joinDate.getValue() + " " + joinTime.getValue()));
+        Date d2 = (joinDate.getValue() == null || joinTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(joinDate.getValue() + " " + joinTime.getValue())); //to be fixed
         Date d3 = (leaveDate.getValue() == null || leaveTime.getValue() == null) ? null : new SimpleDateFormat("yyyy-MM-dd").parse(String.valueOf(leaveDate.getValue() + " " + leaveTime.getValue()));
 
         String joinDT = d2 == null ? null : ("'" + new SimpleDateFormat("yyyy-MM-dd").format(d2) + "'");

@@ -191,6 +191,7 @@ public class PatientReportsController implements Initializable {
         });
 
     }
+
     private void getGender() throws SQLException, ClassNotFoundException, ParseException {
         pieChart.getData().removeAll(Collections.singleton(pieChart.getData().setAll()));
         pieChart.setVisible(true);

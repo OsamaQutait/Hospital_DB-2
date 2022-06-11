@@ -20,20 +20,20 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" style="-fx-background-color: #8b9dc3;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.medicalStaffController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1300.0" style="-fx-background-color: #e0dbdb;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.medicalStaffController">
    <children>
       <HBox prefHeight="800.0" prefWidth="1300.0">
          <children>
             <VBox prefHeight="800.0" prefWidth="1620.0">
                <children>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-color: #dfe3ee; -fx-border-width: 4;">
+                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0" style="-fx-border-color: #e4a4b4; -fx-border-width: 4;">
                      <children>
                         <ImageView fitHeight="58.0" fitWidth="59.0">
                            <image>
                               <Image url="@../Pictures/hospital.jpg" />
                            </image>
                         </ImageView>
-                        <Label alignment="CENTER" prefHeight="58.0" prefWidth="1185.0" style="-fx-background-color: #dfe3ee; -fx-background-radius: 100; -fx-border-radius: 100; -fx-border-color: #3b5998; -fx-border-width: 3.5;" text="Al-Quds Hospital" textFill="#3b5998">
+                        <Label alignment="CENTER" prefHeight="58.0" prefWidth="1185.0" style="-fx-background-color: #e4a4b4; -fx-background-radius: 100; -fx-border-radius: 100; -fx-border-color: #3b5998; -fx-border-width: 3.5;" text="Al-Quds Hospital" textFill="#3b5998">
                            <font>
                               <Font name="Gabriola" size="46.0" />
                            </font>
@@ -306,7 +306,7 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label contentDisplay="CENTER" prefHeight="30.0" prefWidth="288.0" text="Surgery name" textFill="#3b5998">
+                                                <Label contentDisplay="CENTER" prefHeight="30.0" prefWidth="288.0" text="Surgery ID" textFill="#3b5998">
                                                    <font>
                                                       <Font size="16.0" />
                                                    </font>
@@ -345,7 +345,7 @@
                                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                              </rowConstraints>
                                              <children>
-                                                <Label prefHeight="30.0" prefWidth="296.0" text="Test name" textFill="#3b5998">
+                                                <Label prefHeight="30.0" prefWidth="296.0" text="Test ID" textFill="#3b5998">
                                                    <font>
                                                       <Font size="16.0" />
                                                    </font>
